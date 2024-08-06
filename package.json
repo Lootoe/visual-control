@@ -1,0 +1,48 @@
+{
+  "name": "vite-v3-naive-template",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --mode dev -- platform=debug",
+    "build": "vite build --mode dev -- platform=debug",
+    "build:demo.dev": "vite build --mode dev -- platform=demo",
+    "build:demo.test": "vite build --mode test -- platform=demo",
+    "build:demo.prod": "vite build --mode prod -- platform=demo",
+    "build:pad.dev": "vite build --mode test -- platform=pad",
+    "build:pad.test": "vite build --mode test -- platform=pad",
+    "build:pad.prod": "vite build --mode prod -- platform=pad",
+    "build:pc.dev": "vite build --mode test -- platform=pc",
+    "build:pc.test": "vite build --mode test -- platform=pc",
+    "build:pc.prod": "vite build --mode prod -- platform=pc",
+    "build:admin.dev": "vite build --mode dev -- platform=admin",
+    "build:admin.test": "vite build --mode test -- platform=admin",
+    "build:admin.prod": "vite build --mode prod -- platform=admin",
+    "preview": "vite preview",
+    "lint": "npx eslint  --ext .js,.vue src/"
+  },
+  "dependencies": {
+    "@vueuse/core": "^10.9.0",
+    "axios": "^1.6.8",
+    "element-plus": "^2.7.8",
+    "pinia": "^2.1.7",
+    "vue": "^3.4.21",
+    "vue-router": "^4.3.0"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.10.2",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "@vue/eslint-config-prettier": "^9.0.0",
+    "dotenv": "^16.4.5",
+    "eslint": "^8.57",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-vue": "^9.24.1",
+    "less": "^4.2.0",
+    "minimist": "^1.2.8",
+    "prettier": "^3.2.5",
+    "unplugin-auto-import": "^0.17.5",
+    "unplugin-vue-components": "^0.26.0",
+    "vite": "^5.2.0"
+  }
+}
