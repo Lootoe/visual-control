@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 
 export const useCounterStore = defineStore('counterStore', () => {
-
   // state
   let count = ref(0)
   let loading = ref(false)
@@ -27,6 +26,10 @@ export const useCounterStore = defineStore('counterStore', () => {
   }
 
   return {
-    count, loading, doubleCount, increment, randomizeCounter
+    count,
+    loading,
+    doubleCount,
+    increment,
+    randomizeCounter,
   }
 })

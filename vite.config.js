@@ -35,6 +35,6 @@ export default defineConfig(() => {
       // 自定义代理规则
       proxy: {},
     },
-    build: getBuildOptions()
+    build: getBuildOptions(),
   })
 })

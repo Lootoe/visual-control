@@ -21,7 +21,7 @@ module.exports = {
       'error',
       {
         //  每行最大宽度
-        printWidth: 120,
+        printWidth: 100,
         // 缩进长度
         tabWidth: 2,
         // 用制表符而不是空格缩进行。
@@ -35,8 +35,10 @@ module.exports = {
         // 将多行HTML（HTML、JSX、Vue、Angular）元素的>放在最后一行的末尾，而不是单独放在下一行
         bracketSpacing: true,
         // 在唯一的箭头函数参数周围包含括号
-        arrowParens: 'avoid',
+        arrowParens: 'always',
         endOfLine: 'auto',
+        // 防止html标签的尖括号分离
+        jsxBrackets: false,
       },
     ],
     'no-unused-vars': 'warn',
