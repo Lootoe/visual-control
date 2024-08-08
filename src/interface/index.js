@@ -3,14 +3,17 @@ import initAdminPatient from './admin'
 import { initScene } from '@/modules/scene'
 import { initMatrix } from '@/modules/matrix'
 import { initNucleus } from '@/modules/nucleus'
+import { initLead } from '@/modules/lead'
 
 import { useSceneStoreHook } from '@/store/useSceneStore'
 import { usePatientStoreHook } from '@/store/usePatientStore'
 import { useNucleusStoreHook } from '@/store/useNucleusStore'
+import { useLeadStoreHook } from '@/store/useLeadStore'
 
 const { getSceneExtra, getMainSceneManager } = useSceneStoreHook()
 const { getPatientInfo, getPatientProgram, getPatientAssets } = usePatientStoreHook()
 const { getNucleusList } = useNucleusStoreHook()
+const { getLeadList } = useLeadStoreHook()
 
 const logData = () => {
   console.log('【SceneExtraData】', getSceneExtra())
@@ -19,6 +22,7 @@ const logData = () => {
   console.log('【PatientProgram】', getPatientProgram())
   console.log('【PatientAssets】', getPatientAssets())
   console.log('【NucleusList】', getNucleusList().value)
+  console.log('【LeadList】', getLeadList().value)
 }
 
 const handleAdmin = () => {
@@ -37,6 +41,9 @@ const handleAdmin = () => {
     })
     .then(() => {
       return initNucleus()
+    })
+    .then(() => {
+      return initLead()
     })
     .then(() => {
       logData()

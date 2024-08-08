@@ -1,4 +1,4 @@
-import { loadNucleus } from './loadNucleus'
+import { renderNucleus } from './renderNucleus'
 import { getNucleusEnum } from '@/enum/nucleusEnum'
 import { usePatientStoreHook } from '@/store/usePatientStore'
 import { useNucleusStoreHook } from '@/store/useNucleusStore'
@@ -54,7 +54,7 @@ export const initNucleus = () => {
       return nucleus
     })
     // 下载核团
-    Promise.all(nucleusObjectArr.map((item) => loadNucleus(item)))
+    Promise.all(nucleusObjectArr.map((item) => renderNucleus(item)))
       .then((nucleusMeshArr) => {
         addMeshes(nucleusMeshArr)
         nucleusMeshArr.forEach((nucleusMesh, index) => {
