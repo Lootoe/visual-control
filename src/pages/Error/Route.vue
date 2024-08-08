@@ -8,7 +8,7 @@ const goBack = () => {
 </script>
 
 <template>
-  <el-result icon="error" title="环境错误" sub-title="您进入了一个与当前环境不一致的页面">
+  <el-result icon="error" title="环境错误" sub-title="无法进入与当前环境不一致的页面">
     <template #extra>
       <el-button type="primary" @click="goBack">返回</el-button>
     </template>
