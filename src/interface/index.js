@@ -1,26 +1,31 @@
 import { useRoute } from 'vue-router'
 import initAdminPatient from './admin'
-import { renderScene } from '@/modules/scene'
-import { configMNI152 } from '@/modules/matrix'
+import { initScene } from '@/modules/scene'
+import { initMatrix } from '@/modules/matrix'
+import { initNucleus } from '@/modules/nucleus'
+
 import { useSceneStoreHook } from '@/store/useSceneStore'
 import { usePatientStoreHook } from '@/store/usePatientStore'
+import { useNucleusStoreHook } from '@/store/useNucleusStore'
 
-const { getExtraData, getMainSceneManager } = useSceneStoreHook()
+const { getSceneExtra, getMainSceneManager } = useSceneStoreHook()
 const { getPatientInfo, getPatientProgram, getPatientAssets } = usePatientStoreHook()
+const { getNucleusList } = useNucleusStoreHook()
 
 const logData = () => {
-  console.log('【SceneExtraData】', getExtraData())
+  console.log('【SceneExtraData】', getSceneExtra())
   console.log('【MainSceneManager】', getMainSceneManager())
   console.log('【PatientInfo】', getPatientInfo())
   console.log('【PatientProgram】', getPatientProgram())
   console.log('【PatientAssets】', getPatientAssets())
+  console.log('【NucleusList】', getNucleusList().value)
 }
 
 const handleAdmin = () => {
   // 从URL获取IPGSN
   const route = useRoute()
   const queryParams = route.query
-  renderScene({
+  initScene({
     selector: '.main-scene',
     config: {},
   })
@@ -28,7 +33,10 @@ const handleAdmin = () => {
       return initAdminPatient(queryParams)
     })
     .then(() => {
-      return configMNI152()
+      return initMatrix()
+    })
+    .then(() => {
+      return initNucleus()
     })
     .then(() => {
       logData()

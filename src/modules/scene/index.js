@@ -1,13 +1,16 @@
-import { renderMainScene } from './mainScene'
+import { initMainScene } from './mainScene'
 import { useSceneStoreHook } from '@/store/useSceneStore'
 import { cleanScene } from './cleanScene'
+import { createLight } from './light'
 
 const { mainSceneManager } = useSceneStoreHook()
 
-export const renderScene = ({ selector, config }) => {
+export const initScene = ({ selector, config }) => {
   return new Promise((resolve) => {
     window.onload = () => {
-      renderMainScene(selector, config)
+      initMainScene(selector, config)
+      const lights = createLight(6, 500)
+      addMeshes(lights)
       resolve()
     }
   })

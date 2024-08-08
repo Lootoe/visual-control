@@ -13,7 +13,7 @@ const useSceneStore = defineStore('sceneStore', () => {
     extraData[key] = obj
   }
 
-  const getExtraData = () => extraData
+  const getSceneExtra = () => extraData
 
   const getMainSceneManager = () => mainSceneManager
 
@@ -21,7 +21,7 @@ const useSceneStore = defineStore('sceneStore', () => {
     cacheMainSceneObject,
     mainSceneManager,
     cacheExtraData,
-    getExtraData,
+    getSceneExtra,
     getMainSceneManager,
   }
 })

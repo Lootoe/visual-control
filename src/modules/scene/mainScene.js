@@ -20,7 +20,7 @@ const sceneConfig = {
   zoomLimit: [20, 500],
 }
 
-export const renderMainScene = (selector, config) => {
+export const initMainScene = (selector, config) => {
   // config
   let currentConfig = Object.assign(sceneConfig, config)
   const { backgroundColor, cameraFar, screenDistance, zoomLimit } = currentConfig
@@ -52,6 +52,10 @@ export const renderMainScene = (selector, config) => {
   controls.minDistance = zoomLimit[0]
   controls.maxDistance = zoomLimit[1]
   cacheMainSceneObject('controls', controls)
+
+  // ambientLight
+  const ambientLight = new THREE.AmbientLight(0xffffff, 1)
+  scene.add(ambientLight)
 
   // resize
   const onWindowResize = () => {
