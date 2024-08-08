@@ -22,10 +22,17 @@
     "lint": "npx eslint  --ext .js,.vue src/"
   },
   "dependencies": {
-    "@vueuse/core": "^10.9.0",
     "axios": "^1.6.8",
-    "element-plus": "^2.7.8",
+    "dsbridge": "^3.1.4",
+    "element-plus": "^2.7.2",
+    "isomorphic-fetch": "^3.0.0",
+    "ndarray": "^1.0.19",
+    "nifti-reader-js": "^0.6.8",
     "pinia": "^2.1.7",
+    "radash": "^12.1.0",
+    "three": "^0.163.0",
+    "three-mesh-bvh": "^0.7.4",
+    "three-subdivide": "^1.1.5",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },
