@@ -11,16 +11,17 @@ const usePatientStore = defineStore('patientStore', () => {
 
   const updatePatientInfo = (params) => {
     patientInfo = params
-    console.log('【update patientInfo】', patientInfo)
   }
   const updatePatientProgram = (params) => {
     patientProgram = params
-    console.log('【update patientProgram】', patientProgram)
   }
   const updatePatientAssets = (params) => {
     patientAssets = params
-    console.log('【update patientAssets】', patientAssets)
   }
+
+  const getPatientInfo = () => patientInfo
+  const getPatientProgram = () => patientProgram
+  const getPatientAssets = () => patientAssets
 
   // key:资源名称
   // msg:资源错误的原因,比如数据缺失、数据结构不对
@@ -29,9 +30,9 @@ const usePatientStore = defineStore('patientStore', () => {
   }
 
   return {
-    patientInfo,
-    patientProgram,
-    patientAssets,
+    getPatientInfo,
+    getPatientProgram,
+    getPatientAssets,
     updatePatientInfo,
     updatePatientProgram,
     updatePatientAssets,
