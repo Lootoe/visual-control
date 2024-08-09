@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { ArcballControls } from 'three/examples/jsm/controls/ArcballControls.js'
 import { computeBoundsTree, disposeBoundsTree, acceleratedRaycast } from 'three-mesh-bvh'
 import { useSceneStoreHook } from '@/store/useSceneStore'
 const { cacheMainSceneObject } = useSceneStoreHook()
@@ -17,7 +17,7 @@ const sceneConfig = {
   // 镜头距离原点距离
   screenDistance: 80,
   // control的距离限制
-  zoomLimit: [1, 500],
+  zoomLimit: [2, 200],
 }
 
 export const initMainScene = (selector, config) => {
@@ -48,9 +48,10 @@ export const initMainScene = (selector, config) => {
   cacheMainSceneObject('camera', camera)
 
   // controls
-  const controls = new OrbitControls(camera, renderer.domElement)
+  const controls = new ArcballControls(camera, renderer.domElement)
   controls.minDistance = zoomLimit[0]
   controls.maxDistance = zoomLimit[1]
+  controls.enablePan = false
   cacheMainSceneObject('controls', controls)
 
   // ambientLight
