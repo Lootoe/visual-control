@@ -40,8 +40,11 @@ export const initNucleus = () => {
     // 获取核团配置
     const nucleusEnum = getNucleusEnum(diseaseEnum)
     const nucleusObjectArr = nucleusAssets.map((item) => {
+      // 从文件名中获取核团名称
       const nucleusName = getNucleusNameByFile(item.fileName)
+      // 再根据核团名称获取核团配置
       const nucleusConfig = nucleusEnum.find((item) => item.downloadName === nucleusName)
+      // 将所有已知核团信息组装起来
       const { pure, alpha } = splitRGBA(nucleusConfig.color)
       const nucleus = {
         mesh: null,

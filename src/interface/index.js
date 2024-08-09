@@ -4,16 +4,19 @@ import { initScene } from '@/modules/scene'
 import { initMatrix } from '@/modules/matrix'
 import { initNucleus } from '@/modules/nucleus'
 import { initLead } from '@/modules/lead'
+import { initFiber } from '@/modules/fiber'
 
 import { useSceneStoreHook } from '@/store/useSceneStore'
 import { usePatientStoreHook } from '@/store/usePatientStore'
 import { useNucleusStoreHook } from '@/store/useNucleusStore'
 import { useLeadStoreHook } from '@/store/useLeadStore'
+import { useFiberStoreHook } from '@/store/useFiberStore'
 
 const { getSceneExtra, getMainSceneManager } = useSceneStoreHook()
 const { getPatientInfo, getPatientProgram, getPatientAssets } = usePatientStoreHook()
 const { getNucleusList } = useNucleusStoreHook()
 const { getLeadList } = useLeadStoreHook()
+const { getFiberList } = useFiberStoreHook()
 
 const logData = () => {
   console.log('【SceneExtraData】', getSceneExtra())
@@ -23,6 +26,7 @@ const logData = () => {
   console.log('【PatientAssets】', getPatientAssets())
   console.log('【NucleusList】', getNucleusList().value)
   console.log('【LeadList】', getLeadList().value)
+  console.log('【getFiberList】', getFiberList())
 }
 
 const handleAdmin = () => {
@@ -44,6 +48,9 @@ const handleAdmin = () => {
     })
     .then(() => {
       return initLead()
+    })
+    .then(() => {
+      return initFiber()
     })
     .then(() => {
       logData()

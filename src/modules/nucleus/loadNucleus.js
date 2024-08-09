@@ -4,7 +4,7 @@ import { useSceneStoreHook } from '@/store/useSceneStore'
 const { getSceneExtra } = useSceneStoreHook()
 
 /**加载ply模型，主要是主视图的核团 */
-export const loadPLY = (url) => {
+export const loadNucleus = (url) => {
   return new Promise((resolve, reject) => {
     if (!url || url === '') reject()
     const loader = new PLYLoader()

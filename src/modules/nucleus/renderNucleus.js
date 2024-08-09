@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { loadPLY } from './loadNucleus'
+import { loadNucleus } from './loadNucleus'
 
 const getNucleusMat = (color, alpha) => {
   return new THREE.MeshLambertMaterial({
@@ -14,7 +14,7 @@ const getNucleusMat = (color, alpha) => {
 export const renderNucleus = (nucleusObject) => {
   const { url, color, alpha, zh, en } = nucleusObject
   return new Promise((resolve, reject) => {
-    loadPLY(url)
+    loadNucleus(url)
       .then((geometry) => {
         const mat = getNucleusMat(color, alpha)
         const mesh = new THREE.Mesh(geometry, mat)
