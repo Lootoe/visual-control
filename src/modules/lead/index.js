@@ -5,7 +5,7 @@ import { addMeshes } from '@/modules/scene'
 import { leadEnum } from '@/enum/leadEnum'
 import { renderLead, renderChips } from './renderLead'
 const { getPatientInfo, getPatientAssets, getPatientProgram } = usePatientStoreHook()
-const { cacheLeadList } = useLeadStoreHook()
+const { cacheLeadList, getLeadList } = useLeadStoreHook()
 
 export const initLead = () => {
   // 将电极配置和读取的坐标点结合
@@ -40,5 +40,19 @@ export const initLead = () => {
         resolve()
       })
       .catch(reject)
+  })
+}
+
+export const changeLeadVisible = (flag = false) => {
+  const leadList = getLeadList().value
+  // 电极柱
+  Object.values(leadList).forEach((lead) => {
+    lead.mesh.visible = flag
+    // 电极片
+    const chips = lead.chips
+    chips.forEach((chip) => {
+      const chipMesh = chip.mesh
+      chipMesh.visible = flag
+    })
   })
 }

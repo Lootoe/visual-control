@@ -5,6 +5,7 @@ import { initMatrix } from '@/modules/matrix'
 import { initNucleus } from '@/modules/nucleus'
 import { initLead } from '@/modules/lead'
 import { initFiber } from '@/modules/fiber'
+import { initBrain } from '@/modules/brain'
 
 import { useSceneStoreHook } from '@/store/useSceneStore'
 import { usePatientStoreHook } from '@/store/usePatientStore'
@@ -26,7 +27,7 @@ const logData = () => {
   console.log('【PatientAssets】', getPatientAssets())
   console.log('【NucleusList】', getNucleusList().value)
   console.log('【LeadList】', getLeadList().value)
-  console.log('【getFiberList】', getFiberList())
+  console.log('【FiberList】', getFiberList().length)
 }
 
 const handleAdmin = () => {
@@ -51,6 +52,9 @@ const handleAdmin = () => {
     })
     .then(() => {
       return initFiber()
+    })
+    .then(() => {
+      return initBrain()
     })
     .then(() => {
       logData()
