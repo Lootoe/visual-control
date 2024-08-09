@@ -41,7 +41,7 @@ const createEmissiveMap = (
 export const createChipMaterial = (width, height, text, fontSize) => {
   const texture = new THREE.CanvasTexture(createEmissiveMap(width, height, text, fontSize))
   return new THREE.MeshStandardMaterial({
-    color: '#000',
+    color: '#27386f',
     emissiveMap: texture,
     transparent: false,
     emissive: 0xffffff,

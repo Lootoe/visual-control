@@ -17,7 +17,7 @@ const sceneConfig = {
   // 镜头距离原点距离
   screenDistance: 80,
   // control的距离限制
-  zoomLimit: [20, 500],
+  zoomLimit: [1, 500],
 }
 
 export const initMainScene = (selector, config) => {
