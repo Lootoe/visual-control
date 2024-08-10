@@ -1,14 +1,20 @@
 import { renderCortex } from './renderCortex'
+import { renderBrain } from './renderBrain'
 import { usePatientStoreHook } from '@/store/usePatientStore'
 import { useAddonStoreHook } from '@/store/useAddonStore'
-import { addMesh } from '@/modules/scene'
+import { addMesh, addMeshInAssist } from '@/modules/scene'
 
 const { getPatientAssets } = usePatientStoreHook()
 const { cacheAddons, getAddons } = useAddonStoreHook()
 
 export const initAddons = () => {
   return new Promise((resolve, reject) => {
-    initBrain().then(resolve).catch(reject)
+    initCortex()
+      .then(() => {
+        return initBrain()
+      })
+      .then(resolve)
+      .catch(reject)
   })
 }
 
@@ -22,12 +28,29 @@ export const changeAddonsVisible = (key, flag) => {
 const initBrain = () => {
   return new Promise((resolve, reject) => {
     const brainAsset = getPatientAssets().head
-    renderCortex(brainAsset.downloadUrl)
+    renderBrain(brainAsset.downloadUrl)
       .then((brainMesh) => {
-        addMesh(brainMesh)
+        addMeshInAssist(brainMesh)
+        // 默认不显示
+        cacheAddons('brain', {
+          mesh: brainMesh,
+          visible: true,
+        })
+        resolve()
+      })
+      .catch(reject)
+  })
+}
+
+const initCortex = () => {
+  return new Promise((resolve, reject) => {
+    const brainAsset = getPatientAssets().head
+    renderCortex(brainAsset.downloadUrl)
+      .then((cortexMesh) => {
+        addMesh(cortexMesh)
         // 默认不显示
         cacheAddons('cortex', {
-          mesh: brainMesh,
+          mesh: cortexMesh,
           visible: true,
         })
         resolve()

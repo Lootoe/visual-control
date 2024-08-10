@@ -36,5 +36,7 @@ export default defineConfig(() => {
       proxy: {},
     },
     build: getBuildOptions(),
+    // 让vite打包模型文件
+    assetsInclude: ['**/*.obj', '**/*.ply', '**/*.gltf', '**/*.glb'],
   })
 })

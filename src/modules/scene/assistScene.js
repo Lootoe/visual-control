@@ -3,32 +3,30 @@ import { useSceneStoreHook } from '@/store/useSceneStore'
 const { cacheAssistSceneObject } = useSceneStoreHook()
 
 const sceneConfig = {
-  // 场景背景颜色
-  backgroundColor: '#232A3B',
   // 相机可视距离
-  cameraFar: 1000,
+  cameraFar: 100,
   // 镜头距离原点距离
-  screenDistance: 80,
+  screenDistance: 4,
 }
 
 export const initAssistScene = (selector, config) => {
   // config
   let currentConfig = Object.assign(sceneConfig, config)
-  const { backgroundColor, cameraFar, screenDistance } = currentConfig
+  const { cameraFar, screenDistance } = currentConfig
   cacheAssistSceneObject('config', currentConfig)
 
   // render
-  const renderer = new THREE.WebGLRenderer({ logarithmicDepthBuffer: true, antialias: true })
+  const renderer = new THREE.WebGLRenderer({ alpha: true })
   renderer.setPixelRatio(window.devicePixelRatio)
   const dom = document.querySelector(selector)
   const width = dom.clientWidth
   const height = dom.clientHeight
   renderer.setSize(width, height)
   dom.appendChild(renderer.domElement)
+  renderer.setClearAlpha(0)
 
   // scene
   const scene = new THREE.Scene()
-  scene.background = new THREE.Color(backgroundColor)
   cacheAssistSceneObject('scene', scene)
 
   // camera
@@ -40,6 +38,13 @@ export const initAssistScene = (selector, config) => {
   // ambientLight
   const ambientLight = new THREE.AmbientLight(0xffffff, 1)
   scene.add(ambientLight)
+  const light = new THREE.DirectionalLight(0xcccccc, currentConfig.screenDistance)
+  light.position.set(
+    -currentConfig.screenDistance,
+    currentConfig.screenDistance,
+    currentConfig.screenDistance
+  )
+  scene.add(light)
 
   // resize
   const onWindowResize = () => {

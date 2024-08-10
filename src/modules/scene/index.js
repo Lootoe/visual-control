@@ -4,7 +4,7 @@ import { useSceneStoreHook } from '@/store/useSceneStore'
 import { cleanScene } from './cleanScene'
 import { createLight } from './light'
 
-const { mainSceneManager, assistSceneManager } = useSceneStoreHook()
+const { getMainSceneManager, getAssistSceneManager } = useSceneStoreHook()
 
 export const initScene = (params) => {
   const { mainSceneSelector, mainSceneConfig, assistSceneSelector, assistSceneConfig } = params
@@ -17,29 +17,46 @@ export const initScene = (params) => {
   })
 }
 
-// 清除主视图和辅视图
 export const destoryScene = () => {
+  destoryMainScene()
+  destoryAssistScene()
+}
+
+const destoryMainScene = () => {
+  const mainSceneManager = getMainSceneManager()
   const renderer = mainSceneManager.renderer
   const scene = mainSceneManager.scene
   cleanScene(renderer, scene)
 }
 
+const destoryAssistScene = () => {
+  const assistSceneManager = getAssistSceneManager()
+  const renderer = assistSceneManager.renderer
+  const scene = assistSceneManager.scene
+  cleanScene(renderer, scene)
+}
+
 export const addMesh = (mesh) => {
+  const mainSceneManager = getMainSceneManager()
   mainSceneManager.scene.add(mesh)
 }
 
 export const removeMesh = (mesh) => {
+  const mainSceneManager = getMainSceneManager()
   mainSceneManager.scene.remove(mesh)
 }
 
 export const addMeshes = (meshes) => {
+  const mainSceneManager = getMainSceneManager()
   meshes.forEach((mesh) => mainSceneManager.scene.add(mesh))
 }
 
 export const removeMeshes = (meshes) => {
+  const mainSceneManager = getMainSceneManager()
   meshes.forEach((mesh) => mainSceneManager.scene.remove(mesh))
 }
 
-const addMeshInAssist = (mesh) => {
+export const addMeshInAssist = (mesh) => {
+  const assistSceneManager = getAssistSceneManager()
   assistSceneManager.scene.add(mesh)
 }

@@ -1,5 +1,6 @@
 <script setup>
 import init3DAssets from '@/interface'
+import { destoryScene } from '@/modules/scene'
 
 defineOptions({
   name: 'ThreeScene',
@@ -7,6 +8,9 @@ defineOptions({
 
 onMounted(() => {
   init3DAssets()
+})
+onUnmounted(() => {
+  destoryScene
 })
 </script>
 

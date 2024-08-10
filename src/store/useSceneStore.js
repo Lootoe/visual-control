@@ -20,18 +20,17 @@ const useSceneStore = defineStore('sceneStore', () => {
 
   const getSceneExtra = () => extraData
 
-  const getAssistSceneObject = () => assistSceneManager
+  const getAssistSceneManager = () => assistSceneManager
 
   const getMainSceneManager = () => mainSceneManager
 
   return {
     cacheMainSceneObject,
-    mainSceneManager,
     cacheExtraData,
+    cacheAssistSceneObject,
     getSceneExtra,
     getMainSceneManager,
-    cacheAssistSceneObject,
-    getAssistSceneObject,
+    getAssistSceneManager,
   }
 })
 
