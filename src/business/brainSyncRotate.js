@@ -1,5 +1,5 @@
 /**
- * ?辅视图的大脑模型与主视图同步旋转
+ * *辅视图的大脑模型与主视图同步旋转
  */
 import { useSceneStoreHook } from '@/store/useSceneStore'
 const { getMainSceneManager, getAssistSceneManager } = useSceneStoreHook()

@@ -27,6 +27,7 @@ const renderPole = (leadCurvePoints, radius = 1.27 / 2) => {
     steps: 12,
   })
   const mesh = new THREE.Mesh(geometry, createPoleMaterial())
+  mesh.name = 'pole'
   return mesh
 }
 
@@ -80,7 +81,7 @@ const renderCircleChips = (lead) => {
     const num = chips[i].index
     const mesh = new THREE.Mesh(geometry, createChipMaterial(400, 400 * k, num, 60))
     chips[i].mesh = mesh
-    mesh.name = `chips_${num}`
+    mesh.name = 'chip'
     mesh.updateWorldMatrix(true, true)
 
     // 为电极定义额外数据

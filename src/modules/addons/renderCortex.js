@@ -7,6 +7,7 @@ export const renderCortex = (url) => {
       .then((geometry) => {
         const mesh = new THREE.Mesh(geometry, brainMaskMaterial)
         mesh.renderOrder = 2
+        mesh.name = 'cortex'
         resolve(mesh)
       })
       .catch(reject)

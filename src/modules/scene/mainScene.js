@@ -30,6 +30,8 @@ export const initMainScene = (selector, config) => {
   const renderer = new THREE.WebGLRenderer({ logarithmicDepthBuffer: true, antialias: true })
   renderer.setPixelRatio(window.devicePixelRatio)
   const dom = document.querySelector(selector)
+  cacheMainSceneObject('dom', dom)
+
   const width = dom.clientWidth
   const height = dom.clientHeight
   renderer.setSize(width, height)
@@ -62,6 +64,7 @@ export const initMainScene = (selector, config) => {
     const dom = document.querySelector(selector)
     const width = dom.clientWidth
     const height = dom.clientHeight
+    cacheMainSceneObject('dom', dom)
     if (camera) {
       camera.aspect = width / height
       camera.updateProjectionMatrix()
