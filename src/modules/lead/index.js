@@ -31,7 +31,11 @@ export const initLead = () => {
           leadList[position].chips = program[0].nodes
         })
         cacheLeadList(leadList)
-        const leadMeshes = Object.values(leadList).map((item) => renderLead(item))
+        const leadMeshes = Object.values(leadList).map((lead) => {
+          const mesh = renderLead(lead)
+          lead.mesh = mesh
+          return mesh
+        })
         const leadChips = Object.values(leadList)
           .map((item) => renderChips(item))
           .flat()

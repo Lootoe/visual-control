@@ -122,7 +122,6 @@ export const renderLead = (lead) => {
   const group = new THREE.Group()
   group.add(pole)
   group.add(halfBall)
-  lead.mesh = group
   return group
 }
 
