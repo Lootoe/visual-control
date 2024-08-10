@@ -1,4 +1,4 @@
-import { renderBrain } from './renderBrain'
+import { renderCortex } from './renderCortex'
 import { usePatientStoreHook } from '@/store/usePatientStore'
 import { useAddonStoreHook } from '@/store/useAddonStore'
 import { addMesh } from '@/modules/scene'
@@ -22,11 +22,11 @@ export const changeAddonsVisible = (key, flag) => {
 const initBrain = () => {
   return new Promise((resolve, reject) => {
     const brainAsset = getPatientAssets().head
-    renderBrain(brainAsset.downloadUrl)
+    renderCortex(brainAsset.downloadUrl)
       .then((brainMesh) => {
         addMesh(brainMesh)
         // 默认不显示
-        cacheAddons('brain', {
+        cacheAddons('cortex', {
           mesh: brainMesh,
           visible: true,
         })

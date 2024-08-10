@@ -1,9 +1,9 @@
 import * as THREE from 'three'
-import { loadBrain } from './loadBrain.js'
+import { loadCortex } from './loadCortex.js'
 
-export const renderBrain = (url) => {
+export const renderCortex = (url) => {
   return new Promise((resolve, reject) => {
-    loadBrain(url)
+    loadCortex(url)
       .then((geometry) => {
         const mesh = new THREE.Mesh(geometry, brainMaskMaterial)
         mesh.renderOrder = 2
