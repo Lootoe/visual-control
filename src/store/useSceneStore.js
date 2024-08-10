@@ -3,10 +3,15 @@ import { store } from '@/store'
 
 const useSceneStore = defineStore('sceneStore', () => {
   let mainSceneManager = {}
+  let assistSceneManager = {}
   let extraData = {}
 
   const cacheMainSceneObject = (key, obj) => {
     mainSceneManager[key] = obj
+  }
+
+  const cacheAssistSceneObject = (key, obj) => {
+    assistSceneManager[key] = obj
   }
 
   const cacheExtraData = (key, obj) => {
@@ -14,6 +19,8 @@ const useSceneStore = defineStore('sceneStore', () => {
   }
 
   const getSceneExtra = () => extraData
+
+  const getAssistSceneObject = () => assistSceneManager
 
   const getMainSceneManager = () => mainSceneManager
 
@@ -23,6 +30,8 @@ const useSceneStore = defineStore('sceneStore', () => {
     cacheExtraData,
     getSceneExtra,
     getMainSceneManager,
+    cacheAssistSceneObject,
+    getAssistSceneObject,
   }
 })
 

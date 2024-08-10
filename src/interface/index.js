@@ -37,8 +37,10 @@ const handleAdmin = () => {
   const route = useRoute()
   const queryParams = route.query
   initScene({
-    selector: '.main-scene',
-    config: {},
+    mainSceneSelector: '.main-scene',
+    mainSceneConfig: {},
+    assistSceneSelector: '.assist-scene',
+    assistSceneConfig: {},
   })
     .then(() => {
       return initAdminPatient(queryParams)

@@ -1,18 +1,19 @@
 import { initMainScene } from './mainScene'
+import { initAssistScene } from './assistScene'
 import { useSceneStoreHook } from '@/store/useSceneStore'
 import { cleanScene } from './cleanScene'
 import { createLight } from './light'
 
-const { mainSceneManager } = useSceneStoreHook()
+const { mainSceneManager, assistSceneManager } = useSceneStoreHook()
 
-export const initScene = ({ selector, config }) => {
+export const initScene = (params) => {
+  const { mainSceneSelector, mainSceneConfig, assistSceneSelector, assistSceneConfig } = params
   return new Promise((resolve) => {
-    window.onload = () => {
-      initMainScene(selector, config)
-      const lights = createLight(6, 500)
-      addMeshes(lights)
-      resolve()
-    }
+    initMainScene(mainSceneSelector, mainSceneConfig)
+    initAssistScene(assistSceneSelector, assistSceneConfig)
+    const lights = createLight(6, 500)
+    addMeshes(lights)
+    resolve()
   })
 }
 
@@ -37,4 +38,8 @@ export const addMeshes = (meshes) => {
 
 export const removeMeshes = (meshes) => {
   meshes.forEach((mesh) => mainSceneManager.scene.remove(mesh))
+}
+
+const addMeshInAssist = (mesh) => {
+  assistSceneManager.scene.add(mesh)
 }

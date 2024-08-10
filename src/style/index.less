@@ -1,1 +1,55 @@
 @import url('./reset.css');
+
+// !经测试，安卓webview的字体大小差不多不能小于10px
+// !所以设置vw时，要设置个10000的系数，保证根元素的字体大于10px
+
+@import url('./reset.css'); // 导入重置样式文件
+
+// 设置一个比例系数，用于保证在不同设备上的字体大小能满足安卓 WebView 的最小字体要求
+@ratio: 10000;
+
+// 设置网页的默认字体大小，根据屏幕的宽度进行缩放
+html {
+    // 除以 1920 是为了归一化处理，使得在1920px宽度的屏幕上，字体大小为设定值
+    font-size: calc(@ratio * 0.8vw / 1920);
+}
+
+// 针对屏幕宽度在 1440px 到 1920px 之间的 PC 全屏设备，调整字体大小
+@media screen and (min-width: 1440px) {
+    html {
+        // 当屏幕宽度大于1440px时，字体大小略微增大
+        font-size: calc(@ratio * 1.2vw / 1920);
+    }
+}
+
+// 针对屏幕宽度在 751px 到 1440px 之间的 PC 小屏设备，进一步调整字体大小
+@media screen and (max-width: 1440px) and (min-width: 751px) {
+    html {
+        // 在更小的屏幕上，字体大小进一步增大以确保可读性
+        font-size: calc(@ratio * 1.6vw / 1920);
+    }
+}
+
+// 针对屏幕宽度小于 751px 的设备（如小型平板或手机），进行进一步调整
+@media screen and (max-width: 750px) {
+    html {
+        // 最小屏幕设备上的字体大小设置最大，以确保可读性
+        font-size: calc(@ratio * 1.8vw / 1920);
+    }
+}
+
+// 针对高分辨率设备 (例如 retina 屏幕)，增加字体大小以适应更高的像素密度
+@media screen and (min-resolution: 2dppx) {
+    html {
+        // 高分辨率设备上的字体大小略微增大
+        font-size: calc(@ratio * 1.4vw / 1920);
+    }
+}
+
+// 针对屏幕宽度小于 640px 且为高分辨率设备，设置最大字体大小以确保可读性
+@media screen and (min-resolution: 2dppx) and (max-width: 640px) {
+    html {
+        // 在高分辨率小屏幕设备上的字体大小设置为最大
+        font-size: calc(@ratio * 1.8vw / 1920);
+    }
+}
