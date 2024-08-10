@@ -34,11 +34,12 @@ export const initAssistScene = (selector, config) => {
   camera.lookAt(new THREE.Vector3(0, 0, 0))
   camera.position.set(0, 0, screenDistance)
   scene.add(camera)
+  cacheAssistSceneObject('camera', camera)
 
   // ambientLight
   const ambientLight = new THREE.AmbientLight(0xffffff, 1)
   scene.add(ambientLight)
-  const light = new THREE.DirectionalLight(0xcccccc, currentConfig.screenDistance)
+  const light = new THREE.DirectionalLight(0xcccccc, 3)
   light.position.set(
     -currentConfig.screenDistance,
     currentConfig.screenDistance,
