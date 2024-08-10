@@ -1,20 +1,32 @@
 import { renderBrain } from './renderBrain'
 import { usePatientStoreHook } from '@/store/usePatientStore'
-import { useSceneStoreHook } from '@/store/useSceneStore'
+import { useAddonStoreHook } from '@/store/useAddonStore'
 import { addMesh } from '@/modules/scene'
 
 const { getPatientAssets } = usePatientStoreHook()
-const { cacheExtraData, getSceneExtra } = useSceneStoreHook()
+const { cacheAddons, getAddons } = useAddonStoreHook()
 
-export const initBrain = () => {
+export const initAddons = () => {
+  return new Promise((resolve, reject) => {
+    initBrain().then(resolve).catch(reject)
+  })
+}
+
+export const changeAddonsVisible = (key, flag) => {
+  const addons = getAddons()
+  const target = addons[key]
+  target.mesh.visible = flag
+  target.visible = flag
+}
+
+const initBrain = () => {
   return new Promise((resolve, reject) => {
     const brainAsset = getPatientAssets().head
     renderBrain(brainAsset.downloadUrl)
       .then((brainMesh) => {
         addMesh(brainMesh)
         // 默认不显示
-        // brainMesh.visible = false
-        cacheExtraData('brain', {
+        cacheAddons('brain', {
           mesh: brainMesh,
           visible: true,
         })
@@ -22,10 +34,4 @@ export const initBrain = () => {
       })
       .catch(reject)
   })
-}
-
-export const changeBrainVisible = (flag) => {
-  const brain = getSceneExtra().brain
-  brain.mesh.visible = flag
-  brain.visible = flag
 }
