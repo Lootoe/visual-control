@@ -1,5 +1,5 @@
 <script setup>
-import init3DAssets from '@/interface'
+import { init3DAssets } from '@/interface'
 import { init3DHooks } from '@/business'
 
 import { destoryScene } from '@/modules/scene'

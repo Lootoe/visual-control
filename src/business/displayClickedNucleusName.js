@@ -62,4 +62,7 @@ export const displayClickedNucleusName = () => {
   controls.addEventListener('change', () => {
     removeNameUI()
   })
+  window.onload = () => {
+    removeNameUI()
+  }
 }
