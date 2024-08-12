@@ -12,11 +12,11 @@ const getNucleusMat = (color, alpha) => {
 }
 
 export const renderNucleus = (nucleusObject) => {
-  const { url, color, alpha, zh, en } = nucleusObject
+  const { url, pure, alpha, zh, en } = nucleusObject
   return new Promise((resolve, reject) => {
     loadNucleus(url)
       .then((geometry) => {
-        const mat = getNucleusMat(color, alpha)
+        const mat = getNucleusMat(pure, alpha)
         const mesh = new THREE.Mesh(geometry, mat)
         mesh.name = 'nucleus'
         mesh.renderOrder = 2

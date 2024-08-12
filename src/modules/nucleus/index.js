@@ -51,7 +51,7 @@ export const initNucleus = () => {
         ...nucleusConfig,
         // 以下三个变量会在加载核团时使用
         url: item.downloadUrl,
-        color: pure,
+        pure: pure,
         alpha: alpha,
       }
       return nucleus

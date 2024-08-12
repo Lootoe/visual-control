@@ -1,0 +1,135 @@
+.el-message {
+    .el-icon {
+        width: 14px;
+        height: 14px;
+
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    .el-message__content {
+        font-size: 12px;
+    }
+}
+
+.el-popper__arrow{
+    display: none;
+}
+
+.el-color-picker {
+    width: 100%;
+    height: 100%;
+
+    .el-color-picker__trigger {
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        border: none;
+        .el-color-picker__color.is-alpha{
+            background-position:0 0, 50% 0, 50% -50%, 0 50% !important;
+            background-size: 50% 50% !important;
+        }
+
+        .el-color-picker__color {
+            border: none;
+
+            .el-color-picker__icon {
+                display: none;
+            }
+        }
+
+    }
+
+}
+
+.el-color-picker__panel {
+    // display: block !important;
+    background-color: #333d50 !important;
+    width: fit-content !important;
+    height: fit-content;
+    border: 0.01rem solid rgb(147, 153, 165) !important;
+    margin-top: 1.92rem !important;
+    margin-left: 0.12rem;
+    padding: 0.10rem !important;
+
+    .el-color-dropdown__main-wrapper {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        justify-content: flex-end;
+        margin-bottom: 0.10rem;
+
+        .el-color-hue-slider {
+            width: 0.32rem !important;
+            height: 1.80rem !important;
+            margin-left: 0.10rem;
+            border-radius: 0.32rem;
+            overflow: hidden;
+        }
+
+        .el-color-svpanel {
+            width: 3.20rem !important;
+            height: 1.80rem !important;
+            overflow: hidden;
+            .el-color-svpanel__white,.el-color-svpanel__black{
+                width: 100%;
+                height: 100%;
+            }
+        }
+    }
+
+    .el-color-dropdown__btns {
+        display: none;
+    }
+
+    .el-color-alpha-slider {
+        width: 100% !important;
+        height: 0.32rem !important;
+        border-radius: 0.32rem;
+        overflow: hidden;
+    }
+
+    .el-color-svpanel__cursor {
+        &>div {
+            width: 0.32rem;
+            height: 0.32rem;
+        }
+    }
+
+    .el-color-predefine {
+        width: 100%;
+
+        .el-color-predefine__color-selector {
+            width: 0.32rem;
+            height: 0.32rem;
+            margin: 0;
+            margin-right: 0.12rem;
+        }
+    }
+
+    .el-color-alpha-slider__thumb,
+    .el-color-hue-slider__thumb {
+        width: 0.32rem !important;
+        height: 0.32rem !important;
+        border-radius: 50%;
+        border: 0.04rem solid #fff;
+        background-color: transparent;
+
+    }
+}
+
+.nucleus-tip{
+    background-color: rgba(33, 33, 33, 0.6) !important;
+    border: none !important;
+}
+
+.el-slider{
+    .el-slider__button-wrapper{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
