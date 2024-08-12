@@ -78,8 +78,12 @@ const changeNucleusColorFn = (item, color) => {
   changeNucleusColor(name, color)
 }
 
+const colorPickers = ref([])
 const onListScroll = () => {
   // 滚动时隐藏颜色拾取器
+  colorPickers.value.forEach((c) => {
+    c.hide()
+  })
 }
 
 const isMiddle = (item) => {
@@ -89,7 +93,7 @@ const isMiddle = (item) => {
 </script>
 
 <template>
-  <div class="nucleus-manager" :style="{ backgroundColor: backgroundColor }" @scroll="onListScroll">
+  <div class="nucleus-manager" :style="{ backgroundColor: backgroundColor }">
     <div class="top" :style="{ backgroundColor: backgroundColor }">
       <div class="top-left">名称</div>
       <div class="top-center"></div>
@@ -98,7 +102,7 @@ const isMiddle = (item) => {
         <div>右</div>
       </div>
     </div>
-    <div class="main">
+    <div class="main" @scroll="onListScroll">
       <div
         class="item"
         v-for="(item, index) in localNucleusList"
