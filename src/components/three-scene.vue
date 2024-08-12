@@ -1,6 +1,8 @@
 <script setup>
 import { init3DAssets } from '@/interface'
-import { init3DHooks } from '@/business'
+import { brainSyncRotate } from '@/business/brainSyncRotate'
+import { displayClickedNucleusName } from '@/business/displayClickedNucleusName'
+import { adjustCameraPosition } from '@/business/adjustCameraPosition'
 
 import { destoryScene } from '@/modules/scene'
 
@@ -10,7 +12,9 @@ defineOptions({
 
 onMounted(() => {
   init3DAssets()
-  init3DHooks()
+  brainSyncRotate()
+  displayClickedNucleusName()
+  adjustCameraPosition()
 })
 onUnmounted(() => {
   destoryScene
@@ -30,10 +34,11 @@ onUnmounted(() => {
   width: 100vw;
   height: 100vh;
   user-select: none;
-  position: 10;
 }
 .main-scene {
   position: absolute;
+  left: 0;
+  right: 0;
   z-index: 10;
   width: 100%;
   height: 100%;
