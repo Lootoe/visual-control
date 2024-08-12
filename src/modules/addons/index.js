@@ -1,5 +1,6 @@
 import { renderCortex } from './renderCortex'
 import { renderBrain } from './renderBrain'
+import { renderAxesHelper } from './renderAxesHelper'
 import { usePatientStoreHook } from '@/store/usePatientStore'
 import { useAddonStoreHook } from '@/store/useAddonStore'
 import { addMesh, addMeshInAssist } from '@/modules/scene'
@@ -11,6 +12,7 @@ export const initAddons = () => {
   return new Promise((resolve, reject) => {
     initCortex()
       .then(() => {
+        renderAxesHelper()
         return initBrain()
       })
       .then(resolve)
