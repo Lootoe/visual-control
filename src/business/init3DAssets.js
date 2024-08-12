@@ -6,6 +6,7 @@ import { initNucleus } from '@/modules/nucleus'
 import { initLead } from '@/modules/lead'
 import { initFiber } from '@/modules/fiber'
 import { initAddons } from '@/modules/addons'
+import { initFilters } from '@/modules/filter'
 
 import { useSceneStoreHook } from '@/store/useSceneStore'
 import { usePatientStoreHook } from '@/store/usePatientStore'
@@ -13,7 +14,8 @@ import { useNucleusStoreHook } from '@/store/useNucleusStore'
 import { useLeadStoreHook } from '@/store/useLeadStore'
 import { useFiberStoreHook } from '@/store/useFiberStore'
 import { useAddonStoreHook } from '@/store/useAddonStore'
-import { useLoadingStoreHook } from '../store/useLoadingStore'
+import { useLoadingStoreHook } from '@/store/useLoadingStore'
+import { useFilterStoreHook } from '@/store/useFilterStore'
 
 const { getMainSceneManager } = useSceneStoreHook()
 const { getPatientInfo, getPatientProgram, getPatientAssets } = usePatientStoreHook()
@@ -22,6 +24,7 @@ const { getLeadList } = useLeadStoreHook()
 const { getFiberList } = useFiberStoreHook()
 const { getAddons } = useAddonStoreHook()
 const { setLoadingProps } = useLoadingStoreHook()
+const { getChipFilter, getNucleusFilter } = useFilterStoreHook()
 
 const logData = () => {
   console.log('【MainSceneManager】', getMainSceneManager())
@@ -32,6 +35,8 @@ const logData = () => {
   console.log('【LeadList】', getLeadList().value)
   console.log('【FiberList】', getFiberList().length)
   console.log('【Addons】', getAddons())
+  console.log('【ChipFilter】', getChipFilter().value)
+  console.log('【NucleusFilter】', getNucleusFilter().value)
 }
 
 export const init3DAssets = () => {
@@ -77,6 +82,9 @@ const handleAdmin = () => {
     //   setLoadingProps('loadingText', '正在处理皮层')
     //   return initAddons()
     // })
+    .then(() => {
+      return initFilters()
+    })
     .then(() => {
       setLoadingProps('loadingText', '加载成功')
       setLoadingProps('loading', false)

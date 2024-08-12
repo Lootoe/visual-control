@@ -108,7 +108,7 @@ export const generateNucleusCheckList = () => {
   const newFilter = filterParams.map((v, i) => {
     return {
       // 排序的依据
-      index: i,
+      orderIndex: i,
       // 判断filter里是否有这个核团或电极触点，存在才可以进行追踪
       exist: false,
       ...v,
