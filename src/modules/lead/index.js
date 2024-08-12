@@ -46,17 +46,3 @@ export const initLead = () => {
       .catch(reject)
   })
 }
-
-export const changeLeadVisible = (flag = false) => {
-  const leadList = getLeadList().value
-  // 电极柱
-  Object.values(leadList).forEach((lead) => {
-    lead.mesh.visible = flag
-    // 电极片
-    const chips = lead.chips
-    chips.forEach((chip) => {
-      const chipMesh = chip.mesh
-      chipMesh.visible = flag
-    })
-  })
-}
