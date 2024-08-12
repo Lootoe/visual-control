@@ -72,10 +72,10 @@ const handleAdmin = () => {
       setLoadingProps('loadingText', '正在处理神经纤维')
       return initFiber()
     })
-    .then(() => {
-      setLoadingProps('loadingText', '正在处理皮层')
-      return initAddons()
-    })
+    // .then(() => {
+    //   setLoadingProps('loadingText', '正在处理皮层')
+    //   return initAddons()
+    // })
     .then(() => {
       setLoadingProps('loadingText', '加载成功')
       setLoadingProps('loading', false)
