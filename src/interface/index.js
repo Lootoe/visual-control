@@ -80,9 +80,5 @@ const handleAdmin = () => {
       setLoadingProps('loadingText', '加载成功')
       setLoadingProps('loading', false)
       logData()
-
-      setTimeout(() => {
-        setLoadingProps('loading', true)
-      }, 3000)
     })
 }
