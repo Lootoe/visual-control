@@ -34,27 +34,29 @@ export const loadLeadTxt = (url) => {
         // 先设置电极坐标
         arr.forEach((v) => {
           // 获取电极序号
-          const pre = v.match(reg2)[0]
-          const position = Number(pre.match(/\w/)[0])
-          // 获取坐标
-          const post = v.split(reg2)[1]
-          const points = post.split(',')
-          points.forEach((v, i) => {
-            points[i] = Number(v)
-          })
-          const source = new THREE.Vector3(points[0], points[1], points[2])
-          source.applyMatrix4(sceneExtra.MNI152_template)
-          source.applyMatrix4(sceneExtra.ras2xyz)
-          const target = leads[position]
-          if (!target) {
-            const lead = {
-              position,
-              leadPoints: [source],
-              leadLen: 60,
+          const pre = v.match(reg2)
+          if (pre) {
+            const position = Number(pre[0].match(/\w/)[0])
+            // 获取坐标
+            const post = v.split(reg2)[1]
+            const points = post.split(',')
+            points.forEach((v, i) => {
+              points[i] = Number(v)
+            })
+            const source = new THREE.Vector3(points[0], points[1], points[2])
+            source.applyMatrix4(sceneExtra.MNI152_template)
+            source.applyMatrix4(sceneExtra.ras2xyz)
+            const target = leads[position]
+            if (!target) {
+              const lead = {
+                position,
+                leadPoints: [source],
+                leadLen: 60,
+              }
+              leads[position] = lead
+            } else {
+              target.leadPoints.push(source)
             }
-            leads[position] = lead
-          } else {
-            target.leadPoints.push(source)
           }
         })
         // 再设置电极长度
