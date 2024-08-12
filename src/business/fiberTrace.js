@@ -23,7 +23,7 @@ const tracing = (filters, fiberList) => {
   }
   raycaster.firstHitOnly = true
   filters.forEach((filter) => {
-    const { mesh, crossedFiberIndexes } = filter
+    const { mesh, crossedFibers } = filter
     /**电场可能为空，那些模型就不需要追踪 */
     if (mesh) {
       fiberList.forEach((fiber, index) => {
@@ -31,7 +31,7 @@ const tracing = (filters, fiberList) => {
         for (let i = 0; i < fiber.length; i++) {
           const point = fiber[i]
           if (intersectSuccess(raycaster, mesh, point)) {
-            crossedFiberIndexes.push(index)
+            crossedFibers.push(index)
             break
           }
         }

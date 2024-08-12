@@ -7,6 +7,7 @@ import { initLead } from '@/modules/lead'
 import { initFiber } from '@/modules/fiber'
 import { initAddons } from '@/modules/addons'
 import { initFilters } from '@/modules/filter'
+import { fiberTracing } from './fiberTrace'
 
 import { useSceneStoreHook } from '@/store/useSceneStore'
 import { usePatientStoreHook } from '@/store/usePatientStore'
@@ -84,6 +85,9 @@ const handleAdmin = () => {
     // })
     .then(() => {
       return initFilters()
+    })
+    .then(() => {
+      return fiberTracing()
     })
     .then(() => {
       setLoadingProps('loadingText', '加载成功')

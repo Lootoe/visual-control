@@ -1,5 +1,5 @@
 <script setup>
-const ui_bg = import.meta.env.VITE_UI_BG
+const uiBg = import.meta.env.VITE_UI_BG
 const activedToolIndex = ref(-1)
 const changeToolItem = (toolIndex) => {
   if (toolIndex === activedToolIndex.value) {
@@ -13,23 +13,30 @@ const changeToolItem = (toolIndex) => {
 <template>
   <div class="page-wrapper">
     <three-scene></three-scene>
-    <change-scene-side :backgroundColor="ui_bg"></change-scene-side>
-    <nucleus-panel v-show="activedToolIndex === 0" :backgroundColor="ui_bg"></nucleus-panel>
-    <visible-panel v-show="activedToolIndex === 1" :backgroundColor="ui_bg"></visible-panel>
+    <change-scene-side :backgroundColor="uiBg"></change-scene-side>
+    <nucleus-panel v-show="activedToolIndex === 0" :backgroundColor="uiBg"></nucleus-panel>
+    <visible-panel v-show="activedToolIndex === 1" :backgroundColor="uiBg"></visible-panel>
+    <filter-panel v-show="activedToolIndex === 2" :backgroundColor="uiBg"></filter-panel>
     <div class="tool-box">
       <div
         class="tool-item"
         @click="changeToolItem(0)"
-        :style="{ backgroundColor: activedToolIndex === 0 ? 'rgba(122, 192, 199, 1)' : ui_bg }"
+        :style="{ backgroundColor: activedToolIndex === 0 ? 'rgba(122, 192, 199, 1)' : uiBg }"
       >
         <img src="@/assets/img/palette.png" alt="" />
       </div>
       <div
         class="tool-item"
         @click="changeToolItem(1)"
-        :style="{ backgroundColor: activedToolIndex === 1 ? 'rgba(122, 192, 199, 1)' : ui_bg }"
+        :style="{ backgroundColor: activedToolIndex === 1 ? 'rgba(122, 192, 199, 1)' : uiBg }"
       >
         <img src="@/assets/img/layers.png" alt="" />
+      </div>
+    </div>
+    <div class="bottom-box">
+      <div class="fiber-btn" @click="changeToolItem(2)" :backgroundColor="uiBg">
+        <img src="@/assets/img/arrow.png" :class="{ down: activedToolIndex !== 2 }" />
+        <div class="btn__text">神经纤维</div>
       </div>
     </div>
   </div>
@@ -59,6 +66,41 @@ const changeToolItem = (toolIndex) => {
   top: 1rem;
   left: 0.24rem;
 }
+.filter-panel {
+  position: absolute;
+  z-index: 11;
+  bottom: 1rem;
+  left: 0.24rem;
+}
+.bottom-box {
+  position: absolute;
+  left: 0.24rem;
+  bottom: 0.24rem;
+  .fiber-btn {
+    font-size: 0.16rem;
+    height: 0.52rem;
+    padding: 0.2rem;
+    border-radius: 0.04rem;
+    color: rgba(113, 176, 184, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(51, 61, 80, 1);
+    border: 0.01rem solid rgba(113, 176, 184, 1);
+    cursor: pointer;
+    user-select: none;
+    margin-right: 0.16rem;
+    box-sizing: border-box;
+    img {
+      width: 0.18rem;
+      margin-right: 0.12rem;
+      &.down {
+        transform: rotateX(180deg) !important;
+      }
+    }
+  }
+}
+
 .tool-box {
   position: absolute;
   z-index: 10;

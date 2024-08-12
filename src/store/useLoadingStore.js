@@ -11,6 +11,7 @@ const useLoadingStore = defineStore('loadingStore', () => {
       loading.value = value
     } else if (key === 'loadingText') {
       loadingText.value = value
+      console.log('loadingText.value', loadingText.value)
     } else if (key === 'opacity') {
       opacity.value = value
     }

@@ -61,7 +61,7 @@ const initNucleusFilter = async (nucleusAssets, filterAssets) => {
         // 根据需求给定的顺序排列
         nucleusFilter.sort((a, b) => a.orderIndex - b.orderIndex)
         nucleusFilter.forEach((v) => {
-          v.crossedFiberIndexes = []
+          v.crossedFibers = []
         })
         resolve(nucleusFilter)
       })
@@ -126,7 +126,7 @@ const initChipFilter = async (filterAssets) => {
         results.sort((a, b) => a.index - b.index)
         const chipFilter = results
         chipFilter.forEach((v) => {
-          v.crossedFiberIndexes = []
+          v.crossedFibers = []
         })
         resolve(chipFilter)
       })
