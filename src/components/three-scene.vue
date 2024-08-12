@@ -1,5 +1,5 @@
 <script setup>
-import { init3DAssets } from '@/interface'
+import { init3DAssets } from '@//business/init3DAssets'
 import { brainSyncRotate } from '@/business/brainSyncRotate'
 import { displayClickedNucleusName } from '@/business/displayClickedNucleusName'
 import { adjustCameraPosition } from '@/business/adjustCameraPosition'
@@ -12,7 +12,7 @@ defineOptions({
 
 onMounted(() => {
   init3DAssets()
-  brainSyncRotate()
+  // brainSyncRotate()
   displayClickedNucleusName()
   adjustCameraPosition()
 })

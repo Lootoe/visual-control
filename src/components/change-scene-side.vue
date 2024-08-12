@@ -1,5 +1,5 @@
 <script setup>
-defineOptions({ name: 'change-side' })
+defineOptions({ name: 'change-scene-side' })
 defineProps({
   backgroundColor: {
     type: String,
