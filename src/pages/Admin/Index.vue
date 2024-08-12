@@ -1,5 +1,5 @@
 <script setup>
-const ui_bg = 'import.meta.env.VITE_UI_BG'
+const ui_bg = import.meta.env.VITE_UI_BG
 const activedToolIndex = ref(-1)
 const changeToolItem = (toolIndex) => {
   if (toolIndex === activedToolIndex.value) {

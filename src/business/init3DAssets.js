@@ -45,13 +45,14 @@ const handleAdmin = () => {
   // 从URL获取IPGSN
   const route = useRoute()
   const queryParams = route.query
+  const sceneBg = import.meta.env.VITE_SCENE_BG
   setLoadingProps('loading', true)
   setLoadingProps('loadingText', '正在初始化场景')
   initScene({
     mainSceneSelector: '.main-scene',
-    mainSceneConfig: {},
+    mainSceneConfig: { backgroundColor: sceneBg },
     assistSceneSelector: '.assist-scene',
-    assistSceneConfig: {},
+    assistSceneConfig: { backgroundColor: sceneBg },
   })
     .then(() => {
       setLoadingProps('loadingText', '正在下载患者影像')
