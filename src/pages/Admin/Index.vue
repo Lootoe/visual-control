@@ -4,6 +4,7 @@
   <div class="page-wrapper">
     <three-scene></three-scene>
     <change-scene-side></change-scene-side>
+    <visible-panel></visible-panel>
   </div>
 </template>
 
@@ -18,5 +19,11 @@
   z-index: 10;
   bottom: 0.24rem;
   right: 0.24rem;
+}
+.visible-manager {
+  position: absolute;
+  z-index: 10;
+  top: 0.24rem;
+  left: 0.24rem;
 }
 </style>

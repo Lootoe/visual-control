@@ -52,7 +52,10 @@ export const renderAxesHelper = (AxesHelperLength = 100) => {
   const axesZ = createSpriteLabel('Z', '#6666ff', 0, 0, AxesHelperLength + 2)
   const group = new THREE.Group()
   group.add(...[axes, axesX, axesY, axesZ])
-  cacheAddons('axesHelper', group)
+  cacheAddons('axesHelper', {
+    mesh: group,
+    visible: true,
+  })
   addMesh(group)
   const mainSceneManager = getMainSceneManager()
   mainSceneManager.controls.addEventListener('change', () => {
@@ -64,7 +67,7 @@ export const renderAxesHelper = (AxesHelperLength = 100) => {
 export const updateTextDisplay = (camera, displaytDistance = 50) => {
   const position = camera.position
   const axesGroup = getAddons().axesHelper
-  const [_, axesX, axesY, axesZ] = axesGroup.children
+  const [_, axesX, axesY, axesZ] = axesGroup.mesh.children
   // 通过计算相机距离文字的距离，来控制文字显示隐藏
   const distanceX = position.distanceTo(axesX.position)
   const distanceY = position.distanceTo(axesY.position)

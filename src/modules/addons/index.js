@@ -22,7 +22,14 @@ export const initAddons = () => {
 
 export const changeAddonsVisible = (key, flag) => {
   const addons = getAddons()
-  const target = addons[key]
+  let target = null
+  if (key === 'axesHelper') {
+    target = addons['axesHelper']
+  }
+  if (key === 'cortex') {
+    target = addons['cortex']
+  }
+  console.log('target', target)
   target.mesh.visible = flag
   target.visible = flag
 }
