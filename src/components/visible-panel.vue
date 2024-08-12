@@ -68,7 +68,7 @@ const changeVisibleFn = (item) => {
 
 <style scoped lang="less">
 .visible-manager {
-  font-size: 0.14rem;
+  font-size: 0.16rem;
   color: rgba(255, 255, 255, 0.85);
   user-select: none;
   border-radius: 0.06rem;
@@ -80,6 +80,7 @@ const changeVisibleFn = (item) => {
     align-items: center;
     justify-content: space-between;
     padding: 0.2rem;
+    font-size: 0.2rem;
     &__right {
       display: flex;
       align-items: center;
@@ -97,7 +98,7 @@ const changeVisibleFn = (item) => {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.08rem 0.2rem;
+      padding: 0.12rem 0.2rem;
       border-top: 0.01rem solid rgba(49, 55, 70, 1);
       &__left {
         display: flex;
@@ -106,7 +107,7 @@ const changeVisibleFn = (item) => {
         .item-icon {
           width: 0.28rem;
           height: 0.28rem;
-          margin-right: 0.12rem;
+          margin-right: 0.2rem;
         }
       }
       &__right {
@@ -118,8 +119,8 @@ const changeVisibleFn = (item) => {
           justify-content: center;
           align-items: center;
           img {
-            width: 0.24rem;
-            height: 0.24rem;
+            width: 0.28rem;
+            height: 0.28rem;
           }
         }
       }
