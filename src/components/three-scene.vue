@@ -12,7 +12,7 @@ defineOptions({
 
 onMounted(() => {
   init3DAssets()
-  // brainSyncRotate()
+  brainSyncRotate()
   displayClickedNucleusName()
   adjustCameraPosition()
 })
