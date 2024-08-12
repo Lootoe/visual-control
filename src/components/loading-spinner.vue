@@ -1,6 +1,6 @@
 <script setup>
 defineOptions({
-  name: 'spinner',
+  name: 'loading-spinner',
 })
 </script>
 

@@ -7,7 +7,7 @@ import { adjustCameraPosition } from '@/business/adjustCameraPosition'
 import { destoryScene } from '@/modules/scene'
 
 defineOptions({
-  name: 'ThreeScene',
+  name: 'three-scene',
 })
 
 onMounted(() => {

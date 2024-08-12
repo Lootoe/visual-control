@@ -1,6 +1,6 @@
 <script setup>
 defineOptions({
-  name: 'visibleManager',
+  name: 'visible-panel',
 })
 
 defineProps({
