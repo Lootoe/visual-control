@@ -12,7 +12,7 @@ defineOptions({
 
 onMounted(() => {
   init3DAssets()
-  brainSyncRotate()
+  // brainSyncRotate()
   displayClickedNucleusName()
   adjustCameraPosition()
 })
@@ -30,7 +30,7 @@ onUnmounted(() => {
 
 <style scoped lang="less">
 .scene-wrapper {
-  position: relative;
+  position: fixed;
   width: 100vw;
   height: 100vh;
   user-select: none;
