@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { addMeshes, removeMeshes } from '@/modules/scene'
 import { useFilterStoreHook } from '@/store/useFilterStore'
 import { useFiberStoreHook } from '@/store/useFiberStore'
-import { renderFiberLine } from '@/modules/fiber'
+import { renderFiber } from '@/modules/fiber'
 
 const { cacheDisplayFiberList, getFiberList, getDisplayFiberList } = useFiberStoreHook()
 const { getChipFilter, getNucleusFilter } = useFilterStoreHook()
@@ -50,7 +50,7 @@ const tracing = (filters, fiberList) => {
   })
 }
 
-export const fiberTracing = () => {
+export const tracingFiber = () => {
   const fiberList = getFiberList()
   const chipFilter = getChipFilter().value
   const nucleusFilter = getNucleusFilter().value
@@ -77,7 +77,7 @@ export const renderTracedFiber = (fiberIndexes) => {
   // 使用坐标构建纤维素
   const fiberMeshes = []
   needToShowFibers.forEach((vectors) => {
-    const fiberMesh = renderFiberLine(vectors)
+    const fiberMesh = renderFiber(vectors)
     fiberMeshes.push(fiberMesh)
   })
   addMeshes(fiberMeshes)

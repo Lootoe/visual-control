@@ -9,11 +9,11 @@ defineProps({
     default: 'rgba(51, 61, 80, 1)',
   },
 })
+
 import { useLoadingStoreHook } from '@/store/useLoadingStore'
 import { useFilterStoreHook } from '@/store/useFilterStore'
-import { compileFiberContext } from '@/business/compileFiberContext'
 import { useFiberStoreHook } from '@/store/useFiberStore'
-import { clearFibers, renderTracedFiber } from '@/business/fiberTrace.js'
+import { clearFibers, renderTracedFiber, compileTracingContext } from '@/modules/filter'
 
 const { getChipFilter, getNucleusFilter } = useFilterStoreHook()
 const { getFiberList } = useFiberStoreHook()
@@ -101,7 +101,7 @@ const traverse = (type) => {
     if (source === '') return
     showReset.value = true
     const fiberList = getFiberList()
-    const indexes = compileFiberContext(source, filters, fiberList)
+    const indexes = compileTracingContext(source, filters, fiberList)
     // 给数组去重，防止重复添加
     const fiberSet = new Set(indexes)
     const showLen = fiberSet.size

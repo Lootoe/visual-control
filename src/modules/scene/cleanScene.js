@@ -61,6 +61,7 @@ function releaseRenderer(renderer) {
 }
 
 export const cleanScene = (renderer, scene) => {
+  if (!renderer || !scene) return
   // 清除场景中的所有对象
   clearScene(scene)
 

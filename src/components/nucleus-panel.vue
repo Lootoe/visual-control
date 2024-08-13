@@ -11,7 +11,7 @@ defineProps({
 
 import { useNucleusStoreHook } from '@/store/useNucleusStore'
 import { nucleusSideEnum } from '@/enum/nucleusEnum'
-import { changeNucleusVisible, changeNucleusColor } from '@/business/manageNucleus.js'
+import { changeNucleusVisible, changeNucleusColor } from '@/modules/nucleus'
 
 const { getNucleusList } = useNucleusStoreHook()
 const localNucleusList = ref([])

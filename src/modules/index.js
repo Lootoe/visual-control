@@ -5,9 +5,8 @@ import { initMatrix } from '@/modules/matrix'
 import { initNucleus } from '@/modules/nucleus'
 import { initLead } from '@/modules/lead'
 import { initFiber } from '@/modules/fiber'
-import { initAddons } from '@/modules/addons'
-import { initFilters } from '@/modules/filter'
-import { fiberTracing } from './fiberTrace'
+import { initAxesHelper, initCortex, initBrain } from '@/modules/addons'
+import { initFilter } from '@/modules/filter'
 
 import { useSceneStoreHook } from '@/store/useSceneStore'
 import { usePatientStoreHook } from '@/store/usePatientStore'
@@ -40,7 +39,7 @@ const logData = () => {
   console.log('【NucleusFilter】', getNucleusFilter().value)
 }
 
-export const init3DAssets = () => {
+export default () => {
   const SRENV = globalThis.SRENV
   if (SRENV.IS_PLATFORM_ADMIN) {
     handleAdmin()
@@ -83,12 +82,12 @@ const handleAdmin = () => {
     //   setLoadingProps('loadingText', '正在处理皮层')
     //   return initAddons()
     // })
-    .then(() => {
-      return initFilters()
-    })
-    .then(() => {
-      return fiberTracing()
-    })
+    // .then(() => {
+    //   return initFilters()
+    // })
+    // .then(() => {
+    //   return fiberTracing()
+    // })
     .then(() => {
       setLoadingProps('loadingText', '加载成功')
       setLoadingProps('loading', false)

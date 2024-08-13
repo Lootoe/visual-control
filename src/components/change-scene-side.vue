@@ -7,7 +7,7 @@ defineProps({
   },
 })
 
-import { SCENE_FACES, changeSceneSide } from '@/business/changeSceneSide.js'
+import { SCENE_FACES, changeSceneSide } from '@/modules/scene'
 
 const sideItems = ref([])
 

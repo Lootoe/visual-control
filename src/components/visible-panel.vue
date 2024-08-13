@@ -11,7 +11,7 @@ defineProps({
 })
 
 import { loadImg } from '@/utils/tools.js'
-import { changeVisible } from '@/business/manageVisible.js'
+import { changeVisible } from '@/modules/addons'
 
 const controlList = ref([
   {

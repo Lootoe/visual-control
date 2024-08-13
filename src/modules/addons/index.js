@@ -1,55 +1,17 @@
-import { renderCortex } from './renderCortex'
-import { renderBrain } from './renderBrain'
-import { renderAxesHelper } from './renderAxesHelper'
-import { usePatientStoreHook } from '@/store/usePatientStore'
-import { useAddonStoreHook } from '@/store/useAddonStore'
-import { addMesh, addMeshInAssist } from '@/modules/scene'
+import { initAxesHelper, initCortex, __initBrain } from './init'
+import { changeVisible } from './changeVisible'
+import { brainSyncRotate } from './brainSyncRotate'
 
-const { getPatientAssets } = usePatientStoreHook()
-const { cacheAddons, getAddons } = useAddonStoreHook()
-
-export const initAddons = () => {
-  return new Promise((resolve, reject) => {
-    initCortex()
-      .then(() => {
-        renderAxesHelper()
-        return initBrain()
-      })
-      .then(resolve)
-      .catch(reject)
-  })
-}
-
+// brainSyncRotate依赖于initBrain，所以他俩可以合一块
 const initBrain = () => {
   return new Promise((resolve, reject) => {
-    const brainAsset = getPatientAssets().head
-    renderBrain(brainAsset.downloadUrl)
-      .then((brainMesh) => {
-        addMeshInAssist(brainMesh)
-        // 默认不显示
-        cacheAddons('brain', {
-          mesh: brainMesh,
-          visible: true,
-        })
+    __initBrain()
+      .then(() => {
+        brainSyncRotate()
         resolve()
       })
       .catch(reject)
   })
 }
 
-const initCortex = () => {
-  return new Promise((resolve, reject) => {
-    const brainAsset = getPatientAssets().head
-    renderCortex(brainAsset.downloadUrl)
-      .then((cortexMesh) => {
-        addMesh(cortexMesh)
-        // 默认不显示
-        cacheAddons('cortex', {
-          mesh: cortexMesh,
-          visible: true,
-        })
-        resolve()
-      })
-      .catch(reject)
-  })
-}
+export { initAxesHelper, initCortex, initBrain, changeVisible }

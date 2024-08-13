@@ -1,23 +1,12 @@
 <script setup>
-import { init3DAssets } from '@//business/init3DAssets'
-import { brainSyncRotate } from '@/business/brainSyncRotate'
-import { displayClickedNucleusName } from '@/business/displayClickedNucleusName'
-import { adjustCameraPosition } from '@/business/adjustCameraPosition'
-
-import { destoryScene } from '@/modules/scene'
+import initModules from '@/modules'
 
 defineOptions({
   name: 'three-scene',
 })
 
 onMounted(() => {
-  init3DAssets()
-  // brainSyncRotate()
-  displayClickedNucleusName()
-  adjustCameraPosition()
-})
-onUnmounted(() => {
-  destoryScene
+  initModules()
 })
 </script>
 

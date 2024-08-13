@@ -95,7 +95,7 @@ const createIdHandle = () => {
   }
 }
 
-export const compileFiberContext = (source, models, fiberList) => {
+export const compileTracingContext = (source, models, fiberList) => {
   const info = {
     dataMap: {},
     operateStr: source,
