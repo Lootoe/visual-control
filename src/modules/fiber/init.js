@@ -2,7 +2,7 @@ import { useFiberStoreHook } from '@/store/useFiberStore'
 import { usePatientStoreHook } from '@/store/usePatientStore'
 import { loadFiber } from './loadFiber'
 
-const { cacheFiberList } = useFiberStoreHook()
+const fiberStore = useFiberStoreHook()
 const { getPatientAssets } = usePatientStoreHook()
 
 export const initFiber = () => {
@@ -16,7 +16,10 @@ export const initFiber = () => {
         eachFileFiber.forEach((arr) => {
           fiberList.push(...arr)
         })
-        cacheFiberList(fiberList)
+        // 还需要想办法下次渲染时，删除上一次内容
+        fiberStore.$patch((state) => {
+          state.fiberList = fiberList
+        })
         resolve()
       })
       .catch(reject)

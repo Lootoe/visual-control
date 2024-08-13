@@ -2,23 +2,11 @@ import { defineStore } from 'pinia'
 import { store } from '@/store'
 
 const useFiberStore = defineStore('fiberStore', () => {
-  let fiberList = []
+  let fiberList = shallowRef([])
   // 缓存当前的正在显示的模型
-  let displayFiber = []
+  let displayingFiberList = shallowRef([])
 
-  const cacheFiberList = (data) => {
-    fiberList = data
-  }
-
-  const cacheDisplayFiberList = (fiberMeshes) => {
-    displayFiber = fiberMeshes
-  }
-
-  const getFiberList = () => fiberList
-
-  const getDisplayFiberList = () => displayFiber
-
-  return { cacheFiberList, cacheDisplayFiberList, getFiberList, getDisplayFiberList }
+  return { fiberList, displayingFiberList }
 })
 
 export const useFiberStoreHook = () => {

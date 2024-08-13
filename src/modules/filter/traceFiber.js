@@ -4,7 +4,7 @@ import { useFilterStoreHook } from '@/store/useFilterStore'
 import { useFiberStoreHook } from '@/store/useFiberStore'
 import { renderFiber } from '@/modules/fiber'
 
-const { cacheDisplayFiberList, getFiberList, getDisplayFiberList } = useFiberStoreHook()
+const fiberStore = useFiberStoreHook()
 const { getChipFilter, getNucleusFilter } = useFilterStoreHook()
 
 const tracing = (filters, fiberList) => {
@@ -51,7 +51,7 @@ const tracing = (filters, fiberList) => {
 }
 
 export const tracingFiber = () => {
-  const fiberList = getFiberList()
+  const fiberList = fiberStore.fiberList
   const chipFilter = getChipFilter().value
   const nucleusFilter = getNucleusFilter().value
   console.time('神经纤维追踪计时')
@@ -61,14 +61,16 @@ export const tracingFiber = () => {
 }
 
 export const clearFibers = () => {
-  const displayFiberList = getDisplayFiberList()
+  const displayFiberList = fiberStore.displayingFiberList
   removeMeshes(displayFiberList)
-  cacheDisplayFiberList([])
+  fiberStore.$patch((state) => {
+    state.displayingFiberList = []
+  })
 }
 
 export const renderTracedFiber = (fiberIndexes) => {
   clearFibers()
-  const fiberList = getFiberList()
+  const fiberList = fiberStore.fiberList
   const needToShowFibers = []
   // 先根据索引拿到纤维素的坐标
   fiberIndexes.forEach((index) => {
@@ -81,6 +83,7 @@ export const renderTracedFiber = (fiberIndexes) => {
     fiberMeshes.push(fiberMesh)
   })
   addMeshes(fiberMeshes)
-  // 还需要想办法下次渲染时，删除上一次内容
-  cacheDisplayFiberList(fiberMeshes)
+  fiberStore.$patch((state) => {
+    state.displayingFiberList = fiberMeshes
+  })
 }

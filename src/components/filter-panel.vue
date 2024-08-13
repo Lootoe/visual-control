@@ -21,7 +21,7 @@ import {
 } from '@/modules/filter'
 
 const { getChipFilter, getNucleusFilter } = useFilterStoreHook()
-const { getFiberList } = useFiberStoreHook()
+const fiberStore = useFiberStoreHook()
 const { setLoadingProps } = useLoadingStoreHook()
 
 const localNucleusFilter = ref([])
@@ -117,7 +117,7 @@ const tracing = (type) => {
     }
     if (source === '') return
     showReset.value = true
-    const fiberList = getFiberList()
+    const fiberList = fiberStore.fiberList
     const indexes = compileTracingContext(source, filters, fiberList)
     // 给数组去重，防止重复添加
     const fiberSet = new Set(indexes)
