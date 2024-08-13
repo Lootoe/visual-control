@@ -6,10 +6,10 @@ import { useAddonStoreHook } from '@/store/useAddonStore'
 import { useLeadStoreHook } from '@/store/useLeadStore'
 
 const { addons } = useAddonStoreHook()
-const { getLeadList } = useLeadStoreHook()
+const leadStore = useLeadStoreHook()
 
 const changeLeadVisible = (flag = false) => {
-  const leadList = getLeadList().value
+  const leadList = leadStore.leadList
   // 电极柱
   Object.values(leadList).forEach((lead) => {
     lead.mesh.visible = flag

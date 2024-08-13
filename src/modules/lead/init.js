@@ -5,7 +5,7 @@ import { addMeshes } from '@/modules/scene'
 import { leadEnum } from '@/enum/leadEnum'
 import { renderLead, renderChips } from './renderLead'
 const { getPatientInfo, getPatientAssets, getPatientProgram } = usePatientStoreHook()
-const { cacheLeadList } = useLeadStoreHook()
+const leadStore = useLeadStoreHook()
 
 export const initLead = () => {
   // 将电极配置和读取的坐标点结合
@@ -30,7 +30,9 @@ export const initLead = () => {
           // program[0]，是因为一根电极可能有多源的情况
           leadList[position].chips = program[0].nodes
         })
-        cacheLeadList(leadList)
+        leadStore.$patch((state) => {
+          state.leadList = leadList
+        })
         const leadMeshes = Object.values(leadList).map((lead) => {
           const mesh = renderLead(lead)
           lead.mesh = mesh
