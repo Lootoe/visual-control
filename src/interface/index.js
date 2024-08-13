@@ -28,9 +28,9 @@ const filterStore = useFilterStoreHook()
 
 const logData = () => {
   console.log('【MainSceneManager】', sceneStore.mainSceneManager)
-  console.log('【PatientInfo】', patientStore.$state.patientInfo)
-  console.log('【PatientProgram】', patientStore.$state.patientProgram)
-  console.log('【PatientAssets】', patientStore.$state.patientAssets)
+  console.log('【PatientInfo】', patientStore.patientInfo)
+  console.log('【PatientProgram】', patientStore.patientProgram)
+  console.log('【PatientAssets】', patientStore.patientAssets)
   console.log('【NucleusList】', nucleusStore.nucleusList)
   console.log('【LeadList】', leadStore.leadList)
   console.log('【FiberList】', fiberStore.fiberList.length)

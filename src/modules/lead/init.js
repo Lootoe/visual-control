@@ -11,9 +11,9 @@ const leadStore = useLeadStoreHook()
 export const __initLead = () => {
   // 将电极配置和读取的坐标点结合
   return new Promise((resolve, reject) => {
-    const leadAsset = patientStore.$state.patientAssets.lead
-    const leadType = patientStore.$state.patientInfo.leads
-    const leadProgram = patientStore.$state.patientProgram
+    const leadAsset = patientStore.patientAssets.lead
+    const leadType = patientStore.patientInfo.leads
+    const leadProgram = patientStore.patientProgram
     const leadList = {}
     loadLeadTxt(leadAsset.downloadUrl)
       .then((leadPoints) => {

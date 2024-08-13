@@ -18,6 +18,7 @@ const patientStore = usePatientStoreHook()
  */
 export const updateProgramByNode = (params) => {
   if (!params) return null
+  // !采用$state访问，是为了不让其成为响应式，而导致无法拷贝
   const currentProgram = JSON.parse(JSON.stringify(patientStore.$state.patientProgram))
   const { position, index, node } = params
   // 正常情况一个program

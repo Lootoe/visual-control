@@ -14,7 +14,7 @@ export const initAxesHelper = () => {
 
 export const __initBrain = () => {
   return new Promise((resolve, reject) => {
-    const brainAsset = patientStore.$state.patientAssets.head
+    const brainAsset = patientStore.patientAssets.head
     renderBrain(brainAsset.downloadUrl)
       .then((brainMesh) => {
         addMeshInAssist(brainMesh)
@@ -30,7 +30,7 @@ export const __initBrain = () => {
 
 export const initCortex = () => {
   return new Promise((resolve, reject) => {
-    const brainAsset = patientStore.$state.patientAssets.head
+    const brainAsset = patientStore.patientAssets.head
     renderCortex(brainAsset.downloadUrl)
       .then((cortexMesh) => {
         addMesh(cortexMesh)
