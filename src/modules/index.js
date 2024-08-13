@@ -19,7 +19,7 @@ import { useFilterStoreHook } from '@/store/useFilterStore'
 
 const { getMainSceneManager } = useSceneStoreHook()
 const { getPatientInfo, getPatientProgram, getPatientAssets } = usePatientStoreHook()
-const { getNucleusList } = useNucleusStoreHook()
+const nucleusStore = useNucleusStoreHook()
 const leadStore = useLeadStoreHook()
 const fiberStore = useFiberStoreHook()
 const addonStore = useAddonStoreHook()
@@ -31,7 +31,7 @@ const logData = () => {
   console.log('【PatientInfo】', getPatientInfo())
   console.log('【PatientProgram】', getPatientProgram())
   console.log('【PatientAssets】', getPatientAssets())
-  console.log('【NucleusList】', getNucleusList().value)
+  console.log('【NucleusList】', nucleusStore.nucleusList)
   console.log('【LeadList】', leadStore.leadList)
   console.log('【FiberList】', fiberStore.fiberList.length)
   console.log('【Addons】', addonStore.addons)

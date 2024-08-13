@@ -5,20 +5,20 @@
  */
 import * as THREE from 'three'
 import { useNucleusStoreHook } from '@/store/useNucleusStore'
-const { getNucleusList } = useNucleusStoreHook()
+const nucleusStore = useNucleusStoreHook()
 import { splitRGBA } from '@/utils/tools'
 
 export const changeNucleusVisible = (name, flag) => {
-  const nucleusList = getNucleusList()
-  const target = nucleusList.value.find((v) => v.en === name)
+  const nucleusList = nucleusStore.nucleusList
+  const target = nucleusList.find((v) => v.en === name)
   if (target) {
     target.mesh.visible = flag
   }
 }
 
 export const changeNucleusColor = (name, color) => {
-  const nucleusList = getNucleusList()
-  const target = nucleusList.value.find((v) => v.en === name)
+  const nucleusList = nucleusStore.nucleusList
+  const target = nucleusList.find((v) => v.en === name)
   if (target) {
     const { pure, alpha } = splitRGBA(color)
     target.mesh.material.color = new THREE.Color(pure)

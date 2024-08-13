@@ -6,7 +6,7 @@ import { addMeshes } from '@/modules/scene'
 import { splitRGBA } from '@/utils/tools'
 
 const { getPatientInfo, getPatientAssets } = usePatientStoreHook()
-const { cacheNucleusList } = useNucleusStoreHook()
+const nucleusStore = useNucleusStoreHook()
 
 const getNucleusNameByFile = (fileName) => {
   // http://localhost:3000/patientData/46/nucleus/Right-NAc.ply
@@ -68,7 +68,7 @@ export const __initNucleus = () => {
             }
           })
         })
-        cacheNucleusList(sortedNucleusList)
+        nucleusStore.nucleusList = sortedNucleusList
         resolve()
       })
       .catch(reject)

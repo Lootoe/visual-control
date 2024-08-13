@@ -13,11 +13,11 @@ import { useNucleusStoreHook } from '@/store/useNucleusStore'
 import { nucleusSideEnum } from '@/enum/nucleusEnum'
 import { changeNucleusVisible, changeNucleusColor } from '@/modules/nucleus'
 
-const { getNucleusList } = useNucleusStoreHook()
+const nucleusStore = useNucleusStoreHook()
 const localNucleusList = ref([])
 
 watch(
-  () => getNucleusList().value,
+  () => nucleusStore.nucleusList,
   (newval) => {
     const table = {}
     newval.forEach((item) => {
