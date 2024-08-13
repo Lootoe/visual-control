@@ -2,7 +2,7 @@
  * *辅视图的大脑模型与主视图同步旋转
  */
 import { useSceneStoreHook } from '@/store/useSceneStore'
-const { getMainSceneManager, getAssistSceneManager } = useSceneStoreHook()
+const sceneStore = useSceneStoreHook()
 
 const changeHeadSide = (mainSceneManager, assistSceneManager) => {
   const mainCamera = mainSceneManager.camera
@@ -22,8 +22,8 @@ const changeHeadSide = (mainSceneManager, assistSceneManager) => {
 
 /** 同步主视图和辅视图的旋转 */
 export const brainSyncRotate = () => {
-  const mainSceneManager = getMainSceneManager()
-  const assistSceneManager = getAssistSceneManager()
+  const mainSceneManager = sceneStore.mainSceneManager
+  const assistSceneManager = sceneStore.assistSceneManager
   mainSceneManager.controls.addEventListener('change', () => {
     changeHeadSide(mainSceneManager, assistSceneManager)
   })

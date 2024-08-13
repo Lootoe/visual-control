@@ -3,7 +3,7 @@
  */
 import * as THREE from 'three'
 import { useSceneStoreHook } from '@/store/useSceneStore'
-const { getMainSceneManager } = useSceneStoreHook()
+const sceneStore = useSceneStoreHook()
 
 export const adjustCameraPosition = () => {
   const matrixWorld = new THREE.Matrix4()
@@ -27,7 +27,7 @@ export const adjustCameraPosition = () => {
     1
   )
   const invertMatrixWorld = matrixWorld.invert()
-  const camera = getMainSceneManager().camera
+  const camera = sceneStore.mainSceneManager.camera
   camera.applyMatrix4(invertMatrixWorld)
   camera.position.set(33.69271610126761, 44.80819127024677, 113.88255170473744)
 }

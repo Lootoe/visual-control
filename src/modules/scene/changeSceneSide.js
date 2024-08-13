@@ -8,7 +8,7 @@
 
 import { loadImg } from '@/utils/tools'
 import { useSceneStoreHook } from '@/store/useSceneStore'
-const { getMainSceneManager } = useSceneStoreHook()
+const sceneStore = useSceneStoreHook()
 
 export const SCENE_FACES = [
   {
@@ -74,7 +74,7 @@ export const SCENE_FACES = [
 ]
 
 export const changeSceneSide = (params) => {
-  const { camera, controls, config } = getMainSceneManager()
+  const { camera, controls, config } = sceneStore.mainSceneManager
   const { vector, rotation } = params
   camera.position.set(
     vector[0] * config.screenDistance,

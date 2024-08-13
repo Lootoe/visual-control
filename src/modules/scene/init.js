@@ -4,7 +4,7 @@ import { useSceneStoreHook } from '@/store/useSceneStore'
 import { cleanScene } from './cleanScene'
 import { createLight } from './light'
 
-const { getMainSceneManager, getAssistSceneManager } = useSceneStoreHook()
+const sceneStore = useSceneStoreHook()
 
 // 在场景初始化完成时，需要adjustCameraPosition到一个倾斜角度
 export const __initScene = (params) => {
@@ -24,40 +24,40 @@ export const destoryScene = () => {
 }
 
 export const destoryMainScene = () => {
-  const mainSceneManager = getMainSceneManager()
+  const mainSceneManager = sceneStore.mainSceneManager
   const renderer = mainSceneManager.renderer
   const scene = mainSceneManager.scene
   cleanScene(renderer, scene)
 }
 
 export const destoryAssistScene = () => {
-  const assistSceneManager = getAssistSceneManager()
+  const assistSceneManager = sceneStore.assistSceneManager
   const renderer = assistSceneManager.renderer
   const scene = assistSceneManager.scene
   cleanScene(renderer, scene)
 }
 
 export const addMesh = (mesh) => {
-  const mainSceneManager = getMainSceneManager()
+  const mainSceneManager = sceneStore.mainSceneManager
   mainSceneManager.scene.add(mesh)
 }
 
 export const removeMesh = (mesh) => {
-  const mainSceneManager = getMainSceneManager()
+  const mainSceneManager = sceneStore.mainSceneManager
   mainSceneManager.scene.remove(mesh)
 }
 
 export const addMeshes = (meshes) => {
-  const mainSceneManager = getMainSceneManager()
+  const mainSceneManager = sceneStore.mainSceneManager
   meshes.forEach((mesh) => mainSceneManager.scene.add(mesh))
 }
 
 export const removeMeshes = (meshes) => {
-  const mainSceneManager = getMainSceneManager()
+  const mainSceneManager = sceneStore.mainSceneManager
   meshes.forEach((mesh) => mainSceneManager.scene.remove(mesh))
 }
 
 export const addMeshInAssist = (mesh) => {
-  const assistSceneManager = getAssistSceneManager()
+  const assistSceneManager = sceneStore.assistSceneManager
   assistSceneManager.scene.add(mesh)
 }

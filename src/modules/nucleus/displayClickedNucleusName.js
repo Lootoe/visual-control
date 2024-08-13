@@ -8,7 +8,7 @@
 import { useMouseRaycast } from '@/hooks/useMouseRaycast'
 import { useSceneStoreHook } from '@/store/useSceneStore'
 
-const { getMainSceneManager } = useSceneStoreHook()
+const sceneStore = useSceneStoreHook()
 
 const createNameUI = (name, position) => {
   // 创建一个新的div元素
@@ -40,7 +40,7 @@ const removeNameUI = () => {
 }
 
 export const displayClickedNucleusName = () => {
-  const mainSceneManager = getMainSceneManager()
+  const mainSceneManager = sceneStore.mainSceneManager
   const camera = mainSceneManager.camera
   const detectTargets = mainSceneManager.scene.children
   const controls = mainSceneManager.controls

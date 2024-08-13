@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { useSceneStoreHook } from '@/store/useSceneStore'
 
-const { getSceneExtra } = useSceneStoreHook()
+const sceneStore = useSceneStoreHook()
 
 const loadFile = (url) => {
   return new Promise((resolve, reject) => {
@@ -20,7 +20,7 @@ const loadFile = (url) => {
 export const loadFiber = (url) => {
   return new Promise((resolve, reject) => {
     const fiberVectors = []
-    const sceneExtra = getSceneExtra()
+    const sceneExtra = sceneStore.extraData
     loadFile(url)
       .then((data) => {
         // 每一行表示一条线

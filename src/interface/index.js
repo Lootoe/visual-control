@@ -17,7 +17,7 @@ import { useAddonStoreHook } from '@/store/useAddonStore'
 import { useLoadingStoreHook } from '@/store/useLoadingStore'
 import { useFilterStoreHook } from '@/store/useFilterStore'
 
-const { getMainSceneManager } = useSceneStoreHook()
+const sceneStore = useSceneStoreHook()
 const patientStore = usePatientStoreHook()
 const nucleusStore = useNucleusStoreHook()
 const leadStore = useLeadStoreHook()
@@ -27,7 +27,7 @@ const loadingStore = useLoadingStoreHook()
 const filterStore = useFilterStoreHook()
 
 const logData = () => {
-  console.log('【MainSceneManager】', getMainSceneManager())
+  console.log('【MainSceneManager】', sceneStore.mainSceneManager)
   console.log('【PatientInfo】', patientStore.patientInfo)
   console.log('【PatientProgram】', patientStore.patientProgram)
   console.log('【PatientAssets】', patientStore.patientAssets)

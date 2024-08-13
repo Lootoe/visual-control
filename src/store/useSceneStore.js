@@ -2,38 +2,19 @@ import { defineStore } from 'pinia'
 import { store } from '@/store'
 
 const useSceneStore = defineStore('sceneStore', () => {
-  let mainSceneManager = {}
-  let assistSceneManager = {}
-  let extraData = {}
-
-  const cacheMainSceneObject = (key, obj) => {
-    mainSceneManager[key] = obj
-  }
-
-  const cacheAssistSceneObject = (key, obj) => {
-    assistSceneManager[key] = obj
-  }
-
-  const cacheExtraData = (key, obj) => {
-    extraData[key] = obj
-  }
-
-  const getSceneExtra = () => extraData
-
-  const getAssistSceneManager = () => assistSceneManager
-
-  const getMainSceneManager = () => mainSceneManager
+  let mainSceneManager = shallowRef({})
+  let assistSceneManager = shallowRef({})
+  let extraData = shallowRef({})
 
   return {
-    cacheMainSceneObject,
-    cacheExtraData,
-    cacheAssistSceneObject,
-    getSceneExtra,
-    getMainSceneManager,
-    getAssistSceneManager,
+    mainSceneManager,
+    assistSceneManager,
+    extraData,
   }
 })
 
 export const useSceneStoreHook = () => {
   return useSceneStore(store)
 }
+
+// sceneStore

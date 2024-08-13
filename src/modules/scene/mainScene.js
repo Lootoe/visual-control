@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { computeBoundsTree, disposeBoundsTree, acceleratedRaycast } from 'three-mesh-bvh'
 import { useSceneStoreHook } from '@/store/useSceneStore'
-const { cacheMainSceneObject } = useSceneStoreHook()
+const sceneStore = useSceneStoreHook()
 
 // 加速射线检测的重中之重
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree
@@ -24,13 +24,13 @@ export const initMainScene = (selector, config) => {
   // config
   let currentConfig = Object.assign(sceneConfig, config)
   const { backgroundColor, cameraFar, screenDistance, zoomLimit } = currentConfig
-  cacheMainSceneObject('config', currentConfig)
+  sceneStore.mainSceneManager.config = currentConfig
 
   // render
   const renderer = new THREE.WebGLRenderer({ logarithmicDepthBuffer: true, antialias: true })
   renderer.setPixelRatio(window.devicePixelRatio)
   const dom = document.querySelector(selector)
-  cacheMainSceneObject('dom', dom)
+  sceneStore.mainSceneManager.dom = dom
 
   const width = dom.clientWidth
   const height = dom.clientHeight
@@ -40,20 +40,20 @@ export const initMainScene = (selector, config) => {
   // scene
   const scene = new THREE.Scene()
   scene.background = new THREE.Color(backgroundColor)
-  cacheMainSceneObject('scene', scene)
+  sceneStore.mainSceneManager.scene = scene
 
   // camera
   const camera = new THREE.PerspectiveCamera(75, width / height, 1, cameraFar)
   camera.lookAt(new THREE.Vector3(0, 0, 0))
   camera.position.set(0, 0, screenDistance)
   scene.add(camera)
-  cacheMainSceneObject('camera', camera)
+  sceneStore.mainSceneManager.camera = camera
 
   // controls
   const controls = new OrbitControls(camera, renderer.domElement)
   controls.minDistance = zoomLimit[0]
   controls.maxDistance = zoomLimit[1]
-  cacheMainSceneObject('controls', controls)
+  sceneStore.mainSceneManager.controls = controls
 
   // ambientLight
   const ambientLight = new THREE.AmbientLight(0xffffff, 1)
@@ -64,7 +64,7 @@ export const initMainScene = (selector, config) => {
     const dom = document.querySelector(selector)
     const width = dom.clientWidth
     const height = dom.clientHeight
-    cacheMainSceneObject('dom', dom)
+    sceneStore.mainSceneManager.dom = dom
     if (camera) {
       camera.aspect = width / height
       camera.updateProjectionMatrix()

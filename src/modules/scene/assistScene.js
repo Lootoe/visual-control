@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { useSceneStoreHook } from '@/store/useSceneStore'
-const { cacheAssistSceneObject } = useSceneStoreHook()
+const sceneStore = useSceneStoreHook()
 
 const sceneConfig = {
   // 相机可视距离
@@ -13,8 +13,7 @@ export const initAssistScene = (selector, config) => {
   // config
   let currentConfig = Object.assign(sceneConfig, config)
   const { cameraFar, screenDistance } = currentConfig
-  cacheAssistSceneObject('config', currentConfig)
-
+  sceneStore.assistSceneManager.config = currentConfig
   // render
   const renderer = new THREE.WebGLRenderer({ alpha: true })
   renderer.setPixelRatio(window.devicePixelRatio)
@@ -27,14 +26,14 @@ export const initAssistScene = (selector, config) => {
 
   // scene
   const scene = new THREE.Scene()
-  cacheAssistSceneObject('scene', scene)
+  sceneStore.assistSceneManager.scene = scene
 
   // camera
   const camera = new THREE.PerspectiveCamera(75, width / height, 1, cameraFar)
   camera.lookAt(new THREE.Vector3(0, 0, 0))
   camera.position.set(0, 0, screenDistance)
   scene.add(camera)
-  cacheAssistSceneObject('camera', camera)
+  sceneStore.assistSceneManager.camera = camera
 
   // ambientLight
   const ambientLight = new THREE.AmbientLight(0xffffff, 1)

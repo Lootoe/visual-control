@@ -1,7 +1,7 @@
 import { PLYLoader } from 'three/examples/jsm/loaders/PLYLoader'
 import { useSceneStoreHook } from '@/store/useSceneStore'
 
-const { getSceneExtra } = useSceneStoreHook()
+const sceneStore = useSceneStoreHook()
 
 /**加载ply模型，主要是主视图的核团 */
 export const loadCortex = (url) => {
@@ -11,7 +11,7 @@ export const loadCortex = (url) => {
     loader.load(
       url,
       (geometry) => {
-        const sceneExtra = getSceneExtra()
+        const sceneExtra = sceneStore.extraData
         geometry.applyMatrix4(sceneExtra.MNI152_template)
         geometry.applyMatrix4(sceneExtra.ras2xyz)
         resolve(geometry)

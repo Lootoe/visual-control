@@ -4,7 +4,7 @@ import { useAddonStoreHook } from '@/store/useAddonStore'
 import { useSceneStoreHook } from '@/store/useSceneStore'
 
 const addonStore = useAddonStoreHook()
-const { getMainSceneManager } = useSceneStoreHook()
+const sceneStore = useSceneStoreHook()
 
 const createTextByCanvas = (
   width = 400,
@@ -57,7 +57,7 @@ export const renderAxesHelper = (AxesHelperLength = 100) => {
     visible: true,
   }
   addMesh(group)
-  const mainSceneManager = getMainSceneManager()
+  const mainSceneManager = sceneStore.mainSceneManager
   mainSceneManager.controls.addEventListener('change', () => {
     updateTextDisplay(mainSceneManager.camera)
   })
