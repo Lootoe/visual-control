@@ -24,7 +24,7 @@ const { getLeadList } = useLeadStoreHook()
 const fiberStore = useFiberStoreHook()
 const { addons } = useAddonStoreHook()
 const { setLoadingProps } = useLoadingStoreHook()
-const { getChipFilter, getNucleusFilter } = useFilterStoreHook()
+const filterStore = useFilterStoreHook()
 
 const logData = () => {
   console.log('【MainSceneManager】', getMainSceneManager())
@@ -35,8 +35,8 @@ const logData = () => {
   console.log('【LeadList】', getLeadList().value)
   console.log('【FiberList】', fiberStore.fiberList.length)
   console.log('【Addons】', addons)
-  console.log('【ChipFilter】', getChipFilter().value)
-  console.log('【NucleusFilter】', getNucleusFilter().value)
+  console.log('【ChipFilter】', filterStore.chipFilter)
+  console.log('【NucleusFilter】', filterStore.nucleusFilter)
 }
 
 export default () => {

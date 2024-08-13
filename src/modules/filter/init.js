@@ -5,7 +5,7 @@ import { useFilterStoreHook } from '@/store/useFilterStore'
 import { loadFilter } from './loadFilter'
 
 const { getPatientAssets, getPatientProgram } = usePatientStoreHook()
-const { cacheChipFilter, cacheNucleusFilter } = useFilterStoreHook()
+const filterStore = useFilterStoreHook()
 
 export const initFilter = () => {
   return new Promise((resolve, reject) => {
@@ -13,8 +13,10 @@ export const initFilter = () => {
     const nucleusAssets = getPatientAssets().nucleus
     Promise.all([initNucleusFilter(nucleusAssets, filterAssets), initChipFilter(filterAssets)])
       .then(([nucleusFilter, chipFilter]) => {
-        cacheNucleusFilter(nucleusFilter)
-        cacheChipFilter(chipFilter)
+        filterStore.$patch((state) => {
+          state.chipFilter = chipFilter
+          state.nucleusFilter = nucleusFilter
+        })
         resolve()
       })
       .catch(reject)

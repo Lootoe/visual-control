@@ -6,6 +6,7 @@ import { renderFiber } from '@/modules/fiber'
 
 const fiberStore = useFiberStoreHook()
 const { getChipFilter, getNucleusFilter } = useFilterStoreHook()
+const filterStore = useFilterStoreHook()
 
 const tracing = (filters, fiberList) => {
   const raycaster = new THREE.Raycaster()
@@ -52,8 +53,8 @@ const tracing = (filters, fiberList) => {
 
 export const tracingFiber = () => {
   const fiberList = fiberStore.fiberList
-  const chipFilter = getChipFilter().value
-  const nucleusFilter = getNucleusFilter().value
+  const chipFilter = filterStore.chipFilter
+  const nucleusFilter = filterStore.nucleusFilter
   console.time('神经纤维追踪计时')
   tracing(chipFilter, fiberList)
   tracing(nucleusFilter, fiberList)

@@ -20,7 +20,7 @@ import {
   tracingFiber,
 } from '@/modules/filter'
 
-const { getChipFilter, getNucleusFilter } = useFilterStoreHook()
+const filterStore = useFilterStoreHook()
 const fiberStore = useFiberStoreHook()
 const { setLoadingProps } = useLoadingStoreHook()
 
@@ -29,7 +29,7 @@ const localChipFilter = ref([])
 const filters = []
 
 watch(
-  () => getNucleusFilter().value,
+  () => filterStore.nucleusFilter,
   (newval) => {
     localNucleusFilter.value = newval.map((v) => {
       return {
@@ -43,7 +43,7 @@ watch(
 )
 
 watch(
-  () => getChipFilter().value,
+  () => filterStore.chipFilter,
   (newval) => {
     localChipFilter.value = newval.map((v) => {
       return {
