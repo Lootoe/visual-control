@@ -5,7 +5,7 @@
 import useAddonStoreHook from '@/store/useAddonStore'
 import useLeadStoreHook from '@/store/useLeadStore'
 
-const addnonStore = useAddonStoreHook()
+const addonStore = useAddonStoreHook()
 const leadStore = useLeadStoreHook()
 
 const changeLeadVisible = (flag = false) => {
@@ -25,10 +25,10 @@ const changeLeadVisible = (flag = false) => {
 const changeAddonsVisible = (key, flag) => {
   let target = null
   if (key === 'axesHelper') {
-    target = addnonStore.addnons.axesHelper
+    target = addonStore.addons.axesHelper
   }
   if (key === 'cortex') {
-    target = addnonStore.addnons.cortex
+    target = addonStore.addons.cortex
   }
   target.mesh.visible = flag
   target.visible = flag
