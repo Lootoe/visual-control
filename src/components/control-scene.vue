@@ -2,7 +2,7 @@
 import initModules from '@/interface'
 
 defineOptions({
-  name: 'three-scene',
+  name: 'control-scene',
 })
 
 onMounted(() => {

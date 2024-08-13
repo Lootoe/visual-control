@@ -1,7 +1,7 @@
 <script setup></script>
 
 <template>
-  <three-scene></three-scene>
+  <control-scene></control-scene>
 </template>
 
 <style scoped lang="less"></style>
