@@ -52,12 +52,10 @@ export const renderAxesHelper = (AxesHelperLength = 100) => {
   const axesZ = createSpriteLabel('Z', '#6666ff', 0, 0, AxesHelperLength + 2)
   const group = new THREE.Group()
   group.add(...[axes, axesX, axesY, axesZ])
-  addonStore.$patch((state) => {
-    state.addons.axesHelper = {
-      mesh: group,
-      visible: true,
-    }
-  })
+  addonStore.addons.axesHelper = {
+    mesh: group,
+    visible: true,
+  }
   addMesh(group)
   const mainSceneManager = getMainSceneManager()
   mainSceneManager.controls.addEventListener('change', () => {

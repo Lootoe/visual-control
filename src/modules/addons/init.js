@@ -19,12 +19,10 @@ export const __initBrain = () => {
     renderBrain(brainAsset.downloadUrl)
       .then((brainMesh) => {
         addMeshInAssist(brainMesh)
-        addonStore.$patch((state) => {
-          state.addons.brain = {
-            mesh: brainMesh,
-            visible: true,
-          }
-        })
+        addonStore.addons.brain = {
+          mesh: brainMesh,
+          visible: true,
+        }
         resolve()
       })
       .catch(reject)
@@ -37,12 +35,10 @@ export const initCortex = () => {
     renderCortex(brainAsset.downloadUrl)
       .then((cortexMesh) => {
         addMesh(cortexMesh)
-        addonStore.$patch((state) => {
-          state.addons.cortex = {
-            mesh: cortexMesh,
-            visible: true,
-          }
-        })
+        addonStore.addons.cortex = {
+          mesh: cortexMesh,
+          visible: true,
+        }
         resolve()
       })
       .catch(reject)

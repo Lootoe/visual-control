@@ -17,9 +17,7 @@ export const initFiber = () => {
           fiberList.push(...arr)
         })
         // 还需要想办法下次渲染时，删除上一次内容
-        fiberStore.$patch((state) => {
-          state.fiberList = fiberList
-        })
+        fiberStore.fiberList = fiberList
         resolve()
       })
       .catch(reject)

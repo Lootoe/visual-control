@@ -22,7 +22,7 @@ import {
 
 const filterStore = useFilterStoreHook()
 const fiberStore = useFiberStoreHook()
-const { setLoadingProps } = useLoadingStoreHook()
+const loadingStore = useLoadingStoreHook()
 
 const localNucleusFilter = ref([])
 const localChipFilter = ref([])
@@ -86,11 +86,11 @@ const reselect = () => {
 }
 
 const tracing = (type) => {
-  setLoadingProps('loading', true)
+  loadingStore.loading = true
   if (firstTime) {
-    setLoadingProps('loadingText', '第一次追踪神经纤维时间较久，请耐心等待')
+    loadingStore.loadingText = '第一次追踪神经纤维时间较久，请耐心等待'
   } else {
-    setLoadingProps('loadingText', '正在追踪神经纤维')
+    loadingStore.loadingText = '正在追踪神经纤维'
   }
   // settimeout是防止运算导致cpu卡住，结果setLoadingProps无法执行完毕
   // 间接导致设置的文字无效
@@ -126,8 +126,8 @@ const tracing = (type) => {
     console.log('显示的神经纤维数量', showLen)
     console.log('神经纤维总数', totalLen)
     renderTracedFiber(indexes)
-    setLoadingProps('loadingText', '追踪成功')
-    setLoadingProps('loading', false)
+    loadingStore.loadingText = '追踪成功'
+    loadingStore.loading = false
   }, 200)
 }
 

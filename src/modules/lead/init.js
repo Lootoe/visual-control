@@ -30,9 +30,7 @@ export const initLead = () => {
           // program[0]，是因为一根电极可能有多源的情况
           leadList[position].chips = program[0].nodes
         })
-        leadStore.$patch((state) => {
-          state.leadList = leadList
-        })
+        leadStore.leadList = leadList
         const leadMeshes = Object.values(leadList).map((lead) => {
           const mesh = renderLead(lead)
           lead.mesh = mesh

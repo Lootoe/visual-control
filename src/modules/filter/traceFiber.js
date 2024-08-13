@@ -64,9 +64,7 @@ export const tracingFiber = () => {
 export const clearFibers = () => {
   const displayFiberList = fiberStore.displayingFiberList
   removeMeshes(displayFiberList)
-  fiberStore.$patch((state) => {
-    state.displayingFiberList = []
-  })
+  fiberStore.displayingFiberList = []
 }
 
 export const renderTracedFiber = (fiberIndexes) => {
@@ -84,7 +82,5 @@ export const renderTracedFiber = (fiberIndexes) => {
     fiberMeshes.push(fiberMesh)
   })
   addMeshes(fiberMeshes)
-  fiberStore.$patch((state) => {
-    state.displayingFiberList = fiberMeshes
-  })
+  fiberStore.displayingFiberList = fiberMeshes
 }

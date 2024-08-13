@@ -4,31 +4,32 @@ defineOptions({
 })
 import { useLoadingStoreHook } from '@/store/useLoadingStore'
 import { ref, watch } from 'vue'
-const { getLoadingProps, setLoadingProps } = useLoadingStoreHook()
-const loadingProps = getLoadingProps()
-const { opacity, loading, loadingText } = toRefs(loadingProps)
+const loadingStore = useLoadingStoreHook()
 const localLoading = ref(true)
 
 // 这个watch是为了每次消失前，有个5秒渐变
-watch(loading, (val) => {
-  if (!val) {
-    setLoadingProps('opacity', 0)
-    setTimeout(() => {
-      localLoading.value = false
-      // 再次设置为0.5是为了下次使用方便
-      setLoadingProps('opacity', 0.8)
-    }, 500)
-  } else {
-    localLoading.value = true
+watch(
+  () => loadingStore.loading,
+  (val) => {
+    if (!val) {
+      loadingStore.opacity = 0
+      setTimeout(() => {
+        localLoading.value = false
+        // 再次设置为0.5是为了下次使用方便
+        loadingStore.opacity = 0.8
+      }, 500)
+    } else {
+      localLoading.value = true
+    }
   }
-})
+)
 </script>
 
 <template>
-  <div v-if="localLoading" class="page-wrapper" :style="{ opacity: opacity }">
+  <div v-if="localLoading" class="page-wrapper" :style="{ opacity: loadingStore.opacity }">
     <div class="locate">
       <loading-spinner class="ls"></loading-spinner>
-      <div class="loading-text">{{ loadingText }}</div>
+      <div class="loading-text">{{ loadingStore.loadingText }}</div>
     </div>
   </div>
 </template>

@@ -22,8 +22,8 @@ const { getPatientInfo, getPatientProgram, getPatientAssets } = usePatientStoreH
 const { getNucleusList } = useNucleusStoreHook()
 const leadStore = useLeadStoreHook()
 const fiberStore = useFiberStoreHook()
-const { addons } = useAddonStoreHook()
-const { setLoadingProps } = useLoadingStoreHook()
+const addonStore = useAddonStoreHook()
+const loadingStore = useLoadingStoreHook()
 const filterStore = useFilterStoreHook()
 
 const logData = () => {
@@ -34,7 +34,7 @@ const logData = () => {
   console.log('【NucleusList】', getNucleusList().value)
   console.log('【LeadList】', leadStore.leadList)
   console.log('【FiberList】', fiberStore.fiberList.length)
-  console.log('【Addons】', addons)
+  console.log('【Addons】', addonStore.addons)
   console.log('【ChipFilter】', filterStore.chipFilter)
   console.log('【NucleusFilter】', filterStore.nucleusFilter)
 }
@@ -51,8 +51,8 @@ const handleAdmin = () => {
   const route = useRoute()
   const queryParams = route.query
   const sceneBg = import.meta.env.VITE_SCENE_BG
-  setLoadingProps('loading', true)
-  setLoadingProps('loadingText', '正在初始化场景')
+  loadingStore.loading = true
+  loadingStore.loadingText = '正在初始化场景'
   initScene({
     mainSceneSelector: '.main-scene',
     mainSceneConfig: { backgroundColor: sceneBg },
@@ -60,30 +60,30 @@ const handleAdmin = () => {
     assistSceneConfig: { backgroundColor: sceneBg },
   })
     .then(() => {
-      setLoadingProps('loadingText', '正在下载患者影像')
+      loadingStore.loadingText = '正在下载患者影像'
       return initAdminPatient(queryParams)
     })
     .then(() => {
       return initMatrix()
     })
     .then(() => {
-      setLoadingProps('loadingText', '正在处理核团')
+      loadingStore.loadingText = '正在处理核团'
       return initNucleus()
     })
     .then(() => {
-      setLoadingProps('loadingText', '正在处理电极')
+      loadingStore.loadingText = '正在处理电极'
       return initLead()
     })
     .then(() => {
-      setLoadingProps('loadingText', '正在处理神经纤维')
+      loadingStore.loadingText = '正在处理神经纤维'
       return initFiber()
     })
     .then(() => {
       return initFilter()
     })
     .then(() => {
-      setLoadingProps('loadingText', '加载成功')
-      setLoadingProps('loading', false)
+      loadingStore.loadingText = '加载成功'
+      loadingStore.loading = false
       logData()
     })
     .then(() => {
