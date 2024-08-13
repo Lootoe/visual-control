@@ -13,6 +13,6 @@ const usePatientStore = defineStore('patientStore', () => {
   }
 })
 
-export const usePatientStoreHook = () => {
+export default () => {
   return usePatientStore(store)
 }

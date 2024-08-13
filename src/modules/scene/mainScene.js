@@ -1,7 +1,8 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { computeBoundsTree, disposeBoundsTree, acceleratedRaycast } from 'three-mesh-bvh'
-import { useSceneStoreHook } from '@/store/useSceneStore'
+import useSceneStoreHook from '@/store/useSceneStore'
+
 const sceneStore = useSceneStoreHook()
 
 // 加速射线检测的重中之重

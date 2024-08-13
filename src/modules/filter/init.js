@@ -1,7 +1,7 @@
 import { addMeshes } from '@/modules/scene'
 import { generateNucleusCheckList, DISPLAY_ENUM } from '@/enum/filterEnum'
-import { usePatientStoreHook } from '@/store/usePatientStore'
-import { useFilterStoreHook } from '@/store/useFilterStore'
+import usePatientStoreHook from '@/store/usePatientStore'
+import useFilterStoreHook from '@/store/useFilterStore'
 import { loadFilter } from './loadFilter'
 
 const patientStore = usePatientStoreHook()

@@ -1,6 +1,6 @@
 import { loadLeadTxt } from './loadLead'
-import { usePatientStoreHook } from '@/store/usePatientStore'
-import { useLeadStoreHook } from '@/store/useLeadStore'
+import usePatientStoreHook from '@/store/usePatientStore'
+import useLeadStoreHook from '@/store/useLeadStore'
 import { addMeshes } from '@/modules/scene'
 import { leadEnum } from '@/enum/leadEnum'
 import { renderLead, renderChips } from './renderLead'

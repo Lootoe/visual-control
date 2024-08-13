@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { loadMatrix } from './loadMatrix.js'
-import { useSceneStoreHook } from '@/store/useSceneStore'
-import { usePatientStoreHook } from '@/store/usePatientStore'
+import useSceneStoreHook from '@/store/useSceneStore'
+import usePatientStoreHook from '@/store/usePatientStore'
 const sceneStore = useSceneStoreHook()
 const patientStore = usePatientStoreHook()
 

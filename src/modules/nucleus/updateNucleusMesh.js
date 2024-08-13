@@ -4,7 +4,7 @@
  * ?控制核团显示隐藏
  */
 import * as THREE from 'three'
-import { useNucleusStoreHook } from '@/store/useNucleusStore'
+import useNucleusStoreHook from '@/store/useNucleusStore'
 const nucleusStore = useNucleusStoreHook()
 import { splitRGBA } from '@/utils/tools'
 

@@ -13,8 +13,6 @@ const useSceneStore = defineStore('sceneStore', () => {
   }
 })
 
-export const useSceneStoreHook = () => {
+export default () => {
   return useSceneStore(store)
 }
-
-// sceneStore

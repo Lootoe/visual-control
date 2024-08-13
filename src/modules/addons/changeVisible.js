@@ -2,10 +2,10 @@
  * *需要管理电极、坐标轴、皮层的显示和隐藏
  */
 
-import { useAddonStoreHook } from '@/store/useAddonStore'
-import { useLeadStoreHook } from '@/store/useLeadStore'
+import useAddonStoreHook from '@/store/useAddonStore'
+import useLeadStoreHook from '@/store/useLeadStore'
 
-const { addons } = useAddonStoreHook()
+const addnonStore = useAddonStoreHook()
 const leadStore = useLeadStoreHook()
 
 const changeLeadVisible = (flag = false) => {
@@ -25,10 +25,10 @@ const changeLeadVisible = (flag = false) => {
 const changeAddonsVisible = (key, flag) => {
   let target = null
   if (key === 'axesHelper') {
-    target = addons['axesHelper']
+    target = addnonStore.addnons.axesHelper
   }
   if (key === 'cortex') {
-    target = addons['cortex']
+    target = addnonStore.addnons.cortex
   }
   target.mesh.visible = flag
   target.visible = flag

@@ -10,9 +10,9 @@ defineProps({
   },
 })
 
-import { useLoadingStoreHook } from '@/store/useLoadingStore'
-import { useFilterStoreHook } from '@/store/useFilterStore'
-import { useFiberStoreHook } from '@/store/useFiberStore'
+import useLoadingStoreHook from '@/store/useLoadingStore'
+import useFilterStoreHook from '@/store/useFilterStore'
+import useFiberStoreHook from '@/store/useFiberStore'
 import {
   clearFibers,
   renderTracedFiber,

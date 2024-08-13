@@ -2,7 +2,7 @@
 defineOptions({
   name: 'loading-cover',
 })
-import { useLoadingStoreHook } from '@/store/useLoadingStore'
+import useLoadingStoreHook from '@/store/useLoadingStore'
 import { ref, watch } from 'vue'
 const loadingStore = useLoadingStoreHook()
 const localLoading = ref(true)

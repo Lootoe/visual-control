@@ -7,6 +7,6 @@ const useAddonStore = defineStore('addonStore', () => {
   return { addons }
 })
 
-export const useAddonStoreHook = () => {
+export default () => {
   return useAddonStore(store)
 }

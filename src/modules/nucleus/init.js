@@ -1,7 +1,7 @@
 import { renderNucleus } from './renderNucleus'
 import { getNucleusEnum } from '@/enum/nucleusEnum'
-import { usePatientStoreHook } from '@/store/usePatientStore'
-import { useNucleusStoreHook } from '@/store/useNucleusStore'
+import usePatientStoreHook from '@/store/usePatientStore'
+import useNucleusStoreHook from '@/store/useNucleusStore'
 import { addMeshes } from '@/modules/scene'
 import { splitRGBA } from '@/utils/tools'
 

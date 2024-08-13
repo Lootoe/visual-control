@@ -1,5 +1,5 @@
-import { useFiberStoreHook } from '@/store/useFiberStore'
-import { usePatientStoreHook } from '@/store/usePatientStore'
+import useFiberStoreHook from '@/store/useFiberStore'
+import usePatientStoreHook from '@/store/usePatientStore'
 import { loadFiber } from './loadFiber'
 
 const fiberStore = useFiberStoreHook()

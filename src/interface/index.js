@@ -8,14 +8,14 @@ import { initFiber } from '@/modules/fiber'
 import { initAxesHelper, initCortex, initBrain } from '@/modules/addons'
 import { initFilter } from '@/modules/filter'
 
-import { useSceneStoreHook } from '@/store/useSceneStore'
-import { usePatientStoreHook } from '@/store/usePatientStore'
-import { useNucleusStoreHook } from '@/store/useNucleusStore'
-import { useLeadStoreHook } from '@/store/useLeadStore'
-import { useFiberStoreHook } from '@/store/useFiberStore'
-import { useAddonStoreHook } from '@/store/useAddonStore'
-import { useLoadingStoreHook } from '@/store/useLoadingStore'
-import { useFilterStoreHook } from '@/store/useFilterStore'
+import useSceneStoreHook from '@/store/useSceneStore'
+import usePatientStoreHook from '@/store/usePatientStore'
+import useNucleusStoreHook from '@/store/useNucleusStore'
+import useLeadStoreHook from '@/store/useLeadStore'
+import useFiberStoreHook from '@/store/useFiberStore'
+import useAddonStoreHook from '@/store/useAddonStore'
+import useLoadingStoreHook from '@/store/useLoadingStore'
+import useFilterStoreHook from '@/store/useFilterStore'
 
 const sceneStore = useSceneStoreHook()
 const patientStore = usePatientStoreHook()

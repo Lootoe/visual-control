@@ -1,5 +1,5 @@
 import { PLYLoader } from 'three/examples/jsm/loaders/PLYLoader'
-import { useSceneStoreHook } from '@/store/useSceneStore'
+import useSceneStoreHook from '@/store/useSceneStore'
 import * as THREE from 'three'
 const sceneStore = useSceneStoreHook()
 

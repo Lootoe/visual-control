@@ -2,7 +2,7 @@
  * *刚进入可视化程控时，摄像机与皮层之间需要有一定的倾斜角度
  */
 import * as THREE from 'three'
-import { useSceneStoreHook } from '@/store/useSceneStore'
+import useSceneStoreHook from '@/store/useSceneStore'
 const sceneStore = useSceneStoreHook()
 
 export const adjustCameraPosition = () => {

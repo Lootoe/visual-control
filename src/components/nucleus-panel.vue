@@ -9,7 +9,7 @@ defineProps({
   },
 })
 
-import { useNucleusStoreHook } from '@/store/useNucleusStore'
+import useNucleusStoreHook from '@/store/useNucleusStore'
 import { nucleusSideEnum } from '@/enum/nucleusEnum'
 import { changeNucleusVisible, changeNucleusColor } from '@/modules/nucleus'
 

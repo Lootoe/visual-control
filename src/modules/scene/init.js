@@ -1,6 +1,6 @@
 import { initMainScene } from './mainScene'
 import { initAssistScene } from './assistScene'
-import { useSceneStoreHook } from '@/store/useSceneStore'
+import useSceneStoreHook from '@/store/useSceneStore'
 import { cleanScene } from './cleanScene'
 import { createLight } from './light'
 

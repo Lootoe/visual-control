@@ -9,6 +9,6 @@ const useLoadingStore = defineStore('loadingStore', () => {
   return { opacity, loading, loadingText }
 })
 
-export const useLoadingStoreHook = () => {
+export default () => {
   return useLoadingStore(store)
 }

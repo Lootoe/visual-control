@@ -1,11 +1,10 @@
 import * as THREE from 'three'
 import { addMeshes, removeMeshes } from '@/modules/scene'
-import { useFilterStoreHook } from '@/store/useFilterStore'
-import { useFiberStoreHook } from '@/store/useFiberStore'
+import useFilterStoreHook from '@/store/useFilterStore'
+import useFiberStoreHook from '@/store/useFiberStore'
 import { renderFiber } from '@/modules/fiber'
 
 const fiberStore = useFiberStoreHook()
-const { getChipFilter, getNucleusFilter } = useFilterStoreHook()
 const filterStore = useFilterStoreHook()
 
 const tracing = (filters, fiberList) => {

@@ -8,6 +8,6 @@ const useNucleusStore = defineStore('nucleusStore', () => {
   return { nucleusList }
 })
 
-export const useNucleusStoreHook = () => {
+export default () => {
   return useNucleusStore(store)
 }

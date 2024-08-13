@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { addMesh } from '@/modules/scene'
-import { useAddonStoreHook } from '@/store/useAddonStore'
-import { useSceneStoreHook } from '@/store/useSceneStore'
+import useAddonStoreHook from '@/store/useAddonStore'
+import useSceneStoreHook from '@/store/useSceneStore'
 
 const addonStore = useAddonStoreHook()
 const sceneStore = useSceneStoreHook()

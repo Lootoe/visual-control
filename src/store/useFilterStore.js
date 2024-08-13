@@ -8,6 +8,6 @@ const useFilterStore = defineStore('filterStore', () => {
   return { chipFilter, nucleusFilter }
 })
 
-export const useFilterStoreHook = () => {
+export default () => {
   return useFilterStore(store)
 }

@@ -1,8 +1,8 @@
 import { renderCortex } from './renderCortex'
 import { renderBrain } from './renderBrain'
 import { renderAxesHelper } from './renderAxesHelper'
-import { usePatientStoreHook } from '@/store/usePatientStore'
-import { useAddonStoreHook } from '@/store/useAddonStore'
+import usePatientStoreHook from '@/store/usePatientStore'
+import useAddonStoreHook from '@/store/useAddonStore'
 import { addMesh, addMeshInAssist } from '@/modules/scene'
 
 const patientStore = usePatientStoreHook()

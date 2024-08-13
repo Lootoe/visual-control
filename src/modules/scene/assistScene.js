@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { useSceneStoreHook } from '@/store/useSceneStore'
+import useSceneStoreHook from '@/store/useSceneStore'
 const sceneStore = useSceneStoreHook()
 
 const sceneConfig = {

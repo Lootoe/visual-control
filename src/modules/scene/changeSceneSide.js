@@ -7,7 +7,7 @@
  */
 
 import { loadImg } from '@/utils/tools'
-import { useSceneStoreHook } from '@/store/useSceneStore'
+import useSceneStoreHook from '@/store/useSceneStore'
 const sceneStore = useSceneStoreHook()
 
 export const SCENE_FACES = [

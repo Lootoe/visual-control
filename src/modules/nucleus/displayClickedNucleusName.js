@@ -6,7 +6,7 @@
  * ?点击其核团就隐藏当前核团，并且显示其它核团
  */
 import { useMouseRaycast } from '@/hooks/useMouseRaycast'
-import { useSceneStoreHook } from '@/store/useSceneStore'
+import useSceneStoreHook from '@/store/useSceneStore'
 
 const sceneStore = useSceneStoreHook()
 

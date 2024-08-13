@@ -9,6 +9,6 @@ const useFiberStore = defineStore('fiberStore', () => {
   return { fiberList, displayingFiberList }
 })
 
-export const useFiberStoreHook = () => {
+export default () => {
   return useFiberStore(store)
 }

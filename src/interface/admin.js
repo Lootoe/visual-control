@@ -1,5 +1,5 @@
 import { getImageInfo } from '@/utils/api'
-import { usePatientStoreHook } from '@/store/usePatientStore'
+import usePatientStoreHook from '@/store/usePatientStore'
 import { leadEnum } from '@/enum/leadEnum'
 
 const patientStore = usePatientStoreHook()

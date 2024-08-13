@@ -7,6 +7,6 @@ const useLeadStore = defineStore('leadStore', () => {
   return { leadList }
 })
 
-export const useLeadStoreHook = () => {
+export default () => {
   return useLeadStore(store)
 }
