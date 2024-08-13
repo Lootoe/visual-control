@@ -28,7 +28,6 @@ watch(
       if (!target) {
         const obj = {
           color,
-          nucleusSide,
           zhName,
           enName,
           visible: {},
@@ -66,16 +65,23 @@ const getName = (en, side) => {
 
 const changeNucleusVisibleFn = (item, side) => {
   item.visible[side] = !item.visible[side]
-  const { enName, nucleusSide } = item
-  let name = getName(enName, nucleusSide)
+  const { enName } = item
+  let name = getName(enName, side)
   changeNucleusVisible(name, item.visible[side])
 }
 
 const changeNucleusColorFn = (item, color) => {
   item.color = color
-  const { enName, nucleusSide } = item
-  let name = getName(enName, nucleusSide)
-  changeNucleusColor(name, color)
+  const { enName } = item
+  if (isMiddle(item)) {
+    let name = getName(enName, nucleusSideEnum.MIDDLE)
+    changeNucleusColor(name, color)
+  } else {
+    let nameL = getName(enName, nucleusSideEnum.LEFT)
+    let nameR = getName(enName, nucleusSideEnum.RIGHT)
+    changeNucleusColor(nameL, color)
+    changeNucleusColor(nameR, color)
+  }
 }
 
 const colorPickers = ref([])
