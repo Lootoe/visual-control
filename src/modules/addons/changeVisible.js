@@ -5,7 +5,7 @@
 import { useAddonStoreHook } from '@/store/useAddonStore'
 import { useLeadStoreHook } from '@/store/useLeadStore'
 
-const { getAddons } = useAddonStoreHook()
+const { addons } = useAddonStoreHook()
 const { getLeadList } = useLeadStoreHook()
 
 const changeLeadVisible = (flag = false) => {
@@ -23,7 +23,6 @@ const changeLeadVisible = (flag = false) => {
 }
 
 const changeAddonsVisible = (key, flag) => {
-  const addons = getAddons()
   let target = null
   if (key === 'axesHelper') {
     target = addons['axesHelper']

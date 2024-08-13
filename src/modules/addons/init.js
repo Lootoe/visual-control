@@ -6,8 +6,9 @@ import { useAddonStoreHook } from '@/store/useAddonStore'
 import { addMesh, addMeshInAssist } from '@/modules/scene'
 
 const { getPatientAssets } = usePatientStoreHook()
-const { cacheAddons } = useAddonStoreHook()
+const addonStore = useAddonStoreHook()
 
+console.log('addonStore', addonStore)
 export const initAxesHelper = () => {
   return renderAxesHelper()
 }
@@ -18,10 +19,11 @@ export const __initBrain = () => {
     renderBrain(brainAsset.downloadUrl)
       .then((brainMesh) => {
         addMeshInAssist(brainMesh)
-        // 默认不显示
-        cacheAddons('brain', {
-          mesh: brainMesh,
-          visible: true,
+        addonStore.$patch((state) => {
+          state.addons.brain = {
+            mesh: brainMesh,
+            visible: true,
+          }
         })
         resolve()
       })
@@ -35,10 +37,11 @@ export const initCortex = () => {
     renderCortex(brainAsset.downloadUrl)
       .then((cortexMesh) => {
         addMesh(cortexMesh)
-        // 默认不显示
-        cacheAddons('cortex', {
-          mesh: cortexMesh,
-          visible: true,
+        addonStore.$patch((state) => {
+          state.addons.cortex = {
+            mesh: cortexMesh,
+            visible: true,
+          }
         })
         resolve()
       })

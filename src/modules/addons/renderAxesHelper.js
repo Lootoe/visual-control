@@ -3,7 +3,7 @@ import { addMesh } from '@/modules/scene'
 import { useAddonStoreHook } from '@/store/useAddonStore'
 import { useSceneStoreHook } from '@/store/useSceneStore'
 
-const { cacheAddons, getAddons } = useAddonStoreHook()
+const addonStore = useAddonStoreHook()
 const { getMainSceneManager } = useSceneStoreHook()
 
 const createTextByCanvas = (
@@ -52,9 +52,11 @@ export const renderAxesHelper = (AxesHelperLength = 100) => {
   const axesZ = createSpriteLabel('Z', '#6666ff', 0, 0, AxesHelperLength + 2)
   const group = new THREE.Group()
   group.add(...[axes, axesX, axesY, axesZ])
-  cacheAddons('axesHelper', {
-    mesh: group,
-    visible: true,
+  addonStore.$patch((state) => {
+    state.addons.axesHelper = {
+      mesh: group,
+      visible: true,
+    }
   })
   addMesh(group)
   const mainSceneManager = getMainSceneManager()
@@ -66,7 +68,7 @@ export const renderAxesHelper = (AxesHelperLength = 100) => {
 // 当坐标轴与视线差不多平行的时候，隐藏坐标轴文字，防止遮挡视野
 export const updateTextDisplay = (camera, displaytDistance = 50) => {
   const position = camera.position
-  const axesGroup = getAddons().axesHelper
+  const axesGroup = addonStore.addons.axesHelper
   const [_, axesX, axesY, axesZ] = axesGroup.mesh.children
   // 通过计算相机距离文字的距离，来控制文字显示隐藏
   const distanceX = position.distanceTo(axesX.position)

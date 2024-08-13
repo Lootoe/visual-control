@@ -2,15 +2,9 @@ import { defineStore } from 'pinia'
 import { store } from '@/store'
 
 const useAddonStore = defineStore('addonStore', () => {
-  let addons = {}
+  let addons = reactive({})
 
-  const cacheAddons = (key, obj) => {
-    addons[key] = obj
-  }
-
-  const getAddons = () => addons
-
-  return { cacheAddons, getAddons }
+  return { addons }
 })
 
 export const useAddonStoreHook = () => {

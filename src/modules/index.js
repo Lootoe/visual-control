@@ -22,7 +22,7 @@ const { getPatientInfo, getPatientProgram, getPatientAssets } = usePatientStoreH
 const { getNucleusList } = useNucleusStoreHook()
 const { getLeadList } = useLeadStoreHook()
 const { getFiberList } = useFiberStoreHook()
-const { getAddons } = useAddonStoreHook()
+const { addons } = useAddonStoreHook()
 const { setLoadingProps } = useLoadingStoreHook()
 const { getChipFilter, getNucleusFilter } = useFilterStoreHook()
 
@@ -34,7 +34,7 @@ const logData = () => {
   console.log('【NucleusList】', getNucleusList().value)
   console.log('【LeadList】', getLeadList().value)
   console.log('【FiberList】', getFiberList().length)
-  console.log('【Addons】', getAddons())
+  console.log('【Addons】', addons)
   console.log('【ChipFilter】', getChipFilter().value)
   console.log('【NucleusFilter】', getNucleusFilter().value)
 }
