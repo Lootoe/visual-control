@@ -17,6 +17,7 @@ const changeToolItem = (toolIndex) => {
     <nucleus-panel v-show="activedToolIndex === 0" :backgroundColor="uiBg"></nucleus-panel>
     <visible-panel v-show="activedToolIndex === 1" :backgroundColor="uiBg"></visible-panel>
     <filter-panel v-show="activedToolIndex === 2" :backgroundColor="uiBg"></filter-panel>
+    <qi-cranial></qi-cranial>
     <div class="tool-box">
       <div
         class="tool-item"
