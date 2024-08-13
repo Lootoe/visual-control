@@ -11,13 +11,13 @@ const leadStore = useLeadStoreHook()
 
 export const subscribeProgramUpdate = () => {
   patientStore.$subscribe((mutation, state) => {
-    const porgram = state.patientProgram
+    const newProgram = state.patientProgram
     // 解析program，并根据program更新电极片颜色和userData
     // !电场模块也会订阅，但是不在这里处理
     // 第一层forEach是多根电极
     // 第二层forEach一根电极有多个Program
     // 第三层forEach才是遍历nodes更新电极片
-    Object.values(porgram).forEach((arr) => {
+    Object.values(newProgram).forEach((arr) => {
       arr.forEach((program) => {
         const { position, nodes, display } = program
         if (display === 1) {

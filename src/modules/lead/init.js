@@ -29,7 +29,9 @@ export const __initLead = () => {
           const program = leadProgram[position]
           // 这在以后程控改变电极片颜色时特别有用
           // program[0]，是因为一根电极可能有多源的情况
-          leadList[position].chips = program[0].nodes
+          // !注意这里会导致chips引用nodes的数据，从而发生异常
+          // !所以，这里需要进行数据的拷贝
+          leadList[position].chips = JSON.parse(JSON.stringify(program[0].nodes))
         })
         leadStore.leadList = leadList
         const leadMeshes = Object.values(leadList).map((lead) => {

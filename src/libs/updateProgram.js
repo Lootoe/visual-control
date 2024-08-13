@@ -48,7 +48,7 @@ export const updateProgramByNode = (params) => {
 }
 
 export const updateProgramByAmplitude = (amp = 0) => {
-  const currentProgram = Object.assign({}, patientStore.$state.patientProgram)
+  const currentProgram = JSON.parse(JSON.stringify(patientStore.$state.patientProgram))
   // TODO:双源等待实现，可能需要传入是哪个源
   Object.values(currentProgram).forEach((leadProgramArr) => {
     leadProgramArr.forEach((leadProgram) => {
