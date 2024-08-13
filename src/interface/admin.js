@@ -1,61 +1,8 @@
 import { getImageInfo } from '@/utils/api'
 import usePatientStoreHook from '@/store/usePatientStore'
-import { leadEnum } from '@/enum/leadEnum'
+import { generateProgram } from '@/libs/mockProgram'
 
 const patientStore = usePatientStoreHook()
-
-// 用于生成电极片索引
-let chipIndex = 0
-
-// 根据电极型号生成Nodes
-const generateNodes = (leadType) => {
-  const targetParams = leadEnum.find((v) => v.name === leadType)
-  if (targetParams) {
-    const { number } = targetParams
-    const nodes = []
-    for (let i = 0; i < number; i++) {
-      nodes[i] = {
-        index: chipIndex,
-        node: 0,
-        color: '',
-        amplitude: 0,
-        width: 0,
-        rate: 0,
-      }
-      chipIndex++
-    }
-    return nodes
-  } else {
-    throw {
-      msg: '电极型号不存在',
-      errData: { leadType },
-    }
-  }
-}
-
-// 根据电极型号生成程控参数
-const convertProgram = (patientInfo) => {
-  chipIndex = 0
-  const { leads } = patientInfo
-  const patientProgram = {}
-  const leadLength = Object.keys(leads).length
-  for (let position = 1; position <= leadLength; position++) {
-    const { lead } = leads[position]
-    const nodes = generateNodes(lead, position)
-    const program = {
-      nodes,
-      position,
-      display: 1,
-      vtaList: [],
-    }
-    if (program[position]) {
-      patientProgram[position].push(program)
-    } else {
-      patientProgram[position] = [program]
-    }
-  }
-  return patientProgram
-}
 
 // 可视化不需要左右通道，直接将PAD的数据结构改为可视化的数据结构
 const convertPatient = (params) => {
@@ -134,7 +81,7 @@ export default (params) => {
         } else {
           const data = apiResult.data.data
           const patientInfo = convertPatient(data)
-          const patientProgram = convertProgram(patientInfo)
+          const patientProgram = generateProgram(patientInfo.leads)
           const patientAssets = convertAssets(data)
           patientStore.$patch((state) => {
             state.patientInfo = patientInfo

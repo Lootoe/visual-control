@@ -3,7 +3,7 @@ import initAdminPatient from '@/interface/admin'
 import { initScene } from '@/modules/scene'
 import { initMatrix } from '@/modules/matrix'
 import { initNucleus } from '@/modules/nucleus'
-import { initLead } from '@/modules/lead'
+import { initLead, updateProgramOnClickedChip } from '@/modules/lead'
 import { initFiber } from '@/modules/fiber'
 import { initAxesHelper, initCortex, initBrain } from '@/modules/addons'
 import { initFilter } from '@/modules/filter'
@@ -28,9 +28,9 @@ const filterStore = useFilterStoreHook()
 
 const logData = () => {
   console.log('【MainSceneManager】', sceneStore.mainSceneManager)
-  console.log('【PatientInfo】', patientStore.patientInfo)
-  console.log('【PatientProgram】', patientStore.patientProgram)
-  console.log('【PatientAssets】', patientStore.patientAssets)
+  console.log('【PatientInfo】', patientStore.$state.patientInfo)
+  console.log('【PatientProgram】', patientStore.$state.patientProgram)
+  console.log('【PatientAssets】', patientStore.$state.patientAssets)
   console.log('【NucleusList】', nucleusStore.nucleusList)
   console.log('【LeadList】', leadStore.leadList)
   console.log('【FiberList】', fiberStore.fiberList.length)
@@ -87,6 +87,8 @@ const handleAdmin = () => {
       logData()
     })
     .then(() => {
+      // 预览端，采用自己造的Program
+      updateProgramOnClickedChip()
       initAxesHelper()
       initBrain()
       initCortex()

@@ -2,9 +2,9 @@ import { defineStore } from 'pinia'
 import { store } from '@/store'
 
 const usePatientStore = defineStore('patientStore', () => {
-  let patientInfo = ref({})
-  let patientProgram = ref({})
-  let patientAssets = ref({})
+  let patientInfo = {}
+  let patientProgram = {}
+  let patientAssets = {}
 
   return {
     patientInfo,

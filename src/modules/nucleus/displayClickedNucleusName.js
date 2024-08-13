@@ -5,7 +5,7 @@
  * ?旋转视角就隐藏名称
  * ?点击其核团就隐藏当前核团，并且显示其它核团
  */
-import { useMouseRaycast } from '@/hooks/useMouseRaycast'
+import { useMouseRaycast } from '@/libs/mouseRaycast'
 import useSceneStoreHook from '@/store/useSceneStore'
 
 const sceneStore = useSceneStoreHook()
@@ -47,14 +47,17 @@ export const displayClickedNucleusName = () => {
   const dom = mainSceneManager.dom
   dom.addEventListener('click', (event) => {
     removeNameUI()
-    useMouseRaycast(event, camera, detectTargets, 'nucleus', (raycased, result, mousePos) => {
-      if (raycased) {
-        const userData = result.userData
-        if (!userData) return
-        const { displayName } = userData
-        createNameUI(displayName, mousePos)
+    useMouseRaycast(
+      { event, camera, detectTargets, name: 'nucleus' },
+      (raycased, result, mousePos) => {
+        if (raycased) {
+          const userData = result.userData
+          if (!userData) return
+          const { displayName } = userData
+          createNameUI(displayName, mousePos)
+        }
       }
-    })
+    )
   })
   window.addEventListener('mousewheel', () => {
     removeNameUI()

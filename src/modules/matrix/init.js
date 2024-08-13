@@ -10,7 +10,7 @@ export const initMatrix = () => {
     // 先缓存RAS2XYZ矩阵
     const ras2xyz = new THREE.Matrix4(-1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1)
     sceneStore.extraData.ras2xyz = ras2xyz
-    const asset = patientStore.patientAssets?.matrix?.MNI152_template
+    const asset = patientStore.$state.patientAssets?.matrix?.MNI152_template
     loadMatrix(asset.downloadUrl)
       .then((affine) => {
         if (affine) {

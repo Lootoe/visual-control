@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 
-export const useMouseRaycast = (event, camera, detectTargets, name, callback) => {
+export const useMouseRaycast = (config, callback) => {
+  const { event, camera, detectTargets, name } = config
   // 监听点击事件
   const raycaster = new THREE.Raycaster()
   const mouse = new THREE.Vector2()
@@ -12,7 +13,7 @@ export const useMouseRaycast = (event, camera, detectTargets, name, callback) =>
   // 计算与所有对象的交点
   // 处理点击事件
   // 目前只有电极片的点击事件
-  const intersects = raycaster.intersectObjects(detectTargets, true)
+  const intersects = raycaster.intersectObjects(detectTargets)
   if (intersects.length > 0) {
     const res = intersects.find((v) => v.object.name === name && v.object.visible === true)
     if (res) {

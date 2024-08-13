@@ -1,3 +1,15 @@
-import { initLead } from './init'
+import { __initLead } from './init'
+import { subscribeProgramUpdate } from './updateChipMesh'
+import { updateProgramOnClickedChip } from './updateProgramOnClickedChip'
 
-export { initLead }
+const initLead = () => {
+  return new Promise((resolve, reject) => {
+    __initLead()
+      .then(() => {
+        subscribeProgramUpdate()
+        resolve()
+      })
+      .catch(reject)
+  })
+}
+export { initLead, updateProgramOnClickedChip }

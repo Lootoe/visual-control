@@ -19,9 +19,9 @@ const getNucleusNameByFile = (fileName) => {
 
 export const __initNucleus = () => {
   return new Promise((resolve, reject) => {
-    const patientInfo = patientStore.patientInfo
+    const patientInfo = patientStore.$state.patientInfo
     // 获取核团下载链接
-    const nucleusAssets = patientStore.patientAssets.nucleus
+    const nucleusAssets = patientStore.$state.patientAssets.nucleus
     // 获取疾病类型
     const diseaseEnum = patientInfo?.config?.diseaseCode || 0
     // 获取患者植入的核团
