@@ -1,6 +1,6 @@
 import { __initNucleus } from './init'
 import { displayClickedNucleusName } from './displayClickedNucleusName'
-import { changeNucleusVisible, changeNucleusColor } from './manageNucleusMesh'
+import { changeNucleusVisible, changeNucleusColor } from './updateNucleusMesh'
 
 // displayClickedNucleusName可以与initNucleus合一起
 const initNucleus = () => {
