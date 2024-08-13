@@ -18,7 +18,7 @@ import { useLoadingStoreHook } from '@/store/useLoadingStore'
 import { useFilterStoreHook } from '@/store/useFilterStore'
 
 const { getMainSceneManager } = useSceneStoreHook()
-const { getPatientInfo, getPatientProgram, getPatientAssets } = usePatientStoreHook()
+const patientStore = usePatientStoreHook()
 const nucleusStore = useNucleusStoreHook()
 const leadStore = useLeadStoreHook()
 const fiberStore = useFiberStoreHook()
@@ -28,9 +28,9 @@ const filterStore = useFilterStoreHook()
 
 const logData = () => {
   console.log('【MainSceneManager】', getMainSceneManager())
-  console.log('【PatientInfo】', getPatientInfo())
-  console.log('【PatientProgram】', getPatientProgram())
-  console.log('【PatientAssets】', getPatientAssets())
+  console.log('【PatientInfo】', patientStore.patientInfo)
+  console.log('【PatientProgram】', patientStore.patientProgram)
+  console.log('【PatientAssets】', patientStore.patientAssets)
   console.log('【NucleusList】', nucleusStore.nucleusList)
   console.log('【LeadList】', leadStore.leadList)
   console.log('【FiberList】', fiberStore.fiberList.length)

@@ -5,17 +5,16 @@ import { usePatientStoreHook } from '@/store/usePatientStore'
 import { useAddonStoreHook } from '@/store/useAddonStore'
 import { addMesh, addMeshInAssist } from '@/modules/scene'
 
-const { getPatientAssets } = usePatientStoreHook()
+const patientStore = usePatientStoreHook()
 const addonStore = useAddonStoreHook()
 
-console.log('addonStore', addonStore)
 export const initAxesHelper = () => {
   return renderAxesHelper()
 }
 
 export const __initBrain = () => {
   return new Promise((resolve, reject) => {
-    const brainAsset = getPatientAssets().head
+    const brainAsset = patientStore.patientAssets.head
     renderBrain(brainAsset.downloadUrl)
       .then((brainMesh) => {
         addMeshInAssist(brainMesh)
@@ -31,7 +30,7 @@ export const __initBrain = () => {
 
 export const initCortex = () => {
   return new Promise((resolve, reject) => {
-    const brainAsset = getPatientAssets().head
+    const brainAsset = patientStore.patientAssets.head
     renderCortex(brainAsset.downloadUrl)
       .then((cortexMesh) => {
         addMesh(cortexMesh)

@@ -5,7 +5,7 @@ import { useNucleusStoreHook } from '@/store/useNucleusStore'
 import { addMeshes } from '@/modules/scene'
 import { splitRGBA } from '@/utils/tools'
 
-const { getPatientInfo, getPatientAssets } = usePatientStoreHook()
+const patientStore = usePatientStoreHook()
 const nucleusStore = useNucleusStoreHook()
 
 const getNucleusNameByFile = (fileName) => {
@@ -19,9 +19,9 @@ const getNucleusNameByFile = (fileName) => {
 
 export const __initNucleus = () => {
   return new Promise((resolve, reject) => {
-    const patientInfo = getPatientInfo()
+    const patientInfo = patientStore.patientInfo
     // 获取核团下载链接
-    const nucleusAssets = getPatientAssets().nucleus
+    const nucleusAssets = patientStore.patientAssets.nucleus
     // 获取疾病类型
     const diseaseEnum = patientInfo?.config?.diseaseCode || 0
     // 获取患者植入的核团

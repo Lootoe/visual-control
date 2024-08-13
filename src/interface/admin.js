@@ -2,7 +2,7 @@ import { getImageInfo } from '@/utils/api'
 import { usePatientStoreHook } from '@/store/usePatientStore'
 import { leadEnum } from '@/enum/leadEnum'
 
-const { updatePatientInfo, updatePatientProgram, updatePatientAssets } = usePatientStoreHook()
+const patientStore = usePatientStoreHook()
 
 // 用于生成电极片索引
 let chipIndex = 0
@@ -136,9 +136,11 @@ export default (params) => {
           const patientInfo = convertPatient(data)
           const patientProgram = convertProgram(patientInfo)
           const patientAssets = convertAssets(data)
-          updatePatientInfo(patientInfo)
-          updatePatientProgram(patientProgram)
-          updatePatientAssets(patientAssets)
+          patientStore.$patch((state) => {
+            state.patientInfo = patientInfo
+            state.patientProgram = patientProgram
+            state.patientAssets = patientAssets
+          })
           resolve()
         }
       })

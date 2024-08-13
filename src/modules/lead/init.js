@@ -4,15 +4,16 @@ import { useLeadStoreHook } from '@/store/useLeadStore'
 import { addMeshes } from '@/modules/scene'
 import { leadEnum } from '@/enum/leadEnum'
 import { renderLead, renderChips } from './renderLead'
-const { getPatientInfo, getPatientAssets, getPatientProgram } = usePatientStoreHook()
+
+const patientStore = usePatientStoreHook()
 const leadStore = useLeadStoreHook()
 
 export const initLead = () => {
   // 将电极配置和读取的坐标点结合
   return new Promise((resolve, reject) => {
-    const leadAsset = getPatientAssets().lead
-    const leadType = getPatientInfo().leads
-    const leadProgram = getPatientProgram()
+    const leadAsset = patientStore.patientAssets.lead
+    const leadType = patientStore.patientInfo.leads
+    const leadProgram = patientStore.patientProgram
     const leadList = {}
     loadLeadTxt(leadAsset.downloadUrl)
       .then((leadPoints) => {

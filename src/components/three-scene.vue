@@ -1,5 +1,5 @@
 <script setup>
-import initModules from '@/modules'
+import initModules from '@/interface'
 
 defineOptions({
   name: 'three-scene',

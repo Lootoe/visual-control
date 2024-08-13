@@ -4,13 +4,13 @@ import { usePatientStoreHook } from '@/store/usePatientStore'
 import { useFilterStoreHook } from '@/store/useFilterStore'
 import { loadFilter } from './loadFilter'
 
-const { getPatientAssets, getPatientProgram } = usePatientStoreHook()
+const patientStore = usePatientStoreHook()
 const filterStore = useFilterStoreHook()
 
 export const initFilter = () => {
   return new Promise((resolve, reject) => {
-    const filterAssets = getPatientAssets().filter
-    const nucleusAssets = getPatientAssets().nucleus
+    const filterAssets = patientStore.patientAssets.filter
+    const nucleusAssets = patientStore.patientAssets.nucleus
     Promise.all([initNucleusFilter(nucleusAssets, filterAssets), initChipFilter(filterAssets)])
       .then(([nucleusFilter, chipFilter]) => {
         filterStore.$patch((state) => {
@@ -74,7 +74,7 @@ const initNucleusFilter = async (nucleusAssets, filterAssets) => {
 const initChipFilter = async (filterAssets) => {
   return new Promise((resolve, reject) => {
     const results = []
-    const leadProgram = getPatientProgram()
+    const leadProgram = patientStore.patientProgram
     // fileName里匹配数字的正则
     // 旧的正则表达式
     const oldNumReg = /(?<=(c_))\d+/g
