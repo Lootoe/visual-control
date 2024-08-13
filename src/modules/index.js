@@ -78,19 +78,17 @@ const handleAdmin = () => {
       setLoadingProps('loadingText', '正在处理神经纤维')
       return initFiber()
     })
-    // .then(() => {
-    //   setLoadingProps('loadingText', '正在处理皮层')
-    //   return initAddons()
-    // })
-    // .then(() => {
-    //   return initFilters()
-    // })
-    // .then(() => {
-    //   return fiberTracing()
-    // })
+    .then(() => {
+      return initFilter()
+    })
     .then(() => {
       setLoadingProps('loadingText', '加载成功')
       setLoadingProps('loading', false)
       logData()
+    })
+    .then(() => {
+      initAxesHelper()
+      initBrain()
+      initCortex()
     })
 }

@@ -13,7 +13,12 @@ defineProps({
 import { useLoadingStoreHook } from '@/store/useLoadingStore'
 import { useFilterStoreHook } from '@/store/useFilterStore'
 import { useFiberStoreHook } from '@/store/useFiberStore'
-import { clearFibers, renderTracedFiber, compileTracingContext } from '@/modules/filter'
+import {
+  clearFibers,
+  renderTracedFiber,
+  compileTracingContext,
+  tracingFiber,
+} from '@/modules/filter'
 
 const { getChipFilter, getNucleusFilter } = useFilterStoreHook()
 const { getFiberList } = useFiberStoreHook()
@@ -57,6 +62,7 @@ const isSingle = ref(true)
 const hasSeleced = ref(false)
 // 是否展示重置按钮
 const showReset = ref(false)
+let firstTime = true
 
 const selectItem = (item) => {
   item.selected = !item.selected
@@ -79,10 +85,21 @@ const reselect = () => {
   hasSeleced.value = false
 }
 
-const traverse = (type) => {
+const tracing = (type) => {
   setLoadingProps('loading', true)
-  setLoadingProps('loadingText', '正在追踪神经纤维')
+  if (firstTime) {
+    setLoadingProps('loadingText', '第一次追踪神经纤维时间较久，请耐心等待')
+  } else {
+    setLoadingProps('loadingText', '正在追踪神经纤维')
+  }
+  // settimeout是防止运算导致cpu卡住，结果setLoadingProps无法执行完毕
+  // 间接导致设置的文字无效
   setTimeout(() => {
+    // 判断是不是第一次分析，如果是第一次分析就需要先追踪神经纤维
+    if (firstTime) {
+      tracingFiber()
+      firstTime = false
+    }
     clearFibers()
     // 从列表里筛选出已选中的item
     const arr_1 = localChipFilter.value.filter((v) => v.selected).map((v) => v.factor)
@@ -174,11 +191,11 @@ const selectAll = () => {
         </div>
         <div class="bottom__right">
           <template v-if="isSingle">
-            <div class="btn" @click="traverse('confirm')">确定</div>
+            <div class="btn" @click="tracing('confirm')">确定</div>
           </template>
           <template v-else>
-            <div class="btn" @click="traverse('cross')">交集</div>
-            <div class="btn" @click="traverse('append')">并集</div>
+            <div class="btn" @click="tracing('cross')">交集</div>
+            <div class="btn" @click="tracing('append')">并集</div>
           </template>
         </div>
       </div>
