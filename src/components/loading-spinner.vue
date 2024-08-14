@@ -25,7 +25,7 @@ defineOptions({
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    border: 0.06rem solid transparent;
+    border: 0.04rem solid transparent;
     border-top-color: #7766da;
     border-bottom-color: #ec4c24;
     animation: spinner 0.6s ease infinite;

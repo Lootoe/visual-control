@@ -17,6 +17,7 @@ const changeToolItem = (toolIndex) => {
     <nucleus-panel v-show="activedToolIndex === 0" :backgroundColor="uiBg"></nucleus-panel>
     <visible-panel v-show="activedToolIndex === 1" :backgroundColor="uiBg"></visible-panel>
     <filter-panel v-show="activedToolIndex === 2" :backgroundColor="uiBg"></filter-panel>
+    <amp-slider></amp-slider>
     <qi-cranial></qi-cranial>
     <div class="tool-box">
       <div
@@ -101,7 +102,6 @@ const changeToolItem = (toolIndex) => {
     }
   }
 }
-
 .tool-box {
   position: absolute;
   z-index: 10;
@@ -123,5 +123,10 @@ const changeToolItem = (toolIndex) => {
       height: 0.36rem;
     }
   }
+}
+.slider-bar {
+  position: absolute;
+  right: 0;
+  height: 10rem;
 }
 </style>

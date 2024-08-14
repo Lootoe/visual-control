@@ -40,11 +40,16 @@ export const updateProgramByNode = (params) => {
         // Mock数据可以这样使用，正式必须用传入的
         target.color = color
       }
+      // !只要改了触点组合，这根电极上所有幅值全都归零
+      leadProgram.nodes.forEach((nodeObj) => {
+        nodeObj.amplitude = 0
+      })
     }
   })
   patientStore.$patch((state) => {
     state.patientProgram = currentProgram
   })
+  patientStore.amplitude = 0
 }
 
 export const updateProgramByAmplitude = (amp = 0) => {
