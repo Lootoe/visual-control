@@ -66,5 +66,6 @@ export const updateProgramByAmplitude = (amp = 0) => {
   })
   patientStore.$patch((state) => {
     state.patientProgram = currentProgram
+    state.amplitude = amp
   })
 }

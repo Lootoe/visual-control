@@ -3,6 +3,14 @@ import { updateProgramByAmplitude } from '@/libs/updateProgram.js'
 import usePatientStoreHook from '@/store/usePatientStore.js'
 
 const patientStore = usePatientStoreHook()
+const localAmp = ref(0)
+
+watch(
+  () => patientStore.amplitude,
+  (newval) => {
+    localAmp.value = newval
+  }
+)
 
 const sliderToolTip = (value) => {
   return `幅值：${value}V`
@@ -15,7 +23,7 @@ const onAmpChange = (value) => {
 <template>
   <div class="amp-wrapper">
     <el-slider
-      v-model="patientStore.amplitude"
+      v-model="localAmp"
       :min="0"
       :max="12.75"
       :step="0.05"
@@ -25,6 +33,7 @@ const onAmpChange = (value) => {
       placement="left"
       @change="onAmpChange"
     ></el-slider>
+    <!-- 展示真正的值，而不是随着拖曳实时变化的值 -->
     <div class="amp-label">幅值：{{ patientStore.amplitude }}V</div>
   </div>
 </template>
