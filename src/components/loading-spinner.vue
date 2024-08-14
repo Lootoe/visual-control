@@ -13,8 +13,8 @@ defineOptions({
 
 <style scoped lang="less">
 .spinner-wrapper {
-  width: 0.8rem;
-  height: 0.8rem;
+  width: 1rem;
+  height: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -25,7 +25,7 @@ defineOptions({
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    border: 0.02rem solid transparent;
+    border: 0.06rem solid transparent;
     border-top-color: #7766da;
     border-bottom-color: #ec4c24;
     animation: spinner 0.6s ease infinite;
@@ -39,7 +39,8 @@ defineOptions({
     justify-content: center;
     align-items: center;
     color: #fff;
-    font-size: 0.12rem;
+    font-size: 0.16rem;
+    font-weight: bold;
     letter-spacing: 0.01rem;
     animation: breathing 1.5s ease-in-out infinite;
   }

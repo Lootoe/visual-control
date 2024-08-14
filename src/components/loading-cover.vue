@@ -52,9 +52,9 @@ watch(
     align-items: center;
   }
   .loading-text {
-    font-size: 0.18rem;
+    font-size: 0.2rem;
     color: #eee;
-    margin-top: 0.2rem;
+    margin-top: 0.24rem;
   }
 }
 </style>
