@@ -124,13 +124,13 @@ export const generateVtaList = (nodes, position = 1) => {
       // 去除多余的1
       const newArr = processArray(arr)
       const url = processNiiUrl(position, newArr)
-      vtaSegments.push({
-        downloadUrl: url,
-        amplitude: 0,
-      })
+      vtaSegments.push(url)
     }
   }
-  return vtaSegments
+  return {
+    downloadUrlArr: vtaSegments,
+    amplitude: 0,
+  }
 }
 
 /**
@@ -173,7 +173,6 @@ export const updateProgramByNode = (params) => {
         nodeObj.amplitude = 0
       })
       // !根据触点的正负性生成VTAList
-      console.log('leadProgram.nodes', leadProgram.nodes)
       const vtaList = generateVtaList(leadProgram.nodes, position)
       leadProgram.vtaList = vtaList
     }
