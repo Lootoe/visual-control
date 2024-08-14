@@ -89,10 +89,18 @@ const processArray = (arr) => {
   return result
 }
 
-const processNiiName = (position, arr) => {
+const processNiiUrl = (position, arr) => {
   const source = arr.join('')
-  const downloadUrl = `Lead_${position}_${source}.nii.gz`
-  return downloadUrl
+  const fileName = `Lead_${position}_${source}.nii.gz`
+  // 从VTA里寻找对应的下载地址
+  const vtaAssets = patientStore.patientAssets.VTA
+  const res = vtaAssets.find((v) => v.fileName === fileName)
+  if (res) {
+    return res.downloadUrl
+  } else {
+    console.log('找不到VTA文件:', fileName)
+    return ''
+  }
 }
 
 export const generateVtaList = (nodes, position = 1) => {
@@ -115,8 +123,11 @@ export const generateVtaList = (nodes, position = 1) => {
       }
       // 去除多余的1
       const newArr = processArray(arr)
-      const fileName = processNiiName(position, newArr)
-      vtaSegments.push(fileName)
+      const url = processNiiUrl(position, newArr)
+      vtaSegments.push({
+        downloadUrl: url,
+        amplitude: 0,
+      })
     }
   }
   return vtaSegments
@@ -182,6 +193,9 @@ export const updateProgramByAmplitude = (amp = 0) => {
       if (leadProgram.display === 1) {
         leadProgram.nodes.forEach((nodeObj) => {
           nodeObj.amplitude = amp
+        })
+        leadProgram.vtaList.forEach((vtaObj) => {
+          vtaObj.amplitude = amp
         })
       }
     })
