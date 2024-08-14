@@ -63,11 +63,15 @@ const getName = (en, side) => {
   return name
 }
 
-const changeNucleusVisibleFn = (item, side) => {
-  item.visible[side] = !item.visible[side]
-  const { enName } = item
-  let name = getName(enName, side)
-  changeNucleusVisible(name, item.visible[side])
+const changeNucleusVisibleFn = (item, side, flag) => {
+  const visivle = flag ?? !item.visible[side]
+  const pass = Object.prototype.hasOwnProperty.call(item.visible, side)
+  if (pass) {
+    item.visible[side] = visivle
+    const { enName } = item
+    let name = getName(enName, side)
+    changeNucleusVisible(name, item.visible[side])
+  }
 }
 
 const changeNucleusColorFn = (item, color) => {
@@ -93,8 +97,22 @@ const onListScroll = () => {
 }
 
 const isMiddle = (item) => {
-  // eslint-disable-next-line no-prototype-builtins
-  return item.visible.hasOwnProperty('MIDDLE')
+  return Object.prototype.hasOwnProperty.call(item.visible, 'MIDDLE')
+}
+
+const hideAllNucleus = () => {
+  localNucleusList.value.forEach((v) => {
+    changeNucleusVisibleFn(v, nucleusSideEnum.LEFT, false)
+    changeNucleusVisibleFn(v, nucleusSideEnum.RIGHT, false)
+    changeNucleusVisibleFn(v, nucleusSideEnum.MIDDLE, false)
+  })
+}
+const showAllNucleus = () => {
+  localNucleusList.value.forEach((v) => {
+    changeNucleusVisibleFn(v, nucleusSideEnum.LEFT, true)
+    changeNucleusVisibleFn(v, nucleusSideEnum.RIGHT, true)
+    changeNucleusVisibleFn(v, nucleusSideEnum.MIDDLE, true)
+  })
 }
 </script>
 
@@ -154,6 +172,12 @@ const isMiddle = (item) => {
         </div>
       </div>
     </div>
+    <div class="bottom">
+      <div class="btn-box">
+        <div class="btn" style="margin-right: 0.12rem" @click="showAllNucleus">全部显示</div>
+        <div class="btn" @click="hideAllNucleus">全部隐藏</div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -209,7 +233,6 @@ const isMiddle = (item) => {
     grid-template-columns: 0.1fr 2.8fr 0.4fr;
     align-items: center;
     padding: 0.12rem 0.2rem;
-    border-top: 0.01rem solid #313746;
   }
   .item-left {
     margin-right: 0.2rem;
@@ -230,6 +253,23 @@ const isMiddle = (item) => {
       width: 0.28rem;
       height: 0.28rem;
       cursor: pointer;
+    }
+  }
+  .bottom {
+    display: flex;
+    justify-content: flex-end;
+    border-top: 0.01rem solid rgba(103, 110, 125, 1);
+    padding: 0.08rem 0.24rem;
+    .btn-box {
+      display: flex;
+      align-items: center;
+      .btn {
+        font-size: 0.16rem;
+        padding: 0.1rem 0.12rem;
+        border: 0.01rem solid rgba(103, 110, 125, 1);
+        border-radius: 0.04rem;
+        cursor: pointer;
+      }
     }
   }
 }
