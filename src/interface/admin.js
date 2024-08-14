@@ -33,6 +33,7 @@ const convertAssets = (params) => {
     head: {},
     matrix: {},
     filter: [],
+    VTA: [],
   }
   modalityResultList.forEach((item) => {
     if (item.type === 'nucleus') {
@@ -62,6 +63,9 @@ const convertAssets = (params) => {
     }
     if (item.type === 'filter') {
       assets.filter = item.downloadUrlList
+    }
+    if (item.type === 'VTA') {
+      assets.VTA = item.downloadUrlList
     }
   })
   return assets

@@ -1,5 +1,5 @@
 <script setup>
-import { updateProgramByAmplitude } from '@/libs/updateProgram.js'
+import { updateProgramByAmplitude } from '@/libs/mockProgram.js'
 import usePatientStoreHook from '@/store/usePatientStore.js'
 
 const patientStore = usePatientStoreHook()

@@ -1,5 +1,5 @@
 import { useMouseRaycast } from '@/libs/mouseRaycast'
-import { updateProgramByNode } from '@/libs/updateProgram'
+import { updateProgramByNode } from '@/libs/mockProgram'
 import useSceneStoreHook from '@/store/useSceneStore'
 
 const sceneStore = useSceneStoreHook()
