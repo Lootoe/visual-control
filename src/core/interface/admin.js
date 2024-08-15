@@ -1,6 +1,6 @@
 import { getImageInfo } from '@/utils/api'
 import usePatientStoreHook from '@/store/usePatientStore'
-import { generateProgram } from '@/libs/mockProgram'
+import { generateProgramCommon } from '@/core/mockProgram'
 
 const patientStore = usePatientStoreHook()
 
@@ -85,7 +85,7 @@ export default (params) => {
         } else {
           const data = apiResult.data.data
           const patientInfo = convertPatient(data)
-          const patientProgram = generateProgram(patientInfo.leads)
+          const patientProgram = generateProgramCommon(patientInfo.leads)
           const patientAssets = convertAssets(data)
           patientStore.$patch((state) => {
             state.patientInfo = patientInfo

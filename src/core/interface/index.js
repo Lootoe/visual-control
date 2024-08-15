@@ -1,5 +1,5 @@
 import { useRoute } from 'vue-router'
-import initAdminPatient from '@/interface/admin'
+import initAdminPatient from '@/core/interface/admin'
 import { initScene } from '@/modules/scene'
 import { initMatrix } from '@/modules/matrix'
 import { initNucleus } from '@/modules/nucleus'

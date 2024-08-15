@@ -1,5 +1,5 @@
 <script setup>
-import initModules from '@/interface'
+import initModules from '@/core/interface'
 
 defineOptions({
   name: 'control-scene',

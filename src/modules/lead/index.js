@@ -1,5 +1,5 @@
 import { __initLead } from './init'
-import { subscribeProgramUpdate } from './updateChipMesh'
+import { subscribeProgramUpdate } from './subscribeProgramUpdate'
 import { updateProgramOnClickedChip } from './updateProgramOnClickedChip'
 
 const initLead = () => {
