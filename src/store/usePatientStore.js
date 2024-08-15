@@ -6,12 +6,14 @@ const usePatientStore = defineStore('patientStore', () => {
   let patientProgram = ref({})
   let patientAssets = ref({})
   let amplitude = ref(0)
+  let controlType = ref(0)
 
   return {
     patientInfo,
     patientProgram,
     patientAssets,
     amplitude,
+    controlType,
   }
 })
 

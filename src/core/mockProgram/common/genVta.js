@@ -32,7 +32,7 @@ const processNiiUrl = (position, arr) => {
   return fileName
 }
 
-const generateVtaCommon = (nodes, position = 1) => {
+const generateVta = (nodes, position = 1) => {
   if (!nodes) return []
   const length = nodes.length
   let vtaSegments = []
@@ -70,4 +70,4 @@ const generateVtaCommon = (nodes, position = 1) => {
   }
 }
 
-export { generateVtaCommon }
+export { generateVta }

@@ -1,5 +1,5 @@
 import { leadEnum } from '@/enum/leadEnum'
-import { generateVtaCommon } from './genVta'
+import { generateVta } from './genVta'
 
 let chipIndex = 0
 
@@ -31,7 +31,7 @@ const generateProgramCommon = (leads) => {
   for (let position = 1; position <= leadLength; position++) {
     const { lead } = leads[position]
     const nodes = generateNodes(lead, position)
-    const defaultVta = generateVtaCommon(nodes, position)
+    const defaultVta = generateVta(nodes, position)
     // 填充默认的VTA
     // 全是lead_1_0000.nii.gz
     const program = {
