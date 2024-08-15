@@ -47,4 +47,9 @@ const calcUrlIsZero = (downloadUrl = '') => {
   }
 }
 
-export { isCombinationChanged, isAmplitudeChanged, isAmplitudeZero }
+// 计算旧模型是否已经加载过
+const calcMeshIsLoaded = (oldVta) => {
+  return !!oldVta.mesh
+}
+
+export { isCombinationChanged, isAmplitudeChanged, isAmplitudeZero, calcMeshIsLoaded }
