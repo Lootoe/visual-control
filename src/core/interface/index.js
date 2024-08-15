@@ -7,7 +7,6 @@ import { initLead, updateProgramOnClickedChip } from '@/modules/lead'
 import { initFiber } from '@/modules/fiber'
 import { initAxesHelper, initCortex, initBrain } from '@/modules/addons'
 import { initFilter } from '@/modules/filter'
-import { subscribeProgramUpdate } from '@/modules/electric'
 
 import useSceneStoreHook from '@/store/useSceneStore'
 import usePatientStoreHook from '@/store/usePatientStore'
@@ -93,6 +92,5 @@ const handleAdmin = () => {
       initAxesHelper()
       initBrain()
       initCortex()
-      subscribeProgramUpdate()
     })
 }

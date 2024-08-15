@@ -12,4 +12,6 @@ const initLead = () => {
       .catch(reject)
   })
 }
+
+// 将updateProgramOnClickedChip导出，是因为PAD\PC端不需要这个功能
 export { initLead, updateProgramOnClickedChip }
