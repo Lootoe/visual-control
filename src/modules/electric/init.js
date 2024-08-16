@@ -1,26 +1,30 @@
 import usePatientStoreHook from '@/store/usePatientStore'
 import useVtaStoreHook from '@/store/useVtaStore'
+import { convertToVtaTable } from './subscribeProgramUpdate'
+import { map } from 'radash'
+import { addMesh } from '@/modules/scene'
+import { loadElectric } from './loadElectric'
+import { renderElectric } from './renderElectric'
 
 const patientStore = usePatientStoreHook()
 const vtaStore = useVtaStoreHook()
 
-export const convertToVtaTable = (program) => {
-  const vtaTable = {}
-  // 第一层是不同电极
-  // 第二层forEach是同根电极的不同program
-  Object.keys(program).forEach((position) => {
-    const arr = program[position]
-    vtaTable[position] = []
-    arr.forEach((leadProgram) => {
-      const { vtaList, display } = leadProgram
-      if (display === 1) {
-        vtaTable[position].push(...vtaList)
+export const __initElectric = async () => {
+  // 防止引用导致内存泄漏，直接拷贝一份
+  const newProgram = JSON.parse(JSON.stringify(patientStore.patientProgram))
+  const vtaTable = convertToVtaTable(newProgram)
+  await map(Object.values(vtaTable), async (vtaList) => {
+    await map(vtaList, async (vta) => {
+      if (vta.amplitude > 0) {
+        const vtaData = await loadElectric(vta.downloadUrlArr)
+        if (vtaData) {
+          const newMesh = renderElectric(vtaData, vta.amplitude)
+          vta.vtaData = vtaData
+          vta.mesh = newMesh
+          addMesh(newMesh)
+        }
       }
     })
   })
-  return vtaTable
-}
-
-export const __initElectric = () => {
-  vtaStore.vtaTable = convertToVtaTable(patientStore.patientProgram)
+  vtaStore.vtaTable = vtaTable
 }

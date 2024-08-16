@@ -7,12 +7,28 @@ import useSceneStoreHook from '@/store/useSceneStore'
 
 const sceneStore = useSceneStoreHook()
 
+// 判断触点组合的URL是否为空
+const calcUrlIsZero = (downloadUrl = '') => {
+  try {
+    const str_1 = downloadUrl.split('_').pop()
+    const str_2 = str_1.split('.').shift()
+    const isZero = parseFloat(str_2) === 0
+    return isZero
+  } catch (error) {
+    return false
+  }
+}
+
 export const loadElectric = async (downloadUrlArr) => {
   const buffers = []
   await map(downloadUrlArr, async (downloadUrl) => {
-    const buffer = await loadNii(downloadUrl)
-    buffers.push(buffer)
+    if (!calcUrlIsZero(downloadUrl)) {
+      const buffer = await loadNii(downloadUrl)
+      buffers.push(buffer)
+    }
   })
+
+  if (buffers.length === 0) return null
 
   let fusionHeader = null
   let imageDataLength = 0
