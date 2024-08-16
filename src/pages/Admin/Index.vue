@@ -20,7 +20,7 @@ const changeToolItem = (toolIndex) => {
 
 <template>
   <div class="page-wrapper">
-    <control-scene></control-scene>
+    <control-scene @click="activedToolIndex = -1"></control-scene>
     <change-scene-side :backgroundColor="uiBg"></change-scene-side>
     <nucleus-panel v-show="activedToolIndex === 0" :backgroundColor="uiBg"></nucleus-panel>
     <visible-panel v-show="activedToolIndex === 1" :backgroundColor="uiBg"></visible-panel>
