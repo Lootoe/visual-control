@@ -25,6 +25,9 @@ export const brainSyncRotate = () => {
   const mainSceneManager = sceneStore.mainSceneManager
   const assistSceneManager = sceneStore.assistSceneManager
   mainSceneManager.controls.addEventListener('change', () => {
-    changeHeadSide(mainSceneManager, assistSceneManager)
+    const isPanning = mainSceneManager.controls.isPanning
+    if (!isPanning) {
+      changeHeadSide(mainSceneManager, assistSceneManager)
+    }
   })
 }
