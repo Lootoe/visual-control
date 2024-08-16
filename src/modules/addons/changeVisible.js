@@ -30,8 +30,10 @@ const changeAddonsVisible = (key, flag) => {
   if (key === 'cortex') {
     target = addonStore.addons.cortex
   }
-  target.mesh.visible = flag
-  target.visible = flag
+  if (target) {
+    target.mesh.visible = flag
+    target.visible = flag
+  }
 }
 
 export const changeVisible = (type, visible) => {
