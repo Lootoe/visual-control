@@ -1,4 +1,12 @@
 <script setup>
+import usePatientStoreHook from '@/store/usePatientStore'
+import { computed } from 'vue'
+
+const patientStore = usePatientStoreHook()
+const hasFiber = computed(() => {
+  return patientStore.patientAssets?.fiber?.length > 0
+})
+
 const uiBg = import.meta.env.VITE_UI_BG
 const activedToolIndex = ref(-1)
 const changeToolItem = (toolIndex) => {
@@ -35,7 +43,7 @@ const changeToolItem = (toolIndex) => {
         <img src="@/assets/img/layers.png" alt="" />
       </div>
     </div>
-    <div class="bottom-box">
+    <div class="bottom-box" v-if="hasFiber">
       <div class="fiber-btn" @click="changeToolItem(2)" :backgroundColor="uiBg">
         <img src="@/assets/img/arrow.png" :class="{ down: activedToolIndex !== 2 }" />
         <div class="btn__text">神经纤维</div>
