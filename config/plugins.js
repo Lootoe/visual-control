@@ -6,7 +6,7 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 const basePlugins = [
   vue(),
   AutoImport({
-    imports: ['vue', 'vue-router', 'pinia', '@vueuse/core'],
+    imports: ['vue', 'vue-router', 'pinia'],
     eslintrc: {
       enabled: true,
       filepath: './.eslintrc-auto-import.json',
