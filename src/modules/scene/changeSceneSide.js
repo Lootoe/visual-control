@@ -14,7 +14,7 @@ export const SCENE_FACES = [
   {
     name: '正面',
     icon: loadImg('front.png'),
-    vector: [0, 0, 2.5],
+    vector: [0, 0, 2.2],
     rotation: {
       x: 0,
       y: 0,
@@ -24,7 +24,7 @@ export const SCENE_FACES = [
   {
     name: '背面',
     icon: loadImg('behind.png'),
-    vector: [0, 0, -2.5],
+    vector: [0, 0, -2.2],
     rotation: {
       x: 0,
       y: 0,
@@ -34,7 +34,7 @@ export const SCENE_FACES = [
   {
     name: '左侧面',
     icon: loadImg('left.png'),
-    vector: [2.5, 0, 0],
+    vector: [2.2, 0, 0],
     rotation: {
       x: 0,
       y: 0,
@@ -44,7 +44,7 @@ export const SCENE_FACES = [
   {
     name: '右侧面',
     icon: loadImg('right.png'),
-    vector: [-2.5, 0, 0],
+    vector: [-2.2, 0, 0],
     rotation: {
       x: 0,
       y: 0,
@@ -54,7 +54,7 @@ export const SCENE_FACES = [
   {
     name: '顶面',
     icon: loadImg('top.png'),
-    vector: [0, 2.5, 0],
+    vector: [0, 2.2, 0],
     rotation: {
       x: 0,
       y: 0,
@@ -64,7 +64,7 @@ export const SCENE_FACES = [
   {
     name: '底面',
     icon: loadImg('bottom.png'),
-    vector: [0, -2.5, 0],
+    vector: [0, -2.2, 0],
     rotation: {
       x: 0,
       y: 0,
