@@ -117,5 +117,5 @@ const generateField = (nArray, header) => {
     }
   }
 
-  return { dims: nArray.shape, points, values }
+  return { shape: nArray.shape, points, values }
 }

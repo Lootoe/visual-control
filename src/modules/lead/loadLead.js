@@ -66,7 +66,7 @@ export const loadLeadTxt = (url) => {
             const position = Number(lenResult[0].match(/\d{1}/)[0])
             // 提取后面的数字
             const len = Number(v.split(reg3)[1])
-            const target = leads.find((v) => v.position === position)
+            const target = leads[position]
             target.leadLen = len
           }
         })

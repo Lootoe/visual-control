@@ -1,3 +1,6 @@
+import usePatientStoreHook from '@/store/usePatientStore'
+const patientStore = usePatientStoreHook()
+
 const processArray = (arr) => {
   let result = new Array(arr.length).fill(0) // 初始化结果数组，全部为0
   let n = arr.length
@@ -29,7 +32,14 @@ const processArray = (arr) => {
 const processNiiUrl = (position, arr) => {
   const source = arr.join('')
   const fileName = `Lead_${position}_${source}.nii.gz`
-  return fileName
+  // 用真实的下载地址替换文件名
+  const vtaAssets = patientStore.patientAssets.VTA
+  const target = vtaAssets.find((v) => v.fileName === fileName)
+  if (target) {
+    return target.downloadUrl
+  } else {
+    return fileName
+  }
 }
 
 const generateVta = (nodes, position = 1) => {

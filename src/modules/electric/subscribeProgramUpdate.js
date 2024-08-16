@@ -5,8 +5,8 @@
  */
 import usePatientStoreHook from '@/store/usePatientStore'
 import useVtaStoreHook from '@/store/useVtaStore'
-import { manageVta } from './manageVta'
 import { convertToVtaTable } from './init'
+import { diffVtaList, handleStuff } from './diffVta'
 
 const patientStore = usePatientStoreHook()
 const vtaStore = useVtaStoreHook()
@@ -19,10 +19,18 @@ export const subscribeProgramUpdate = () => {
     const newProgram = JSON.parse(JSON.stringify(state.patientProgram))
     // 将program转换为VtaTable的结构
     const newVtaTable = convertToVtaTable(newProgram)
-    const oldVtaTable = vtaStore.vtaTable
-    console.log('newVtaTable', newVtaTable)
-    console.log('oldVtaTable', oldVtaTable)
+    const oldVtaTable = vtaStore.$state.vtaTable
     manageVta(newVtaTable, oldVtaTable)
     vtaStore.vtaTable = newVtaTable
+  })
+}
+
+const manageVta = (newVtaTable, oldVtaTable) => {
+  Object.keys(newVtaTable).forEach((position) => {
+    const newVtaList = newVtaTable[position]
+    const oldVtaList = oldVtaTable[position]
+    const stuffList = diffVtaList(newVtaList, oldVtaList)
+    console.log('【VtaStuffList】', stuffList)
+    handleStuff(stuffList)
   })
 }

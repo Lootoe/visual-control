@@ -84,13 +84,16 @@ export default (params) => {
           return reject('该患者尚无影像数据')
         } else {
           const data = apiResult.data.data
+          const patientAssets = convertAssets(data)
+          // 放到前面，是因为program要依赖于assets生成
+          patientStore.$patch((state) => {
+            state.patientAssets = patientAssets
+          })
           const patientInfo = convertPatient(data)
           const patientProgram = generateProgram(patientInfo.leads)
-          const patientAssets = convertAssets(data)
           patientStore.$patch((state) => {
             state.patientInfo = patientInfo
             state.patientProgram = patientProgram
-            state.patientAssets = patientAssets
           })
           resolve()
         }

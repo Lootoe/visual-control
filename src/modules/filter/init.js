@@ -90,7 +90,7 @@ const initChipFilter = async (filterAssets) => {
         // 0,1,2,3代表position电极从下往上的第几个触点
         const target = leadProgram[leadPosition]
         if (target) {
-          const actualNum = target.nodes[Number(chipNum)].index
+          const actualNum = target[0].nodes[Number(chipNum)].index
           results.push({
             index: actualNum,
             exist: true,
