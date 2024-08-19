@@ -32,7 +32,7 @@ export const convertToVtaTable = (program) => {
 // 在调节幅值时，根据nii field构建模型
 export const subscribeProgramUpdate = () => {
   // 采用队列机制，如果当前有电场在处理，必须等当前的电场处理完毕，才能处理下一个
-  const queue = []
+  let queue = []
   let flag = false
   patientStore.$subscribe((mutation, state) => {
     const fn = async () => {
@@ -46,7 +46,9 @@ export const subscribeProgramUpdate = () => {
       vtaStore.vtaTable = newVtaTable
       flag = false
       if (queue.length > 0) {
-        const nextFn = queue.shift()
+        // 只处理最后一个
+        const nextFn = queue.pop()
+        queue = []
         nextFn()
       }
     }

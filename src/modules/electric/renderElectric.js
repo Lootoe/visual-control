@@ -5,7 +5,7 @@ const calcThreshold = (strength) => {
   // 本来幅值是从0.8到3V均匀变化的
   // 现在将其变化区间改为了1.2-3V
   // 但是总步数还是没变
-  if (strength <= 0.7) return 99999
+  if (strength < 0.8) return 99999
   let actualNum = strength
   const min = 0.8
   const replaceMin = 1.2
