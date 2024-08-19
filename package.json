@@ -22,6 +22,7 @@
     "lint": "npx eslint  --ext .js,.vue src/"
   },
   "dependencies": {
+    "@tweenjs/tween.js": "^25.0.0",
     "axios": "^1.6.8",
     "dsbridge": "^3.1.4",
     "element-plus": "^2.7.2",

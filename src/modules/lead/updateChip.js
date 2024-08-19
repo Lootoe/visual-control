@@ -23,7 +23,8 @@ export const updateChip = (newProgram) => {
           target.color = color === '' ? defaultColor : color
           target.amplitude = amplitude
           const mesh = target.mesh
-          const userData = { position, node, index }
+          const fixed = { position, node, index }
+          const userData = Object.assign(target.mesh.userData, fixed)
           mesh.userData = userData
           mesh.material.color = new THREE.Color(target.color)
         })
