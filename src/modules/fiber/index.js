@@ -1,4 +1,4 @@
-import { renderFiber } from './renderFiber'
+import { renderFiber, renderFiberInOneMesh } from './renderFiber'
 import { initFiber } from './init'
 
-export { renderFiber, initFiber }
+export { renderFiber, initFiber, renderFiberInOneMesh }

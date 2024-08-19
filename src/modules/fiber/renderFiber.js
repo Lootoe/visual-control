@@ -48,3 +48,27 @@ export const renderFiber = (vectors) => {
   const line = new THREE.Line(geometry, lineMat)
   return line
 }
+
+export const renderFiberInOneMesh = (sourceFibers) => {
+  // 使用坐标构建纤维素
+  const allPositions = []
+  const allColors = []
+  sourceFibers.forEach((vectors) => {
+    const curve = new THREE.CatmullRomCurve3(vectors)
+    const len = vectors.length
+    const colors = calcColors(curve, len)
+    for (let i = 0; i < len; i++) {
+      let v = curve.getPointAt(i / (len - 1))
+      allPositions.push(v.x, v.y, v.z)
+    }
+    allColors.push(...colors)
+    // 添加NaN值点，让神经纤维截断
+    allPositions.push(NaN, NaN, NaN)
+    allColors.push(0, 0, 0)
+  })
+  const geometry = new THREE.BufferGeometry()
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute(allPositions, 3))
+  geometry.setAttribute('color', new THREE.Float32BufferAttribute(allColors, 3))
+  const line = new THREE.Line(geometry, new THREE.LineBasicMaterial({ vertexColors: true }))
+  return line
+}
