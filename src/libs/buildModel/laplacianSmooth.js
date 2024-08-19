@@ -1,6 +1,5 @@
 import * as THREE from 'three'
 import '@/libs/buildModel/toIndexed'
-import { BufferGeometryUtils } from 'three/examples/jsm/Addons.js'
 
 // 预计算邻居顶点及其法线
 const precomputeNeighborsAndNormals = (indexes, vertices, vertexNormals) => {
@@ -143,7 +142,6 @@ export const laplacianSmooth = (geometry, iterations = 1, lambda = 1, mu = -1) =
 
   const positionAttribute = new THREE.Float32BufferAttribute(newVertices, 3)
   newGeo.setAttribute('position', positionAttribute)
-  const finalGeo = BufferGeometryUtils.mergeVertices(newGeo, 0.1)
-  finalGeo.computeVertexNormals()
-  return finalGeo
+  newGeo.computeVertexNormals()
+  return newGeo
 }
