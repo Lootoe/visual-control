@@ -83,3 +83,16 @@ export const renderTracedFiber = (fiberIndexes) => {
   addMeshes(fiberMeshes)
   fiberStore.displayingFiberList = fiberMeshes
 }
+
+export const renderAllFiber = () => {
+  clearFibers()
+  const fiberList = fiberStore.fiberList
+  // 使用坐标构建纤维素
+  const fiberMeshes = []
+  fiberList.forEach((vectors) => {
+    const fiberMesh = renderFiber(vectors)
+    fiberMeshes.push(fiberMesh)
+  })
+  addMeshes(fiberMeshes)
+  fiberStore.displayingFiberList = fiberMeshes
+}

@@ -18,7 +18,17 @@ import {
   renderTracedFiber,
   compileTracingContext,
   tracingFiber,
+  renderAllFiber,
 } from '@/modules/filter'
+
+window.hack.sf = () => {
+  loadingStore.loading = true
+  loadingStore.loadingText = '正在追踪神经纤维'
+  setTimeout(() => {
+    renderAllFiber()
+    loadingStore.loading = false
+  }, 200)
+}
 
 const filterStore = useFilterStoreHook()
 const fiberStore = useFiberStoreHook()
