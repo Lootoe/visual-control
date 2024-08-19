@@ -27,6 +27,7 @@ window.hack.sf = () => {
   setTimeout(() => {
     renderAllFiber()
     loadingStore.loading = false
+    showReset.value = true
   }, 200)
 }
 
