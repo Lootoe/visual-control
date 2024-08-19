@@ -96,3 +96,36 @@ export const renderAllFiber = () => {
   addMeshes(fiberMeshes)
   fiberStore.displayingFiberList = fiberMeshes
 }
+
+// 显示不能追踪到的神经纤维
+export const renderRestFiber = () => {
+  clearFibers()
+  tracingFiber()
+  const fiberList = fiberStore.fiberList
+  console.log('filterStore', filterStore)
+  const nucleusFilter = filterStore.nucleusFilter
+  const chipFilter = filterStore.chipFilter
+  const nucleusIndexes = []
+  const chipIndexes = []
+  nucleusFilter.forEach((filter) => {
+    nucleusIndexes.push(...filter.crossedFibers)
+  })
+  chipFilter.forEach((filter) => {
+    chipIndexes.push(...filter.crossedFibers)
+  })
+  const needToShowFibers = []
+  // 先根据索引拿到纤维素的坐标
+  fiberList.forEach((fiber, index) => {
+    if (!nucleusIndexes.includes(index) && !chipIndexes.includes(index)) {
+      needToShowFibers.push(fiber)
+    }
+  })
+  // 使用坐标构建纤维素
+  const fiberMeshes = []
+  needToShowFibers.forEach((vectors) => {
+    const fiberMesh = renderFiber(vectors)
+    fiberMeshes.push(fiberMesh)
+  })
+  addMeshes(fiberMeshes)
+  fiberStore.displayingFiberList = fiberMeshes
+}

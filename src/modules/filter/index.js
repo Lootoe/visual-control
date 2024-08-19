@@ -1,5 +1,11 @@
 import { initFilter } from './init'
-import { tracingFiber, clearFibers, renderTracedFiber, renderAllFiber } from './traceFiber'
+import {
+  tracingFiber,
+  clearFibers,
+  renderTracedFiber,
+  renderAllFiber,
+  renderRestFiber,
+} from './traceFiber'
 import { compileTracingContext } from './compileFiberContext'
 
 export {
@@ -9,4 +15,5 @@ export {
   renderTracedFiber,
   compileTracingContext,
   renderAllFiber,
+  renderRestFiber,
 }

@@ -19,13 +19,26 @@ import {
   compileTracingContext,
   tracingFiber,
   renderAllFiber,
+  renderRestFiber,
 } from '@/modules/filter'
 
+// 显示所有神经纤维，而不是能追踪到的神经纤维
 window.hack.sf = () => {
   loadingStore.loading = true
   loadingStore.loadingText = '正在追踪神经纤维'
   setTimeout(() => {
     renderAllFiber()
+    loadingStore.loading = false
+    showReset.value = true
+  }, 200)
+}
+
+// 显示不能追踪到的神经纤维
+window.hack.rsf = () => {
+  loadingStore.loading = true
+  loadingStore.loadingText = '正在追踪神经纤维'
+  setTimeout(() => {
+    renderRestFiber()
     loadingStore.loading = false
     showReset.value = true
   }, 200)
