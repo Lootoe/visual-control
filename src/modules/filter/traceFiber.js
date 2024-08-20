@@ -102,7 +102,6 @@ export const renderRestFiber = () => {
   clearFibers()
   tracingFiber()
   const fiberList = fiberStore.fiberList
-  console.log('filterStore', filterStore)
   const nucleusFilter = filterStore.nucleusFilter
   const chipFilter = filterStore.chipFilter
   const nucleusIndexes = []
