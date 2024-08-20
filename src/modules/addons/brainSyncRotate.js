@@ -27,7 +27,6 @@ const changeHeadSide = (mainSceneManager) => {
 
   // 计算方位角，相机相对于模型在XZ平面的角度
   let theta = Math.atan2(relativePosition.x, relativePosition.z)
-  console.log('theta', theta)
   // 将俯仰角和方位角应用到模型的旋转
   assistBrain.rotation.set(phi, -theta, 0)
 }
