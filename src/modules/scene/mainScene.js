@@ -55,6 +55,8 @@ export const initMainScene = (selector, config) => {
   controls.minDistance = zoomLimit[0]
   controls.maxDistance = zoomLimit[1]
   sceneStore.mainSceneManager.controls = controls
+  controls.maxPolarAngle = (Math.PI * 9) / 10
+  controls.minPolarAngle = Math.PI / 10
 
   // ambientLight
   const ambientLight = new THREE.AmbientLight(0xffffff, 1)
