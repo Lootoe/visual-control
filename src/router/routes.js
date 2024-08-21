@@ -13,6 +13,10 @@ const DEMORoutes = [
     path: '/demo/index',
     component: () => import('@/pages/Demo/Index.vue'),
   },
+  {
+    path: '/demo/patient',
+    component: () => import('@/pages/Demo/SelectPatient.vue'),
+  },
 ]
 
 const PCRoutes = [

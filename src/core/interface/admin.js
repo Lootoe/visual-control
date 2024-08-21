@@ -1,6 +1,25 @@
 import usePatientStoreHook from '@/store/usePatientStore'
 import { generateProgram } from '@/core/mockProgram'
-import { getImageInfoByIPGSN } from '../convert/getImageInfo'
+import { getImageInfo } from '@/utils/api'
+import { convertPatient } from '../convert/convertPatient'
+import { convertAssets } from '../convert/convertAssets'
+
+const getImageInfoByIPGSN = (params) => {
+  return new Promise((resolve, reject) => {
+    getImageInfo(params)
+      .then((apiResult) => {
+        if (!apiResult?.data) {
+          return reject('该患者尚无影像数据')
+        } else {
+          const data = apiResult.data.data
+          const patientAssets = convertAssets(data)
+          const patientInfo = convertPatient(data)
+          resolve({ patientInfo, patientAssets })
+        }
+      })
+      .catch(reject)
+  })
+}
 
 const patientStore = usePatientStoreHook()
 

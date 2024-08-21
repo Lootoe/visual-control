@@ -2,6 +2,7 @@ import initAdminPatient from '@/core/interface/admin'
 import initPCPatient from '@/core/interface/pc'
 import initPadPatient from '@/core/interface/pad'
 import { switchTo2D } from '@/core/interface/pad'
+import initDemoPatient from '@/core/interface/demo'
 import { initScene } from '@/modules/scene'
 import { initMatrix } from '@/modules/matrix'
 import { initNucleus } from '@/modules/nucleus'
@@ -63,6 +64,9 @@ export default () => {
     } else {
       handlePad()
     }
+  }
+  if (SRENV.IS_PLATFORM_DEMO()) {
+    handleDemo()
   }
 }
 
@@ -206,5 +210,56 @@ const handlePad = () => {
     })
     .catch(() => {
       switchTo2D()
+    })
+}
+
+const handleDemo = () => {
+  // 从URL获取IPGSN
+  const route = useRoute()
+  const queryParams = route.query
+  const sceneBg = import.meta.env.VITE_SCENE_BG
+  loadingStore.loading = true
+  loadingStore.loadingText = '正在初始化场景'
+  initScene({
+    mainSceneSelector: '.main-scene',
+    mainSceneConfig: { backgroundColor: sceneBg },
+    assistSceneSelector: '.assist-scene',
+    assistSceneConfig: { backgroundColor: sceneBg },
+  })
+    .then(() => {
+      loadingStore.loadingText = '正在下载患者影像'
+      loadingStore.loading = false
+      return initDemoPatient({ demoId: queryParams.demoId })
+    })
+    .then(() => {
+      return initMatrix()
+    })
+    .then(() => {
+      loadingStore.loadingText = '正在处理核团'
+      return initNucleus()
+    })
+    .then(() => {
+      loadingStore.loadingText = '正在处理电极'
+      return initLead()
+    })
+    .then(() => {
+      loadingStore.loadingText = '正在处理神经纤维'
+      return initFiber()
+    })
+    .then(() => {
+      return initFilter()
+    })
+    .then(() => {
+      loadingStore.loadingText = '加载成功'
+      loadingStore.loading = false
+      logData()
+    })
+    .then(() => {
+      // 预览端，采用自己造的Program
+      updateProgramOnClickedChip()
+      initAxesHelper()
+      initBrain()
+      initCortex()
+      initElectric()
     })
 }
