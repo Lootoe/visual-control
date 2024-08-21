@@ -1,6 +1,11 @@
 <script setup>
 import usePatientStoreHook from '@/store/usePatientStore'
-import { computed } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const goBack = () => {
+  router.replace('/demo/patient')
+}
 
 const patientStore = usePatientStoreHook()
 const hasFiber = computed(() => {
@@ -28,6 +33,9 @@ const changeToolItem = (toolIndex) => {
     <amp-slider></amp-slider>
     <qi-cranial></qi-cranial>
     <div class="tool-box">
+      <div class="tool-item" @click="goBack()" :style="{ backgroundColor: uiBg }">
+        <img src="@/assets/img/leftArrow.svg" alt="" />
+      </div>
       <div
         class="tool-item"
         @click="changeToolItem(0)"
