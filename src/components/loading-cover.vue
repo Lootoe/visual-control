@@ -11,6 +11,7 @@ const localLoading = ref(false)
 watch(
   () => loadingStore.loading,
   (val) => {
+    console.log('val', val)
     if (!val) {
       loadingStore.opacity = 0
       setTimeout(() => {
@@ -21,7 +22,8 @@ watch(
     } else {
       localLoading.value = true
     }
-  }
+  },
+  { immediate: true }
 )
 </script>
 
