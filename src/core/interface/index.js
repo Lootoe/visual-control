@@ -1,5 +1,6 @@
 import { useRoute } from 'vue-router'
 import initAdminPatient from '@/core/interface/admin'
+import initPCPatient from '@/core/interface/pc'
 import { initScene } from '@/modules/scene'
 import { initMatrix } from '@/modules/matrix'
 import { initNucleus } from '@/modules/nucleus'
@@ -42,8 +43,11 @@ const logData = () => {
 
 export default () => {
   const SRENV = globalThis.SRENV
-  if (SRENV.IS_PLATFORM_ADMIN) {
+  if (SRENV.IS_PLATFORM_ADMIN()) {
     handleAdmin()
+  }
+  if (SRENV.IS_PLATFORM_PC()) {
+    handlePC()
   }
 }
 
@@ -90,6 +94,51 @@ const handleAdmin = () => {
     .then(() => {
       // 预览端，采用自己造的Program
       updateProgramOnClickedChip()
+      initAxesHelper()
+      initBrain()
+      initCortex()
+      initElectric()
+    })
+}
+
+const handlePC = () => {
+  const sceneBg = import.meta.env.VITE_SCENE_BG
+  loadingStore.loading = true
+  loadingStore.loadingText = '正在初始化场景'
+  initScene({
+    mainSceneSelector: '.main-scene',
+    mainSceneConfig: { backgroundColor: sceneBg },
+    assistSceneSelector: '.assist-scene',
+    assistSceneConfig: { backgroundColor: sceneBg },
+  })
+    .then(() => {
+      loadingStore.loadingText = '正在下载患者影像'
+      return initPCPatient()
+    })
+    .then(() => {
+      return initMatrix()
+    })
+    .then(() => {
+      loadingStore.loadingText = '正在处理核团'
+      return initNucleus()
+    })
+    .then(() => {
+      loadingStore.loadingText = '正在处理电极'
+      return initLead()
+    })
+    .then(() => {
+      loadingStore.loadingText = '正在处理神经纤维'
+      return initFiber()
+    })
+    .then(() => {
+      return initFilter()
+    })
+    .then(() => {
+      loadingStore.loadingText = '加载成功'
+      loadingStore.loading = false
+      logData()
+    })
+    .then(() => {
       initAxesHelper()
       initBrain()
       initCortex()

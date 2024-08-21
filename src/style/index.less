@@ -26,7 +26,7 @@ html {
 @media screen and (max-width: 750px) {
     html {
         // 最小屏幕设备上的字体大小设置最大，以确保可读性
-        font-size: calc(@ratio * 1.6vw / 1920);
+        font-size: calc(@ratio * 1.5vw / 1920);
     }
 }
 
@@ -44,4 +44,8 @@ html {
         // 在高分辨率小屏幕设备上的字体大小设置为最大
         font-size: calc(@ratio * 1.8vw / 1920);
     }
+}
+
+body {
+    overflow: hidden;
 }
