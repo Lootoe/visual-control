@@ -1,6 +1,12 @@
 // 统一使用downloadUrl\fileName的数据结构
 export const convertAssets = (params) => {
-  const { modalityResultList } = params
+  let sourceData
+  if (params.modalityResultList) {
+    sourceData = params.modalityResultList
+  }
+  if (params.assetsList) {
+    sourceData = params.assetsList
+  }
   const assets = {
     nucleus: [],
     lead: [],
@@ -10,7 +16,7 @@ export const convertAssets = (params) => {
     filter: [],
     VTA: [],
   }
-  modalityResultList.forEach((item) => {
+  sourceData.forEach((item) => {
     if (item.type === 'nucleus') {
       assets.nucleus = item.downloadUrlList
     }

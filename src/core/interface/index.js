@@ -1,6 +1,7 @@
-import { useRoute } from 'vue-router'
 import initAdminPatient from '@/core/interface/admin'
 import initPCPatient from '@/core/interface/pc'
+import initPadPatient from '@/core/interface/pad'
+import { switchTo2D } from '@/core/interface/pad'
 import { initScene } from '@/modules/scene'
 import { initMatrix } from '@/modules/matrix'
 import { initNucleus } from '@/modules/nucleus'
@@ -9,6 +10,7 @@ import { initFiber } from '@/modules/fiber'
 import { initAxesHelper, initCortex, initBrain } from '@/modules/addons'
 import { initFilter } from '@/modules/filter'
 import { initElectric } from '@/modules/electric'
+import { useRoute } from 'vue-router'
 
 import useSceneStoreHook from '@/store/useSceneStore'
 import usePatientStoreHook from '@/store/usePatientStore'
@@ -48,6 +50,19 @@ export default () => {
   }
   if (SRENV.IS_PLATFORM_PC()) {
     handlePC()
+  }
+  if (SRENV.IS_PLATFORM_PAD()) {
+    if (SRENV.IS_MODE_DEV()) {
+      const sceneBg = import.meta.env.VITE_SCENE_BG
+      initScene({
+        mainSceneSelector: '.main-scene',
+        mainSceneConfig: { backgroundColor: sceneBg },
+        assistSceneSelector: '.assist-scene',
+        assistSceneConfig: { backgroundColor: sceneBg },
+      })
+    } else {
+      handlePad()
+    }
   }
 }
 
@@ -143,5 +158,53 @@ const handlePC = () => {
       initBrain()
       initCortex()
       initElectric()
+    })
+}
+
+const handlePad = () => {
+  const sceneBg = import.meta.env.VITE_SCENE_BG
+  loadingStore.loading = true
+  loadingStore.loadingText = '正在初始化场景'
+  initScene({
+    mainSceneSelector: '.main-scene',
+    mainSceneConfig: { backgroundColor: sceneBg },
+    assistSceneSelector: '.assist-scene',
+    assistSceneConfig: { backgroundColor: sceneBg },
+  })
+    .then(() => {
+      loadingStore.loadingText = '正在下载患者影像'
+      return initPadPatient()
+    })
+    .then(() => {
+      return initMatrix()
+    })
+    .then(() => {
+      loadingStore.loadingText = '正在处理核团'
+      return initNucleus()
+    })
+    .then(() => {
+      loadingStore.loadingText = '正在处理电极'
+      return initLead()
+    })
+    .then(() => {
+      loadingStore.loadingText = '正在处理神经纤维'
+      return initFiber()
+    })
+    .then(() => {
+      return initFilter()
+    })
+    .then(() => {
+      loadingStore.loadingText = '加载成功'
+      loadingStore.loading = false
+      logData()
+    })
+    .then(() => {
+      initAxesHelper()
+      initBrain()
+      initCortex()
+      initElectric()
+    })
+    .catch(() => {
+      switchTo2D()
     })
 }

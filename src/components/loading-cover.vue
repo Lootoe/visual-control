@@ -5,7 +5,7 @@ defineOptions({
 import useLoadingStoreHook from '@/store/useLoadingStore'
 import { ref, watch } from 'vue'
 const loadingStore = useLoadingStoreHook()
-const localLoading = ref(true)
+const localLoading = ref(false)
 
 // 这个watch是为了每次消失前，有个5秒渐变
 watch(
