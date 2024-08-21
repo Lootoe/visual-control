@@ -51,10 +51,6 @@ const defaultRoutes = [
     path: '/',
     redirect: allowedRoutes[0].path,
   },
-  {
-    path: '/error/route',
-    component: () => import('@/pages/Error/Route.vue'),
-  },
 ]
 
 const currentEnvRoutes = [...allowedRoutes, ...defaultRoutes]
