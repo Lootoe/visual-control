@@ -24,11 +24,41 @@ const laplacian = (vertex, neighbors) => {
   return smoothedPosition.sub(vertex)
 }
 
+// 修正法线梯度的计算方法
+const computeNormalGradient = (vertex, neighbors) => {
+  let gradientSum = 0
+  const referenceNormal = new THREE.Vector3()
+
+  // 计算当前顶点的参考法线
+  neighbors.forEach((neighbor) => {
+    const edge = neighbor.clone().sub(vertex)
+    referenceNormal.add(edge)
+  })
+  referenceNormal.normalize()
+
+  // 计算每个相邻顶点的法线偏离
+  neighbors.forEach((neighbor) => {
+    const edge = neighbor.clone().sub(vertex)
+    const edgeNormal = edge.clone().normalize()
+    const angle = referenceNormal.angleTo(edgeNormal)
+    gradientSum += angle
+  })
+
+  return gradientSum / neighbors.length
+}
+
 const laplacianSmoothStep = (vertices, neighborsMap, lambda) => {
   const newVertices = []
   vertices.forEach((vertex, vertexIndex) => {
     const neighbors = Array.from(neighborsMap.get(vertexIndex)).map((index) => vertices[index])
-    const delta = laplacian(vertex, neighbors).multiplyScalar(lambda)
+
+    // 计算法线梯度
+    const normalGradient = computeNormalGradient(vertex, neighbors)
+
+    // 调整lambda值，法线梯度越大，平滑强度越高
+    const adjustedLambda = lambda * (1 + normalGradient * 0.5)
+
+    const delta = laplacian(vertex, neighbors).multiplyScalar(adjustedLambda)
     newVertices.push(vertex.clone().add(delta))
   })
   return newVertices
@@ -38,7 +68,13 @@ const inverseLaplacianSmoothStep = (vertices, neighborsMap, mu) => {
   const newVertices = []
   vertices.forEach((vertex, vertexIndex) => {
     const neighbors = Array.from(neighborsMap.get(vertexIndex)).map((index) => vertices[index])
-    const delta = laplacian(vertex, neighbors).multiplyScalar(mu)
+
+    // 计算法线梯度
+    const normalGradient = computeNormalGradient(vertex, neighbors)
+
+    // 调整mu值，法线梯度越大，反向平滑强度越高
+    const adjustedMu = mu * (1 + normalGradient * 0.5)
+    const delta = laplacian(vertex, neighbors).multiplyScalar(adjustedMu)
     newVertices.push(vertex.clone().sub(delta))
   })
   return newVertices
