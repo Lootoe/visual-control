@@ -1,4 +1,4 @@
-import { __initLead } from './init'
+import { __initLead, getChipMeshes } from './init'
 import { subscribeProgramUpdate } from './subscribeProgramUpdate'
 import { updateProgramOnClickedChip } from './updateProgramOnClickedChip'
 
@@ -14,4 +14,4 @@ const initLead = () => {
 }
 
 // 将updateProgramOnClickedChip导出，是因为PAD\PC端不需要这个功能
-export { initLead, updateProgramOnClickedChip }
+export { initLead, updateProgramOnClickedChip, getChipMeshes }

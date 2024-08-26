@@ -49,3 +49,10 @@ export const __initLead = () => {
       .catch(reject)
   })
 }
+
+export const getChipMeshes = () => {
+  const leadList = leadStore.leadList
+  return Object.values(leadList)
+    .map((item) => item.chips)
+    .flat()
+}

@@ -123,7 +123,19 @@ const generateField = (nArray, header) => {
     for (let y = 0; y < rowLength; y++) {
       for (let x = 0; x < colLength; x++) {
         const point = new THREE.Vector3(z, y, x)
-        const value = nArray.get(x, y, z)
+        let value = nArray.get(x, y, z)
+        // 最边缘的值置为0，防止存在破洞
+        // 不给外层加一圈，而是原地置零，是因为加一圈需要将整个shape向右上平移，相当麻烦
+        if (
+          x === 0 ||
+          y === 0 ||
+          z === 0 ||
+          x === colLength - 1 ||
+          y === rowLength - 1 ||
+          z === depth - 1
+        ) {
+          value = 0
+        }
         point.applyMatrix4(m41)
         point.applyMatrix4(sceneStore.extraData.MNI152_template)
         point.applyMatrix4(sceneStore.extraData.ras2xyz)

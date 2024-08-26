@@ -1,33 +1,30 @@
 import * as THREE from 'three'
 
 export const scaleModel = (geometry, scale) => {
-  const vectors = geometry.attributes.position.array
+  // 获取顶点和法线数据
+  const positions = geometry.attributes.position.array
+  const normals = geometry.attributes.normal.array
 
   let vertices = []
-  for (let i = 0; i < vectors.length; i += 3) {
-    vertices.push(new THREE.Vector3(vectors[i], vectors[i + 1], vectors[i + 2]))
+  for (let i = 0; i < positions.length; i += 3) {
+    const vertex = new THREE.Vector3(positions[i], positions[i + 1], positions[i + 2])
+    const normal = new THREE.Vector3(normals[i], normals[i + 1], normals[i + 2])
+
+    // 沿着法线方向缩放顶点
+    const scaledVertex = vertex.add(normal.multiplyScalar(scale - 1))
+    vertices.push(scaledVertex)
   }
 
-  // 计算模型的中心点
-  const centroid = new THREE.Vector3()
-  vertices.forEach((vertex) => centroid.add(vertex))
-  centroid.divideScalar(vertices.length)
-
-  // 将顶点平移，使中心点在原点
-  vertices = vertices.map((vertex) => vertex.sub(centroid))
-
-  // 在原点基础上放大1.2倍
-  vertices = vertices.map((vertex) => vertex.multiplyScalar(scale))
-
-  // 将顶点平移回原来的位置
-  vertices = vertices.map((vertex) => vertex.add(centroid))
-
+  // 将新的顶点数据转换回Float32Array
   const newVertices = []
   vertices.forEach((vertex) => {
     newVertices.push(vertex.x, vertex.y, vertex.z)
   })
+
+  // 创建新的BufferGeometry并设置顶点属性
   const positionAttribute = new THREE.Float32BufferAttribute(newVertices, 3)
   const newGeo = new THREE.BufferGeometry()
   newGeo.setAttribute('position', positionAttribute)
+
   return newGeo
 }

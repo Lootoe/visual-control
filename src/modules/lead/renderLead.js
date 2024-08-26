@@ -26,26 +26,31 @@ const renderPole = (leadCurvePoints, radius = 1.27 / 2) => {
     extrudePath: curve,
     steps: 12,
   })
-  const mesh = new THREE.Mesh(geometry, createPoleMaterial())
-  mesh.name = 'pole'
-  return mesh
+  return geometry
 }
 
 // 生成底部半球
 const renderHalfBall = (leadCurvePoints, radius = 1.27 / 2) => {
   const curve = new THREE.CatmullRomCurve3(leadCurvePoints)
   const startPoint = curve.getPointAt(0)
-  // 开始点到结束点的一个向量
   const tangent = curve.getTangentAt(0)
-  // 生成一个反方向向量 -0.5随机数 表示方向相反
-  const endPoint = startPoint.clone().addScaledVector(tangent, -0.5)
+
+  // 创建球体几何体
   const ball = new THREE.SphereGeometry(radius, 32, 32, 0, Math.PI, 0, Math.PI)
-  const mesh = new THREE.Mesh(ball, createPoleMaterial())
-  mesh.position.x = startPoint.x
-  mesh.position.y = startPoint.y
-  mesh.position.z = startPoint.z
-  mesh.lookAt(endPoint)
-  return mesh
+
+  // 创建一个矩阵并根据tangent方向进行旋转
+  const matrix = new THREE.Matrix4()
+
+  // 设置朝向
+  matrix.lookAt(startPoint, startPoint.clone().add(tangent), new THREE.Vector3(0, 1, 0))
+
+  // 应用旋转矩阵到球体几何体
+  ball.applyMatrix4(matrix)
+
+  // 移动球体几何体到startPoint位置
+  ball.translate(startPoint.x, startPoint.y, startPoint.z)
+
+  return ball
 }
 
 // 生成环状电极
@@ -76,6 +81,36 @@ const renderCircleChips = (lead) => {
     const p2 = new THREE.Vector2(radius + 0.02, len / 2)
     const geometry = new THREE.LatheGeometry([p1, p2], 36, 0, Math.PI * 2)
 
+    // 给电极片定位
+    const centerPoint = new THREE.Vector3().lerpVectors(startPoint, endPoint, 0.5)
+
+    // 补电极用的圆柱
+    const electricGeo = renderPole([startPoint, endPoint], radius + 0.04)
+
+    // 创建一个变换矩阵，用于顶点变换
+    const transformMatrix = new THREE.Matrix4()
+
+    // 平移矩阵，将顶点移动到目标位置
+    transformMatrix.makeTranslation(centerPoint.x, centerPoint.y, centerPoint.z)
+
+    // 计算旋转方向
+    const direction = new THREE.Vector3().subVectors(endPoint, startPoint).normalize()
+    const up = new THREE.Vector3(0, 1, 0)
+
+    // 计算电极片朝向的四元数
+    const quaternion = new THREE.Quaternion()
+    quaternion.setFromUnitVectors(up, direction)
+
+    // 将四元数转换为旋转矩阵
+    const rotationMatrix = new THREE.Matrix4()
+    rotationMatrix.makeRotationFromQuaternion(quaternion)
+
+    // 将旋转矩阵和平移矩阵组合
+    transformMatrix.multiply(rotationMatrix)
+
+    // 将变换矩阵应用于几何体的每个顶点
+    geometry.applyMatrix4(transformMatrix)
+
     // 贴图的高度需要根据chipConfig来调整，防止文字被压扁
     const k = len / 3
     const num = chips[i].index
@@ -89,23 +124,9 @@ const renderCircleChips = (lead) => {
       index: num,
       node: chips[i].node,
       position: lead.position,
+      electricGeo,
     }
     mesh.userData = userData
-
-    // 给电极片定位
-    const centerPoint = new THREE.Vector3().lerpVectors(startPoint, endPoint, 0.5)
-    mesh.position.x = centerPoint.x
-    mesh.position.y = centerPoint.y
-    mesh.position.z = centerPoint.z
-
-    // 矫正方向
-    const direction = curve.getTangentAt(1)
-    const quaternion = new THREE.Quaternion()
-    quaternion.setFromUnitVectors(mesh.up, direction)
-    mesh.quaternion.copy(quaternion)
-
-    // 还要绕导线的方向旋转PI, 贴图默认朝向内侧，旋转180度朝向屏幕
-    mesh.rotateOnWorldAxis(direction.normalize(), Math.PI / 2)
     chipArr.push(mesh)
   }
 
@@ -119,10 +140,13 @@ export const renderLead = (lead) => {
   // 将其转换为vector3
   const lead2Points = adjustCurveMatrix(leadPoints, leadLen)
   const pole = renderPole(lead2Points)
+  const poleMesh = new THREE.Mesh(pole, createPoleMaterial())
+  poleMesh.name = 'pole'
   const halfBall = renderHalfBall(lead2Points)
+  const halfBallMesh = new THREE.Mesh(halfBall, createPoleMaterial())
+  halfBallMesh.name = 'halfBall'
   const group = new THREE.Group()
-  group.add(pole)
-  group.add(halfBall)
+  group.add(poleMesh, halfBallMesh)
   return group
 }
 
