@@ -1,7 +1,7 @@
 import { marchingCubes, laplacianSmooth } from '@/libs/buildModel'
 import * as THREE from 'three'
 import { getChipMeshes } from '@/modules/lead'
-import { interscetDetect, combineMeshes } from '@/libs/buildModel'
+import { interscetDetect, combineMeshes } from '@/libs/modifyModel'
 
 const calcThreshold = (strength) => {
   // 本来幅值是从0.8到3V均匀变化的
@@ -42,10 +42,11 @@ const renderVtaMesh = (vtaData, isoLevel) => {
   return mesh
 }
 
-const intersectsChips = (electricMesh) => {
-  const chips = getChipMeshes()
+const intersectsChips = (electricMesh, position) => {
+  const allChips = getChipMeshes()
+  const leadChips = allChips[position]
   const interscetedChips = []
-  for (let chip of chips) {
+  for (let chip of leadChips) {
     const flag = interscetDetect(chip.mesh, electricMesh)
     if (flag) {
       interscetedChips.push(chip)
@@ -55,16 +56,17 @@ const intersectsChips = (electricMesh) => {
   return interscetedChips
 }
 
-export const renderElectric = (vtaData, strength) => {
+export const renderElectric = (vtaData, strength, position) => {
   const isoLevel = calcThreshold(strength)
   console.log(`幅值${strength}对应的阈值:${isoLevel}`)
   const mesh = renderVtaMesh(vtaData, isoLevel)
-  const results = intersectsChips(mesh)
+  const results = intersectsChips(mesh, position)
   if (results.length === 0) return mesh
+  // 必须把原电场放数组第一个
   const meshes = [mesh]
   results.forEach((r) => {
     const electricGeo = r.mesh.userData.electricGeo
-    const electricMesh = new THREE.Mesh(electricGeo, new THREE.MeshBasicMaterial({ color: '#000' }))
+    const electricMesh = new THREE.Mesh(electricGeo, new THREE.MeshBasicMaterial())
     meshes.push(electricMesh)
   })
   const finalMesh = combineMeshes(meshes)

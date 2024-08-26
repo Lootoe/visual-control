@@ -200,7 +200,7 @@ export const diffVtaList = (newVtaList, oldVtaList) => {
   return stuffList
 }
 
-export const handleStuff = async (stuffList) => {
+export const handleStuff = async (stuffList, position) => {
   await map(stuffList, async (stuff) => {
     const { command, newVta, oldVta } = stuff
     if (command === commandEnum.NONE) {
@@ -220,7 +220,7 @@ export const handleStuff = async (stuffList) => {
       const vtaData = await loadElectric(newVta.downloadUrlArr)
       newVta.vtaData = vtaData
       if (vtaData) {
-        const newMesh = renderElectric(vtaData, newVta.amplitude)
+        const newMesh = renderElectric(vtaData, newVta.amplitude, position)
         newVta.mesh = newMesh
         addMesh(newMesh)
       }
@@ -231,7 +231,7 @@ export const handleStuff = async (stuffList) => {
         removeMesh(oldVta.mesh)
       }
       if (oldVta.vtaData) {
-        const newMesh = renderElectric(oldVta.vtaData, newVta.amplitude)
+        const newMesh = renderElectric(oldVta.vtaData, newVta.amplitude, position)
         newVta.mesh = newMesh
         newVta.vtaData = oldVta.vtaData
         addMesh(newMesh)

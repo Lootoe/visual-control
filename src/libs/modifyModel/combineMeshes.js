@@ -3,7 +3,6 @@ import { ADDITION, Brush, Evaluator } from 'three-bvh-csg'
 export const combineMeshes = (meshes) => {
   const brushs = meshes.map((mesh) => {
     const brush = new Brush(mesh.geometry.clone(), mesh.material.clone())
-    brush.updateMatrixWorld()
     return brush
   })
   const evaluator = new Evaluator()

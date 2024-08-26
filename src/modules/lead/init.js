@@ -52,7 +52,9 @@ export const __initLead = () => {
 
 export const getChipMeshes = () => {
   const leadList = leadStore.leadList
-  return Object.values(leadList)
-    .map((item) => item.chips)
-    .flat()
+  const chipMeshes = {}
+  Object.values(leadList).forEach((lead) => {
+    chipMeshes[lead.position] = lead.chips
+  })
+  return chipMeshes
 }

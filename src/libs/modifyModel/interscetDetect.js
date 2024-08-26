@@ -5,6 +5,9 @@ export const interscetDetect = (meshA, meshB) => {
   const centerA = new THREE.Vector3()
   meshA.geometry.computeBoundingBox()
   meshA.geometry.boundingBox.getCenter(centerA)
+  // 性能提升重中之重，构建BVH树，加速射线检测
+  meshB.geometry.computeBoundsTree()
+  meshB.geometry.computeBoundingBox()
 
   // 将几何中心转到世界坐标
   centerA.applyMatrix4(meshA.matrixWorld)
@@ -16,13 +19,16 @@ export const interscetDetect = (meshA, meshB) => {
   const vertices = meshA.geometry.attributes.position.array
   let overlapDetected = false
 
+  // 预先创建 Vector3 实例以避免在循环中频繁创建
+  const vertex = new THREE.Vector3()
+  const direction = new THREE.Vector3()
   for (let i = 0; i < vertices.length; i += 3) {
-    // 获取顶点坐标
-    const vertex = new THREE.Vector3(vertices[i], vertices[i + 1], vertices[i + 2])
+    // 获取顶点坐标并转换到世界坐标系
+    vertex.set(vertices[i], vertices[i + 1], vertices[i + 2])
     vertex.applyMatrix4(meshA.matrixWorld)
 
     // 计算射线方向
-    const direction = new THREE.Vector3().subVectors(vertex, centerA).normalize()
+    direction.subVectors(vertex, centerA).normalize()
 
     // 设置射线起点和方向
     raycaster.set(centerA, direction)
@@ -31,18 +37,11 @@ export const interscetDetect = (meshA, meshB) => {
     const intersects = raycaster.intersectObject(meshB, true)
     const centerToVertexDistance = centerA.distanceTo(vertex)
 
-    if (intersects.length > 0) {
-      // 检查射线是否与 MeshB 相交并且交点距离小于中心到顶点的距离
-      if (intersects[0].distance < centerToVertexDistance) {
-        overlapDetected = true
-        break
-      }
+    if (intersects.length > 0 && intersects[0].distance < centerToVertexDistance) {
+      overlapDetected = true
+      break
     }
   }
 
-  if (overlapDetected) {
-    return true
-  } else {
-    return false
-  }
+  return overlapDetected
 }
