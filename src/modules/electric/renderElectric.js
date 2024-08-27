@@ -14,7 +14,7 @@ const calcThreshold = (strength) => {
 }
 
 const electricMaterial = new THREE.MeshPhongMaterial({
-  color: '#ff4444',
+  color: '#fe2323',
   transparent: true,
   opacity: 0.6,
   depthTest: true,
