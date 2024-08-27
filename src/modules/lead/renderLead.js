@@ -101,6 +101,9 @@ const renderCircleChips = (lead) => {
     const quaternion = new THREE.Quaternion()
     quaternion.setFromUnitVectors(up, direction)
 
+    // 将四元数围绕direction旋转2/PI,目的是使文字朝向用户
+    quaternion.multiply(new THREE.Quaternion().setFromAxisAngle(up, Math.PI / 2))
+
     // 将四元数转换为旋转矩阵
     const rotationMatrix = new THREE.Matrix4()
     rotationMatrix.makeRotationFromQuaternion(quaternion)
