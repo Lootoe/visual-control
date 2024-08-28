@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import { ExtendedOrbitControls } from './extendControls'
 import { computeBoundsTree, disposeBoundsTree, acceleratedRaycast } from 'three-mesh-bvh'
 import useSceneStoreHook from '@/store/useSceneStore'
+import Stats from 'three/examples/jsm/libs/stats.module.js'
 
 const sceneStore = useSceneStoreHook()
 
@@ -28,7 +29,10 @@ export const initMainScene = (selector, config) => {
   sceneStore.mainSceneManager.config = currentConfig
 
   // render
-  const renderer = new THREE.WebGLRenderer({ logarithmicDepthBuffer: true, antialias: true })
+  const renderer = new THREE.WebGLRenderer({
+    logarithmicDepthBuffer: true,
+    antialias: true,
+  })
   renderer.setPixelRatio(window.devicePixelRatio)
   const dom = document.querySelector(selector)
   sceneStore.mainSceneManager.dom = dom
@@ -77,11 +81,31 @@ export const initMainScene = (selector, config) => {
   }
   window.addEventListener('resize', onWindowResize)
 
+  const stats = new Stats()
+  dom.appendChild(stats.dom)
+  stats.dom.style.position = 'fixed'
+  stats.dom.style.width = 'fit-content'
+  stats.dom.style.right = '0px'
+  stats.dom.style.top = '3rem'
+  stats.dom.style.left = 'auto'
+  stats.dom.style.display = 'none'
+
+  const setStats = (value) => {
+    if (value) {
+      stats.dom.style.display = 'block'
+    } else {
+      stats.dom.style.display = 'none'
+    }
+  }
+
+  window.hack.setStats = setStats
+
   // anim
   const renderLoop = () => {
     requestAnimationFrame(renderLoop)
     controls.update()
     renderer.render(scene, camera)
+    stats.update()
   }
 
   renderLoop()

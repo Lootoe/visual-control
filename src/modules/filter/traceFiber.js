@@ -1,8 +1,8 @@
 import * as THREE from 'three'
-import { addMeshes, removeMeshes } from '@/modules/scene'
+import { removeMesh, addMesh } from '@/modules/scene'
 import useFilterStoreHook from '@/store/useFilterStore'
 import useFiberStoreHook from '@/store/useFiberStore'
-import { renderFiber } from '@/modules/fiber'
+import { renderFiberInOneMesh } from '@/modules/fiber'
 
 const fiberStore = useFiberStoreHook()
 const filterStore = useFilterStoreHook()
@@ -62,7 +62,7 @@ export const tracingFiber = () => {
 
 export const clearFibers = () => {
   const displayFiberList = fiberStore.displayingFiberList
-  removeMeshes(displayFiberList)
+  removeMesh(displayFiberList)
   fiberStore.displayingFiberList = []
 }
 
@@ -74,26 +74,18 @@ export const renderTracedFiber = (fiberIndexes) => {
   fiberIndexes.forEach((index) => {
     needToShowFibers.push(fiberList[index])
   })
-  // 使用坐标构建纤维素
-  const fiberMeshes = []
-  needToShowFibers.forEach((vectors) => {
-    const fiberMesh = renderFiber(vectors)
-    fiberMeshes.push(fiberMesh)
-  })
-  addMeshes(fiberMeshes)
+  // 将所有线条合并为一根
+  const fiberMeshes = renderFiberInOneMesh(needToShowFibers)
+  addMesh(fiberMeshes)
   fiberStore.displayingFiberList = fiberMeshes
 }
 
 export const renderAllFiber = () => {
   clearFibers()
   const fiberList = fiberStore.fiberList
-  // 使用坐标构建纤维素
-  const fiberMeshes = []
-  fiberList.forEach((vectors) => {
-    const fiberMesh = renderFiber(vectors)
-    fiberMeshes.push(fiberMesh)
-  })
-  addMeshes(fiberMeshes)
+  // 将所有线条合并为一根
+  const fiberMeshes = renderFiberInOneMesh(fiberList)
+  addMesh(fiberMeshes)
   fiberStore.displayingFiberList = fiberMeshes
 }
 
@@ -119,12 +111,7 @@ export const renderRestFiber = () => {
       needToShowFibers.push(fiber)
     }
   })
-  // 使用坐标构建纤维素
-  const fiberMeshes = []
-  needToShowFibers.forEach((vectors) => {
-    const fiberMesh = renderFiber(vectors)
-    fiberMeshes.push(fiberMesh)
-  })
-  addMeshes(fiberMeshes)
+  const fiberMeshes = renderFiberInOneMesh(needToShowFibers)
+  addMesh(fiberMeshes)
   fiberStore.displayingFiberList = fiberMeshes
 }
