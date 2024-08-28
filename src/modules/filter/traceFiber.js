@@ -63,7 +63,7 @@ export const tracingFiber = () => {
 export const clearFibers = () => {
   const displayFiberList = fiberStore.displayingFiberList
   removeMesh(displayFiberList)
-  fiberStore.displayingFiberList = []
+  fiberStore.displayingFiberList = null
 }
 
 export const renderTracedFiber = (fiberIndexes) => {

@@ -8,7 +8,7 @@ function clearScene(scene) {
 }
 
 // 销毁对象
-function disposeObject(object) {
+export function disposeObject(object) {
   if (object.geometry) {
     object.geometry.dispose()
   }
@@ -25,7 +25,7 @@ function disposeObject(object) {
     object.texture.dispose()
   }
 
-  if (object.children.length > 0) {
+  if (object?.children?.length > 0) {
     object.children.forEach((child) => disposeObject(child))
   }
 }

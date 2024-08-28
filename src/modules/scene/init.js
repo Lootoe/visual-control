@@ -1,7 +1,7 @@
 import { initMainScene } from './mainScene'
 import { initAssistScene } from './assistScene'
 import useSceneStoreHook from '@/store/useSceneStore'
-import { cleanScene } from './cleanScene'
+import { cleanScene, disposeObject } from './cleanScene'
 import { createLight } from './light'
 
 const sceneStore = useSceneStoreHook()
@@ -43,8 +43,11 @@ export const addMesh = (mesh) => {
 }
 
 export const removeMesh = (mesh) => {
-  const mainSceneManager = sceneStore.mainSceneManager
-  mainSceneManager.scene.remove(mesh)
+  if (mesh) {
+    disposeObject(mesh)
+    const mainSceneManager = sceneStore.mainSceneManager
+    mainSceneManager.scene.remove(mesh)
+  }
 }
 
 export const addMeshes = (meshes) => {
