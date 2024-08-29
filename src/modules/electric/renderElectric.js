@@ -52,23 +52,22 @@ const intersectsChips = (electricMesh, position) => {
       interscetedChips.push(chip)
     }
   }
-  console.log('interscetedChips', interscetedChips)
   return interscetedChips
 }
 
-export const renderElectric = (vtaData, strength, position) => {
+export const renderElectric = (vtaData, strength) => {
   const isoLevel = calcThreshold(strength)
   console.log(`幅值${strength}对应的阈值:${isoLevel}`)
   const mesh = renderVtaMesh(vtaData, isoLevel)
-  const results = intersectsChips(mesh, position)
-  if (results.length === 0) return mesh
-  // 必须把原电场放数组第一个
-  const meshes = [mesh]
-  results.forEach((r) => {
-    const electricGeo = r.mesh.userData.electricGeo
-    const electricMesh = new THREE.Mesh(electricGeo, new THREE.MeshBasicMaterial())
-    meshes.push(electricMesh)
-  })
-  const finalMesh = combineMeshes(meshes)
-  return finalMesh
+  // const results = intersectsChips(mesh, position)
+  // if (results.length === 0) return mesh
+  // // 必须把原电场放数组第一个
+  // const meshes = [mesh]
+  // results.forEach((r) => {
+  //   const electricGeo = r.mesh.userData.electricGeo
+  //   const electricMesh = new THREE.Mesh(electricGeo, new THREE.MeshBasicMaterial())
+  //   meshes.push(electricMesh)
+  // })
+  // const finalMesh = combineMeshes(meshes)
+  return mesh
 }
