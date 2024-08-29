@@ -21,8 +21,11 @@ export const loadFiber = (url) => {
   return new Promise((resolve, reject) => {
     const fiberVectors = []
     const sceneExtra = sceneStore.extraData
+    const matrix = sceneExtra.ras2xyz.clone()
+    matrix.multiply(sceneExtra.MNI152_template)
     loadFile(url)
       .then((data) => {
+        console.time('load fiber')
         // 每一行表示一条线
         const regExp = /\n/g
         const dataRow = data.split(regExp)
@@ -45,8 +48,7 @@ export const loadFiber = (url) => {
           const newLineVectors = []
           for (let i = 0; i < len; i += 3) {
             const vec = curve.getPointAt(i / len)
-            vec.applyMatrix4(sceneExtra.MNI152_template)
-            vec.applyMatrix4(sceneExtra.ras2xyz)
+            vec.applyMatrix4(matrix)
             const x = parseFloat(vec.x.toFixed(3))
             const y = parseFloat(vec.y.toFixed(3))
             const z = parseFloat(vec.z.toFixed(3))
@@ -54,6 +56,7 @@ export const loadFiber = (url) => {
           }
           fiberVectors.push(newLineVectors)
         })
+        console.timeEnd('load fiber')
         resolve(fiberVectors)
       })
       .catch(reject)
