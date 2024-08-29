@@ -25,7 +25,6 @@ export const loadFiber = (url) => {
     matrix.multiply(sceneExtra.MNI152_template)
     loadFile(url)
       .then((data) => {
-        console.time('load fiber')
         // 每一行表示一条线
         const regExp = /\n/g
         const dataRow = data.split(regExp)
@@ -56,7 +55,6 @@ export const loadFiber = (url) => {
           }
           fiberVectors.push(newLineVectors)
         })
-        console.timeEnd('load fiber')
         resolve(fiberVectors)
       })
       .catch(reject)
