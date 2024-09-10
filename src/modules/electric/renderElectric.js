@@ -64,7 +64,9 @@ const intersectsChips = (electricMesh, position) => {
   const leadChips = allChips[position]
   const interscetedChips = []
   for (let chip of leadChips) {
-    const flag = interscetDetect(chip.mesh, electricMesh)
+    // 阈值设为36是因为电极片最上层的点数为36
+    // 我们认为第一层完全被覆盖了才认为是相交
+    const flag = interscetDetect(chip.mesh, electricMesh, 36)
     if (flag) {
       interscetedChips.push(chip)
     }

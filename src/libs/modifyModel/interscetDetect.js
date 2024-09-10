@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 
-export const interscetDetect = (meshA, meshB) => {
+export const interscetDetect = (meshA, meshB, threshold = 1) => {
   // 计算 MeshA 的几何中心
   const centerA = new THREE.Vector3()
   meshA.geometry.computeBoundingBox()
@@ -17,11 +17,12 @@ export const interscetDetect = (meshA, meshB) => {
 
   // 获取 MeshA 的顶点
   const vertices = meshA.geometry.attributes.position.array
-  let overlapDetected = false
 
   // 预先创建 Vector3 实例以避免在循环中频繁创建
   const vertex = new THREE.Vector3()
   const direction = new THREE.Vector3()
+  let count = 0
+  const COUNT_THRESHOLD = threshold
   for (let i = 0; i < vertices.length; i += 3) {
     // 获取顶点坐标并转换到世界坐标系
     vertex.set(vertices[i], vertices[i + 1], vertices[i + 2])
@@ -38,10 +39,12 @@ export const interscetDetect = (meshA, meshB) => {
     const centerToVertexDistance = centerA.distanceTo(vertex)
 
     if (intersects.length > 0 && intersects[0].distance < centerToVertexDistance) {
-      overlapDetected = true
-      break
+      count++
+      if (count >= COUNT_THRESHOLD) {
+        return true
+      }
     }
   }
 
-  return overlapDetected
+  return false
 }
