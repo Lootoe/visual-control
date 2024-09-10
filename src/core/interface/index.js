@@ -3,6 +3,7 @@ import initPCPatient from '@/core/interface/pc'
 import initPadPatient from '@/core/interface/pad'
 import { switchTo2D } from '@/core/interface/pad'
 import initDemoPatient from '@/core/interface/demo'
+import debug from '@/core/interface/debug'
 import { initScene } from '@/modules/scene'
 import { initMatrix } from '@/modules/matrix'
 import { initNucleus } from '@/modules/nucleus'
@@ -67,6 +68,9 @@ export default () => {
   }
   if (SRENV.IS_PLATFORM_DEMO()) {
     handleDemo()
+  }
+  if (SRENV.IS_PLATFORM_DEBUG()) {
+    handleDebug()
   }
 }
 
@@ -261,5 +265,24 @@ const handleDemo = () => {
       initBrain()
       initCortex()
       initElectric()
+    })
+}
+
+const handleDebug = () => {
+  const sceneBg = import.meta.env.VITE_SCENE_BG
+  loadingStore.loading = true
+  loadingStore.loadingText = '正在初始化场景'
+  initScene({
+    mainSceneSelector: '.main-scene',
+    mainSceneConfig: { backgroundColor: sceneBg },
+    assistSceneSelector: '.assist-scene',
+    assistSceneConfig: { backgroundColor: sceneBg },
+  })
+    .then(() => {
+      return debug()
+    })
+    .then(() => {
+      loadingStore.loading = false
+      loadingStore.loadingText = '加载完成'
     })
 }

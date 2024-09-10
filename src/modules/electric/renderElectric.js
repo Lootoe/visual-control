@@ -35,9 +35,26 @@ const renderVtaMesh = (vtaData, isoLevel) => {
   })
   let geometry = null
   geometry = marchingCubes(vtaData, isoLevel)
-  // geometry.computeVertexNormals()
+  geometry.computeVertexNormals()
   const finalGeo = laplacianSmooth(geometry, 1, 0.5, -1)
   const mesh = new THREE.Mesh(finalGeo, electricMaterial)
+  mesh.renderOrder = 2
+  return mesh
+}
+
+const renderVtaCloud = (vtaData, isoLevel) => {
+  const { values, points } = vtaData
+  const vertices = []
+  values.forEach((v, i) => {
+    if (v >= isoLevel) {
+      const p = points[i]
+      vertices.push(p.toArray())
+    }
+  })
+  let geometry = null
+  geometry = marchingCubes(vtaData, isoLevel)
+  const mat = new THREE.PointsMaterial({ size: 0.2, color: 0xffff00 })
+  const mesh = new THREE.Points(geometry, mat)
   mesh.renderOrder = 2
   return mesh
 }
@@ -55,7 +72,7 @@ const intersectsChips = (electricMesh, position) => {
   return interscetedChips
 }
 
-export const renderElectric = (vtaData, strength) => {
+export const renderElectric = (vtaData, strength, position) => {
   const isoLevel = calcThreshold(strength)
   console.log(`幅值${strength}对应的阈值:${isoLevel}`)
   const mesh = renderVtaMesh(vtaData, isoLevel)

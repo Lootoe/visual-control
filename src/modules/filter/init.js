@@ -126,6 +126,20 @@ const initChipFilter = async (filterAssets) => {
           results[i].factor = 'c_' + results[i].index
         })
         results.sort((a, b) => a.index - b.index)
+        // 显示触点filter的hack方法
+        window.hack.tcd = (param) => {
+          if (typeof param === 'boolean') {
+            results.forEach((v) => {
+              v.mesh.visible = param
+            })
+          } else if (typeof param === 'number') {
+            results[param].mesh.visible = !results[param].mesh.visible
+          } else {
+            results.forEach((v) => {
+              v.mesh.visible = !v.mesh.visible
+            })
+          }
+        }
         const chipFilter = results
         chipFilter.forEach((v) => {
           v.crossedFibers = []

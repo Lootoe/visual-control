@@ -16,9 +16,20 @@ export const loadFilter = async (url) => {
         // 性能提升重中之重，构建BVH树，加速射线检测
         geometry.computeBoundsTree()
         geometry.computeBoundingBox()
-        const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ color: 0x000 }))
+        const mesh = new THREE.Mesh(
+          geometry,
+          new THREE.MeshPhongMaterial({
+            color: '#fe2323',
+            transparent: true,
+            opacity: 0.6,
+            depthTest: true,
+            depthWrite: true,
+            side: THREE.DoubleSide,
+          })
+        )
         // 只用来追踪，并不显示
         mesh.visible = false
+        mesh.renderOrder = 3
         resolve(mesh)
       },
       null,
