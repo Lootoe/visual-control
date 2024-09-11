@@ -35,7 +35,7 @@ const renderVtaMesh = (vtaData, isoLevel) => {
   })
   let geometry = null
   geometry = marchingCubes(vtaData, isoLevel)
-  geometry.computeVertexNormals()
+  // geometry.computeVertexNormals()
   const finalGeo = laplacianSmooth(geometry, 1, 0.5, -1)
   const mesh = new THREE.Mesh(finalGeo, electricMaterial)
   mesh.renderOrder = 2
@@ -66,7 +66,8 @@ const intersectsChips = (electricMesh, position) => {
   for (let chip of leadChips) {
     // 阈值设为36是因为电极片最上层的点数为36
     // 我们认为第一层完全被覆盖了才认为是相交
-    const flag = interscetDetect(chip.mesh, electricMesh, 36)
+    const vitualMesh = new THREE.Mesh(chip.mesh.userData.electricGeo, new THREE.MeshBasicMaterial())
+    const flag = interscetDetect(vitualMesh, electricMesh, 0.2)
     if (flag) {
       interscetedChips.push(chip)
     }
@@ -78,15 +79,19 @@ export const renderElectric = (vtaData, strength, position) => {
   const isoLevel = calcThreshold(strength)
   console.log(`幅值${strength}对应的阈值:${isoLevel}`)
   const mesh = renderVtaMesh(vtaData, isoLevel)
-  // const results = intersectsChips(mesh, position)
-  // if (results.length === 0) return mesh
-  // // 必须把原电场放数组第一个
-  // const meshes = [mesh]
-  // results.forEach((r) => {
-  //   const electricGeo = r.mesh.userData.electricGeo
-  //   const electricMesh = new THREE.Mesh(electricGeo, new THREE.MeshBasicMaterial())
-  //   meshes.push(electricMesh)
-  // })
-  // const finalMesh = combineMeshes(meshes)
-  return mesh
+  let results = intersectsChips(mesh, position)
+
+  // 正极不爬
+  results = results.filter((v) => v.node !== 1)
+
+  if (results.length === 0) return mesh
+  // 必须把原电场放数组第一个
+  const meshes = [mesh]
+  results.forEach((r) => {
+    const electricGeo = r.mesh.userData.electricGeo
+    const electricMesh = new THREE.Mesh(electricGeo, new THREE.MeshBasicMaterial())
+    meshes.push(electricMesh)
+  })
+  const finalMesh = combineMeshes(meshes)
+  return finalMesh
 }

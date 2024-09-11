@@ -14,17 +14,17 @@ const adjustCurveMatrix = (leadPoints, leadLen) => {
 }
 
 // 生成电极柱模型
-const renderPole = (leadCurvePoints, radius = 1.27 / 2) => {
+const renderPole = (leadCurvePoints, radius = 1.27 / 2, seq = 128, step = 12) => {
   // 样条曲线
   const curve = new THREE.CatmullRomCurve3(leadCurvePoints)
   // 扫描形状
   const circle = new THREE.EllipseCurve(0, 0, radius, radius, 0, Math.PI * 2, true)
-  const points = circle.getPoints(128)
+  const points = circle.getPoints(seq)
   const shape = new THREE.Shape(points)
   // 扫描成型
   const geometry = new THREE.ExtrudeGeometry(shape, {
     extrudePath: curve,
-    steps: 12,
+    steps: step,
   })
   return geometry
 }
@@ -85,7 +85,7 @@ const renderCircleChips = (lead) => {
     const centerPoint = new THREE.Vector3().lerpVectors(startPoint, endPoint, 0.5)
 
     // 补电极用的圆柱
-    const electricGeo = renderPole([startPoint, endPoint], radius + 0.04)
+    const electricGeo = renderPole([startPoint, endPoint], radius + 0.04, 64, 6)
 
     // 创建一个变换矩阵，用于顶点变换
     const transformMatrix = new THREE.Matrix4()
