@@ -60,7 +60,6 @@ export const interscetDetect = (meshA, meshB, percent = 0.2) => {
       }
     }
   }
-  console.log('inCount', inCount, containCount)
 
   if (inCount === 0) {
     return false
