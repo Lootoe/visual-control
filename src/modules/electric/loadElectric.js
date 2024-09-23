@@ -1,8 +1,9 @@
-import * as THREE from 'three'
-import { map } from 'radash'
-import axios from 'axios'
 import ndarray from 'ndarray'
 import * as nifti from 'nifti-reader-js'
+import * as THREE from 'three'
+import { map } from 'radash'
+import { ElMessage } from 'element-plus'
+import axios from 'axios'
 import useSceneStoreHook from '@/store/useSceneStore'
 
 const sceneStore = useSceneStoreHook()
@@ -19,49 +20,6 @@ const calcUrlIsZero = (downloadUrl = '') => {
   }
 }
 
-export const loadElectric = async (downloadUrlArr) => {
-  const buffers = []
-  await map(downloadUrlArr, async (downloadUrl) => {
-    if (!calcUrlIsZero(downloadUrl)) {
-      const buffer = await loadNii(downloadUrl)
-      buffers.push(buffer)
-    }
-  })
-
-  if (buffers.length === 0) return null
-
-  let fusionHeader = null
-  let imageDataLength = 0
-  const imageDataArr = []
-  // 多负极的电场需要融合
-  buffers.forEach((buffer) => {
-    const { imageData, header } = depressNifiti(buffer)
-    imageDataLength = imageData.length
-    imageDataArr.push(imageData)
-    fusionHeader = header
-  })
-  // 去除NaN值
-  imageDataArr.forEach((arr) => {
-    arr.forEach((value, i) => {
-      if (Number.isNaN(value)) {
-        arr[i] = 0
-      }
-    })
-  })
-  // 对相同索引的标量值进行叠加达到融合效果
-  const fusionImage = Array(imageDataLength).fill(0)
-  for (let i = 0; i < imageDataLength; i++) {
-    imageDataArr.forEach((imageData) => {
-      fusionImage[i] += imageData[i]
-    })
-  }
-  const dims = fusionHeader.dims.slice(1, 4)
-  const dimsCorrect = [dims[2], dims[1], dims[0]]
-  const nArray = ndarray(fusionImage, dimsCorrect)
-  const field = generateField(nArray, fusionHeader)
-  return field
-}
-
 const loadNii = (url) => {
   return new Promise((resolve, reject) => {
     axios
@@ -73,6 +31,21 @@ const loadNii = (url) => {
       })
       .catch(reject)
   })
+}
+
+export const loadNifitis = async (downloadUrlArr) => {
+  const buffers = []
+  await map(downloadUrlArr, async (downloadUrl) => {
+    // 判断触点组合的URL是否为空
+    // 在初始化和调节幅值时，我们只能调节一根电极，那么另一根电极的触点组合可能为0000
+    // 为了防止我们去处理0000这个不存在的触点组合
+    // 我们直接不做任何事
+    if (!calcUrlIsZero(downloadUrl)) {
+      const buffer = await loadNii(downloadUrl)
+      buffers.push(buffer)
+    }
+  })
+  return buffers
 }
 
 // 得到分析后的Image数据和头文件
@@ -146,4 +119,57 @@ const generateField = (nArray, header) => {
   }
 
   return { shape: nArray.shape, points, values }
+}
+
+export const loadElectric = async (downloadUrlArr) => {
+  let buffers
+  let fusionHeader = null
+  const imageDataArr = []
+  let imageDataLength = 0
+  try {
+    buffers = await loadNifitis(downloadUrlArr)
+    // 如果全是0000的触点组合，那就不处理
+    if (buffers.length === 0) return null
+    buffers.forEach((buffer) => {
+      const { imageData, header } = depressNifiti(buffer)
+      imageDataLength = imageData.length
+      imageDataArr.push(imageData)
+      fusionHeader = header
+    })
+  } catch (error) {
+    console.log('error', error)
+    // 有的电场组合不是很合理，或者说我们给的组合并不完整
+    ElMessage({
+      type: 'warning',
+      message: '该触点组合暂无电场仿真',
+    })
+    // 返回Null，那么在usElectric里，渲染电场的逻辑就会暂停
+    return null
+  }
+  imageDataArr.forEach((arr) => {
+    arr.forEach((value, i) => {
+      if (Number.isNaN(value)) {
+        arr[i] = 0
+      }
+    })
+  })
+  // 融合后的图像数据
+  const fusionImage = Array(imageDataLength).fill(0)
+  for (let i = 0; i < imageDataLength; i++) {
+    imageDataArr.forEach((imageData) => {
+      fusionImage[i] += imageData[i]
+    })
+  }
+  const dims = fusionHeader.dims.slice(1, 4)
+  const dimsCorrect = [dims[2], dims[1], dims[0]]
+  const nArray = ndarray(fusionImage, dimsCorrect)
+  const fusionVta = generateField(nArray, fusionHeader)
+  const ndArrayList = imageDataArr.map((imageData) => ndarray(imageData, dimsCorrect))
+  const splitVta = ndArrayList.map((nArray) => generateField(nArray, fusionHeader))
+
+  const electricRenderData = {
+    fusionVta,
+    splitVta,
+  }
+  return electricRenderData
 }

@@ -85,7 +85,7 @@ const renderCircleChips = (lead) => {
     const centerPoint = new THREE.Vector3().lerpVectors(startPoint, endPoint, 0.5)
 
     // 补电极用的圆柱
-    const electricGeo = renderPole([startPoint, endPoint], radius + 0.04, 64, 6)
+    const electricGeo = renderPole([startPoint, endPoint], radius + 0.04, 64, 8)
 
     // 创建一个变换矩阵，用于顶点变换
     const transformMatrix = new THREE.Matrix4()
@@ -128,6 +128,11 @@ const renderCircleChips = (lead) => {
       node: chips[i].node,
       position: lead.position,
       electricGeo,
+      startPoint,
+      endPoint,
+      chipLen: len,
+      transformMatrix,
+      chipRadius: radius,
     }
     mesh.userData = userData
     chipArr.push(mesh)

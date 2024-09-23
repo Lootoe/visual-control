@@ -1,8 +1,8 @@
 import * as THREE from 'three'
-import { ExtendedOrbitControls } from './extendControls'
 import { computeBoundsTree, disposeBoundsTree, acceleratedRaycast } from 'three-mesh-bvh'
 import useSceneStoreHook from '@/store/useSceneStore'
 import Stats from 'three/examples/jsm/libs/stats.module.js'
+import { OrbitControls } from 'three/examples/jsm/Addons.js'
 
 const sceneStore = useSceneStoreHook()
 
@@ -55,7 +55,7 @@ export const initMainScene = (selector, config) => {
   sceneStore.mainSceneManager.camera = camera
 
   // controls
-  const controls = new ExtendedOrbitControls(camera, renderer.domElement)
+  const controls = new OrbitControls(camera, renderer.domElement)
   controls.minDistance = zoomLimit[0]
   controls.maxDistance = zoomLimit[1]
   sceneStore.mainSceneManager.controls = controls

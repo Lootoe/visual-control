@@ -205,22 +205,21 @@ export const handleStuff = async (stuffList, position) => {
     const { command, newVta, oldVta } = stuff
     if (command === commandEnum.NONE) {
       newVta.mesh = oldVta.mesh
-      newVta.vtaData = oldVta.vtaData
+      newVta.electricRenderData = oldVta.electricRenderData
       oldVta.mesh = null
-      oldVta.vtaData = null
+      oldVta.electricRenderData = null
     }
     if (command === commandEnum.UPDATE) {
       // 先删除旧模型
       if (calcMeshIsLoaded(oldVta)) {
         removeMesh(oldVta.mesh)
         oldVta.mesh = null
-        oldVta.vtaData = null
+        oldVta.electricRenderData = null
       }
-      // 再加载新模型
-      const vtaData = await loadElectric(newVta.downloadUrlArr)
-      newVta.vtaData = vtaData
-      if (vtaData) {
-        const newMesh = renderElectric(vtaData, newVta.amplitude, position)
+      const electricRenderData = await loadElectric(newVta.downloadUrlArr)
+      newVta.electricRenderData = electricRenderData
+      if (electricRenderData) {
+        const newMesh = renderElectric(electricRenderData, newVta.amplitude, position)
         newVta.mesh = newMesh
         addMesh(newMesh)
       }
@@ -230,13 +229,13 @@ export const handleStuff = async (stuffList, position) => {
       if (calcMeshIsLoaded(oldVta)) {
         removeMesh(oldVta.mesh)
       }
-      if (oldVta.vtaData) {
-        const newMesh = renderElectric(oldVta.vtaData, newVta.amplitude, position)
+      if (oldVta.electricRenderData) {
+        const newMesh = renderElectric(oldVta.electricRenderData, newVta.amplitude, position)
         newVta.mesh = newMesh
-        newVta.vtaData = oldVta.vtaData
+        newVta.electricRenderData = oldVta.electricRenderData
         addMesh(newMesh)
         oldVta.mesh = null
-        oldVta.vtaData = null
+        oldVta.electricRenderData = null
       }
     }
     if (command === commandEnum.HIDE) {

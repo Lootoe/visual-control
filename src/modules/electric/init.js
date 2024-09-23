@@ -16,10 +16,10 @@ export const __initElectric = async () => {
   await map(Object.values(vtaTable), async (vtaList) => {
     await map(vtaList, async (vta) => {
       if (vta.amplitude > 0) {
-        const vtaData = await loadElectric(vta.downloadUrlArr)
-        if (vtaData) {
-          const newMesh = renderElectric(vtaData, vta.amplitude)
-          vta.vtaData = vtaData
+        const electricRenderData = await loadElectric(vta.downloadUrlArr)
+        if (electricRenderData) {
+          const newMesh = renderElectric(electricRenderData, vta.amplitude)
+          vta.electricRenderData = electricRenderData
           vta.mesh = newMesh
           addMesh(newMesh)
         }
