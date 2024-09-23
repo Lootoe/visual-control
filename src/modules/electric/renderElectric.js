@@ -91,7 +91,7 @@ const getGeometryVertices = (geometry) => {
 // 当幅值为0.8时，直接采用补的电极片，无视融合
 const handleVtaStep1 = (vtaData, isoLevel, position) => {
   const mesh = renderVtaMesh(vtaData, isoLevel)
-  let results = intersectsChips(mesh, position, 0.14, true)
+  let results = intersectsChips(mesh, position, 0.12, true)
   // 正极不爬
   results = results.filter((v) => v.node !== 1)
   console.log('检测到相交的电极片数量', results.length)
@@ -110,7 +110,7 @@ const handleVtaStep2 = (vtaDataList, isoLevel, position) => {
   const group = new THREE.Group()
   vtaDataList.forEach((vtaData) => {
     const mesh = renderVtaMesh(vtaData, isoLevel)
-    let results = intersectsChips(mesh, position, 0.2, true)
+    let results = intersectsChips(mesh, position, 0.14, true)
     console.log('检测到相交的电极片数量', results.length)
     // 正极不爬
     results = results.filter((v) => v.node === 2)
@@ -136,7 +136,7 @@ const handleVtaStep2 = (vtaDataList, isoLevel, position) => {
       vertices.push(...faceVertices)
     })
     const qhGeo = getGeoFromVertices(vertices)
-    const finalGeo = laplacianSmooth(qhGeo, 1, 0.15, 0)
+    const finalGeo = laplacianSmooth(qhGeo, 1, 0.16, 0)
     const fianlMesh = new THREE.Mesh(finalGeo, electricMaterial)
     fianlMesh.renderOrder = 2
     group.add(fianlMesh)
@@ -147,7 +147,7 @@ const handleVtaStep2 = (vtaDataList, isoLevel, position) => {
 // 当幅值大于1.6V时，采用融合算法
 const handleVtaStep3 = (vtaData, isoLevel, position) => {
   const mesh = renderVtaMesh(vtaData, isoLevel)
-  let results = intersectsChips(mesh, position, 0.15, false)
+  let results = intersectsChips(mesh, position, 0.16, false)
   // 正极不爬
   results = results.filter((v) => v.node !== 1)
   console.log('检测到相交的电极片数量', results.length)

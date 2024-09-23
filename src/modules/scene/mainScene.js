@@ -36,6 +36,7 @@ export const initMainScene = (selector, config) => {
   renderer.setPixelRatio(window.devicePixelRatio)
   const dom = document.querySelector(selector)
   sceneStore.mainSceneManager.dom = dom
+  sceneStore.mainSceneManager.renderer = renderer
 
   const width = dom.clientWidth
   const height = dom.clientHeight
