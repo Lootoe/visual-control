@@ -91,18 +91,14 @@ let firstTime = true
 const selectItem = (item) => {
   item.selected = !item.selected
   // 判断有没有选中项
-  const selectedArr_1 = localNucleusFilter.value.filter((v) => v.selected)
-  const selectedArr_2 = localChipFilter.value.filter((v) => v.selected)
-  const selectedNum = selectedArr_1.length + selectedArr_2.length
+  const selectedArr = filters.filter((v) => v.selected)
+  const selectedNum = selectedArr.length
   hasSeleced.value = selectedNum > 0
   isSingle.value = selectedNum <= 1
 }
 
 const reselect = () => {
-  localNucleusFilter.value.forEach((v) => {
-    v.selected = false
-  })
-  localChipFilter.value.forEach((v) => {
+  filters.forEach((v) => {
     v.selected = false
   })
   isSingle.value = true
@@ -126,9 +122,7 @@ const tracing = (type) => {
     }
     clearFibers()
     // 从列表里筛选出已选中的item
-    const arr_1 = localChipFilter.value.filter((v) => v.selected).map((v) => v.factor)
-    const arr_2 = localNucleusFilter.value.filter((v) => v.selected).map((v) => v.factor)
-    const arr = [...arr_1, ...arr_2]
+    const arr = filters.filter((v) => v.selected).map((v) => v.factor)
     let source = ''
     if (type === 'confirm') {
       source = arr[0] || ''
@@ -162,10 +156,7 @@ const reset = () => {
 }
 
 const selectAll = () => {
-  localNucleusFilter.value.forEach((v) => {
-    v.selected = true
-  })
-  localChipFilter.value.forEach((v) => {
+  filters.forEach((v) => {
     v.selected = true
   })
   hasSeleced.value = true
