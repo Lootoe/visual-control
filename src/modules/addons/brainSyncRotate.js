@@ -19,16 +19,14 @@ const changeHeadSide = (mainSceneManager) => {
   const centerPos = new THREE.Vector3(0, 0, 0)
   relativePosition.subVectors(mainCamera.position, centerPos).normalize()
 
-  // 计算俯仰角（仰角），相机相对于模型的Y轴角度
-  let phi = Math.atan2(
-    relativePosition.y,
-    Math.sqrt(relativePosition.x * relativePosition.x + relativePosition.z * relativePosition.z)
-  )
+  // 计算相机相对于物体A的旋转
+  const cameraQuaternion = new THREE.Quaternion()
+  mainCamera.getWorldQuaternion(cameraQuaternion) // 获取相机的世界旋转四元数
 
-  // 计算方位角，相机相对于模型在XZ平面的角度
-  let theta = Math.atan2(relativePosition.x, relativePosition.z)
-  // 将俯仰角和方位角应用到模型的旋转
-  assistBrain.rotation.set(phi, -theta, 0)
+  // 反转相机的四元数，以计算物体A应该面向的方向
+  const inverseCameraQuaternion = cameraQuaternion.clone().invert()
+
+  assistBrain.setRotationFromQuaternion(inverseCameraQuaternion)
 }
 
 /** 同步主视图和辅视图的旋转 */
