@@ -20,7 +20,6 @@ const electricMaterial = new THREE.MeshPhongMaterial({
   transparent: true,
   opacity: 0.6,
   depthTest: true,
-  depthWrite: true,
   side: THREE.DoubleSide,
   refractionRatio: 1,
   shininess: 40,
@@ -136,7 +135,7 @@ const handleVtaStep2 = (vtaDataList, isoLevel, position) => {
       vertices.push(...faceVertices)
     })
     const qhGeo = getGeoFromVertices(vertices)
-    const finalGeo = laplacianSmooth(qhGeo, 1, 0.16, 0)
+    const finalGeo = laplacianSmooth(qhGeo, 1, 0.14, 0)
     const fianlMesh = new THREE.Mesh(finalGeo, electricMaterial)
     fianlMesh.renderOrder = 2
     group.add(fianlMesh)
@@ -154,16 +153,47 @@ const handleVtaStep3 = (vtaData, isoLevel, position) => {
   if (results.length === 0) {
     return mesh
   }
-  // 必须把原电场放数组第一个
-  const meshes = [mesh]
-  results.forEach((r) => {
-    const electricGeo = r.mesh.userData.electricGeo
-    const electricMesh = new THREE.Mesh(electricGeo, new THREE.MeshBasicMaterial())
-    meshes.push(electricMesh)
-  })
-  const finalMesh = combineMeshes(meshes)
-  finalMesh.renderOrder = 2
-  return finalMesh
+  if (results.length === 1) {
+    // 正极不爬
+    results = results.filter((v) => v.node === 2)
+    const meshes = [mesh]
+    results.forEach((r) => {
+      const userData = r.mesh.userData
+      const fakeData = calcFakeData(userData.startPoint, userData.endPoint, mesh.geometry)
+      const fakeChip = renderFakeChip({
+        controlLen: fakeData.controlLen,
+        offset: fakeData.offset,
+        chipLen: userData.chipLen,
+        chipRadius: userData.chipRadius,
+        transformMatrix: userData.transformMatrix,
+      })
+      meshes.push(fakeChip)
+    })
+    const finalMesh = combineMeshes(meshes)
+    const geoVertices = getGeometryVertices(finalMesh.geometry)
+    const faces = qh(geoVertices)
+    const vertices = []
+    faces.forEach((face) => {
+      const faceVertices = face.map((v) => geoVertices[v])
+      vertices.push(...faceVertices)
+    })
+    const qhGeo = getGeoFromVertices(vertices)
+    const finalGeo = laplacianSmooth(qhGeo, 1, 0.16, 0)
+    const fianlMesh = new THREE.Mesh(finalGeo, electricMaterial)
+    fianlMesh.renderOrder = 2
+    return fianlMesh
+  } else {
+    // 必须把原电场放数组第一个
+    const meshes = [mesh]
+    results.forEach((r) => {
+      const electricGeo = r.mesh.userData.electricGeo
+      const electricMesh = new THREE.Mesh(electricGeo, new THREE.MeshBasicMaterial())
+      meshes.push(electricMesh)
+    })
+    const finalMesh = combineMeshes(meshes)
+    finalMesh.renderOrder = 2
+    return finalMesh
+  }
 }
 
 export const renderElectric = (electricRenderData, strength, position) => {
