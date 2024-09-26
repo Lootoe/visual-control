@@ -144,8 +144,8 @@ const handleVtaStep2 = (vtaDataList, isoLevel, position) => {
 }
 
 // 当幅值大于1.6V时，采用融合算法
-const handleVtaStep3 = (vtaData, isoLevel, position) => {
-  const mesh = renderVtaMesh(vtaData, isoLevel)
+const handleVtaStep3 = (vtaData, isoLevel, position, strength) => {
+  const mesh = renderVtaMesh(vtaData.fusionVta, isoLevel)
   let results = intersectsChips(mesh, position, 0.16, false)
   // 正极不爬
   results = results.filter((v) => v.node !== 1)
@@ -153,35 +153,8 @@ const handleVtaStep3 = (vtaData, isoLevel, position) => {
   if (results.length === 0) {
     return mesh
   }
-  if (results.length === 1) {
-    // 正极不爬
-    results = results.filter((v) => v.node === 2)
-    const meshes = [mesh]
-    results.forEach((r) => {
-      const userData = r.mesh.userData
-      const fakeData = calcFakeData(userData.startPoint, userData.endPoint, mesh.geometry)
-      const fakeChip = renderFakeChip({
-        controlLen: fakeData.controlLen,
-        offset: fakeData.offset,
-        chipLen: userData.chipLen,
-        chipRadius: userData.chipRadius,
-        transformMatrix: userData.transformMatrix,
-      })
-      meshes.push(fakeChip)
-    })
-    const finalMesh = combineMeshes(meshes)
-    const geoVertices = getGeometryVertices(finalMesh.geometry)
-    const faces = qh(geoVertices)
-    const vertices = []
-    faces.forEach((face) => {
-      const faceVertices = face.map((v) => geoVertices[v])
-      vertices.push(...faceVertices)
-    })
-    const qhGeo = getGeoFromVertices(vertices)
-    const finalGeo = laplacianSmooth(qhGeo, 1, 0.16, 0)
-    const fianlMesh = new THREE.Mesh(finalGeo, electricMaterial)
-    fianlMesh.renderOrder = 2
-    return fianlMesh
+  if (results.length === vtaData?.nodeLength && strength < 1.4) {
+    return handleVtaStep2(vtaData.splitVta, isoLevel, position)
   } else {
     // 必须把原电场放数组第一个
     const meshes = [mesh]
@@ -206,6 +179,6 @@ export const renderElectric = (electricRenderData, strength, position) => {
     return handleVtaStep2(electricRenderData.splitVta, isoLevel, position)
   }
   if (strength > 1.2) {
-    return handleVtaStep3(electricRenderData.fusionVta, isoLevel, position)
+    return handleVtaStep3(electricRenderData, isoLevel, position, strength)
   }
 }

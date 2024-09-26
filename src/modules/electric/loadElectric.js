@@ -170,6 +170,7 @@ export const loadElectric = async (downloadUrlArr) => {
   const electricRenderData = {
     fusionVta,
     splitVta,
+    nodeLength: downloadUrlArr.length,
   }
   return electricRenderData
 }
