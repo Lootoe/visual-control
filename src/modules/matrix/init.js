@@ -18,6 +18,8 @@ export const initMatrix = () => {
         }
         resolve()
       })
-      .catch(reject)
+      .catch(() => {
+        reject('MNI152_template加载失败')
+      })
   })
 }

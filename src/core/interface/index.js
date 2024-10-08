@@ -122,6 +122,10 @@ const handleAdmin = () => {
       initCortex()
       initElectric()
     })
+    .catch((err) => {
+      loadingStore.loadingFail = true
+      loadingStore.failReason = err
+    })
 }
 
 const handlePC = () => {
@@ -166,6 +170,10 @@ const handlePC = () => {
       initBrain()
       initCortex()
       initElectric()
+    })
+    .catch((err) => {
+      loadingStore.loadingFail = true
+      loadingStore.failReason = err
     })
 }
 
@@ -266,6 +274,10 @@ const handleDemo = () => {
       initCortex()
       initElectric()
     })
+    .catch((err) => {
+      loadingStore.loadingFail = true
+      loadingStore.failReason = err
+    })
 }
 
 const handleDebug = () => {
@@ -284,5 +296,9 @@ const handleDebug = () => {
     .then(() => {
       loadingStore.loading = false
       loadingStore.loadingText = '加载完成'
+    })
+    .catch((err) => {
+      loadingStore.loadingFail = true
+      loadingStore.failReason = err
     })
 }

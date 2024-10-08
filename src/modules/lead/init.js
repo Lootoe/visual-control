@@ -46,7 +46,9 @@ export const __initLead = () => {
         addMeshes(leadChips)
         resolve()
       })
-      .catch(reject)
+      .catch(() => {
+        reject('电极加载失败')
+      })
   })
 }
 

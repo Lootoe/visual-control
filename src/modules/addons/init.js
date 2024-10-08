@@ -40,6 +40,8 @@ export const initCortex = () => {
         }
         resolve()
       })
-      .catch(reject)
+      .catch(() => {
+        reject('大脑皮层加载失败')
+      })
   })
 }

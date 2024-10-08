@@ -1,4 +1,4 @@
-import { useMouseRaycast } from '@/libs/mouseRaycast'
+import { useMouseRaycast } from '@/hooks/mouseRaycast'
 import { updateProgramByNode } from '@/core/mockProgram'
 import useSceneStoreHook from '@/store/useSceneStore'
 

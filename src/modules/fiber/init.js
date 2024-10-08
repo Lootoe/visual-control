@@ -20,6 +20,8 @@ export const initFiber = () => {
         fiberStore.fiberList = fiberList
         resolve()
       })
-      .catch(reject)
+      .catch(() => {
+        reject('神经纤维加载失败')
+      })
   })
 }

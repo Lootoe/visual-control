@@ -27,7 +27,7 @@ const patientStore = usePatientStoreHook()
 export default (params) => {
   return new Promise((resolve, reject) => {
     if (!params?.ipgSN) {
-      return reject('参数ipgSN不能为空')
+      return reject('未识别到IPGSN')
     }
     // 路由传啥值就用啥,必须包括IPGSN
     getImageInfoByIPGSN(params)

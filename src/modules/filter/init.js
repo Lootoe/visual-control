@@ -146,6 +146,8 @@ const initChipFilter = async (filterAssets) => {
         })
         resolve(chipFilter)
       })
-      .catch(reject)
+      .catch(() => {
+        reject('神经纤维筛选项加载失败')
+      })
   })
 }
