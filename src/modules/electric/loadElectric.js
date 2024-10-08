@@ -86,39 +86,48 @@ const depressNifiti = (buffer) => {
   return { header, imageData }
 }
 
-const generateField = (nArray, header) => {
+const genPoints = (nArray, header) => {
   const { affine } = header
   const [colLength, rowLength, depth] = nArray.shape
   const m41 = new THREE.Matrix4(...affine[0], ...affine[1], ...affine[2], ...affine[3])
-  let values = []
-  let points = []
+  const points = []
+
   for (let z = 0; z < depth; z++) {
     for (let y = 0; y < rowLength; y++) {
       for (let x = 0; x < colLength; x++) {
         const point = new THREE.Vector3(z, y, x)
-        let value = nArray.get(x, y, z)
-        // 最边缘的值置为0，防止存在破洞
-        // 不给外层加一圈，而是原地置零，是因为加一圈需要将整个shape向右上平移，相当麻烦
-        if (
-          x === 0 ||
-          y === 0 ||
-          z === 0 ||
-          x === colLength - 1 ||
-          y === rowLength - 1 ||
-          z === depth - 1
-        ) {
-          value = 0
-        }
         point.applyMatrix4(m41)
         point.applyMatrix4(sceneStore.extraData.MNI152_template)
         point.applyMatrix4(sceneStore.extraData.ras2xyz)
         points.push(point)
+      }
+    }
+  }
+  return points
+}
+
+const genValues = (nArray) => {
+  const [colLength, rowLength, depth] = nArray.shape
+  const values = []
+  for (let z = 0; z < depth; z++) {
+    for (let y = 0; y < rowLength; y++) {
+      for (let x = 0; x < colLength; x++) {
+        let value = nArray.get(x, y, z)
+        if (
+          x <= 1 ||
+          y <= 1 ||
+          z <= 1 ||
+          x >= colLength - 2 ||
+          y >= rowLength - 2 ||
+          z >= depth - 2
+        ) {
+          value = 0
+        }
         values.push(Math.abs(value))
       }
     }
   }
-
-  return { shape: nArray.shape, points, values }
+  return values
 }
 
 export const loadElectric = async (downloadUrlArr) => {
@@ -163,14 +172,26 @@ export const loadElectric = async (downloadUrlArr) => {
   const dims = fusionHeader.dims.slice(1, 4)
   const dimsCorrect = [dims[2], dims[1], dims[0]]
   const nArray = ndarray(fusionImage, dimsCorrect)
-  const fusionVta = generateField(nArray, fusionHeader)
-  const ndArrayList = imageDataArr.map((imageData) => ndarray(imageData, dimsCorrect))
-  const splitVta = ndArrayList.map((nArray) => generateField(nArray, fusionHeader))
+  const points = genPoints(nArray, fusionHeader)
+  const values = genValues(nArray)
+  const fusionVta = { shape: nArray.shape, points, values }
 
-  const electricRenderData = {
+  const ndArrayList = imageDataArr.map((imageData) => ndarray(imageData, dimsCorrect))
+  const valuesList = ndArrayList.map((nArray) => genValues(nArray))
+  const splitVta = []
+  const nodeLength = downloadUrlArr.length
+  // 累加valuesList的值
+  for (let i = 0; i < nodeLength; i++) {
+    const vtaData = {
+      shape: ndArrayList[i].shape,
+      points: Array.from(points),
+      values: valuesList[i],
+    }
+    splitVta.push(vtaData)
+  }
+  return {
     fusionVta,
     splitVta,
-    nodeLength: downloadUrlArr.length,
+    nodeLength,
   }
-  return electricRenderData
 }

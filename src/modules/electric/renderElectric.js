@@ -144,17 +144,18 @@ const handleVtaStep2 = (vtaDataList, isoLevel, position) => {
 }
 
 // 当幅值大于1.6V时，采用融合算法
-const handleVtaStep3 = (vtaData, isoLevel, position, strength) => {
-  const mesh = renderVtaMesh(vtaData.fusionVta, isoLevel)
-  let results = intersectsChips(mesh, position, 0.16, false)
+const handleVtaStep3 = (electricRenderData, isoLevel, position, strength) => {
+  const { fusionVta, splitVta, nodeLength } = electricRenderData
+  const mesh = renderVtaMesh(fusionVta, isoLevel)
+  let results = intersectsChips(mesh, position, 0.14, false)
   // 正极不爬
   results = results.filter((v) => v.node !== 1)
   console.log('检测到相交的电极片数量', results.length)
   if (results.length === 0) {
     return mesh
   }
-  if (results.length === vtaData?.nodeLength && strength < 1.4) {
-    return handleVtaStep2(vtaData.splitVta, isoLevel, position)
+  if (results.length === nodeLength && strength < 1.4) {
+    return handleVtaStep2(splitVta, isoLevel, position)
   } else {
     // 必须把原电场放数组第一个
     const meshes = [mesh]
