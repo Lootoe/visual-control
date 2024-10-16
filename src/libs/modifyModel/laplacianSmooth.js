@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import '@/libs/buildModel/toIndexed'
+import './toIndexed'
 
 const precomputeNeighbors = (indexes) => {
   const neighborsMap = new Map()

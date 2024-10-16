@@ -84,9 +84,6 @@ const renderCircleChips = (lead) => {
     // 给电极片定位
     const centerPoint = new THREE.Vector3().lerpVectors(startPoint, endPoint, 0.5)
 
-    // 补电极用的圆柱
-    const electricGeo = renderPole([startPoint, endPoint], radius + 0.04, 64, 8)
-
     // 创建一个变换矩阵，用于顶点变换
     const transformMatrix = new THREE.Matrix4()
 
@@ -113,6 +110,10 @@ const renderCircleChips = (lead) => {
 
     // 将变换矩阵应用于几何体的每个顶点
     geometry.applyMatrix4(transformMatrix)
+    // 补电极用的圆柱
+    const electricGeo = new THREE.CylinderGeometry(radius + 0.04, radius + 0.04, len, 32)
+    electricGeo.applyMatrix4(transformMatrix)
+    electricGeo.computeVertexNormals()
 
     // 贴图的高度需要根据chipConfig来调整，防止文字被压扁
     const k = len / 3

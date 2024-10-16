@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { getChipMeshes } from '@/modules/lead'
-import { marchingCubes, laplacianSmooth } from '@/libs/buildModel'
-import { interscetDetect, combineMeshes } from '@/libs/modifyModel'
+import { marchingCubes } from '@/libs/buildModel'
+import { interscetDetect, combineMeshes, laplacianSmooth, flipNormals } from '@/libs/modifyModel'
 import { renderFakeChip, calcFakeData } from './fakeChip'
 import qh from 'quickhull3d'
 
@@ -39,6 +39,7 @@ const renderVtaMesh = (vtaData, isoLevel) => {
   geometry = marchingCubes(vtaData, isoLevel)
   const smoothedGeometry = laplacianSmooth(geometry, 1, 0.5, -1)
   const mesh = new THREE.Mesh(smoothedGeometry, electricMaterial)
+  flipNormals(mesh.geometry)
   mesh.renderOrder = 2
   return mesh
 }
@@ -159,12 +160,14 @@ const handleVtaStep3 = (electricRenderData, isoLevel, position, strength) => {
   } else {
     // 必须把原电场放数组第一个
     const meshes = [mesh]
-    results.forEach((r) => {
-      const electricGeo = r.mesh.userData.electricGeo
-      const electricMesh = new THREE.Mesh(electricGeo, new THREE.MeshBasicMaterial())
-      meshes.push(electricMesh)
-    })
-    const finalMesh = combineMeshes(meshes)
+    results
+      .filter((v) => v.node === 0)
+      .forEach((r) => {
+        const electricGeo = r.mesh.userData.electricGeo
+        const electricMesh = new THREE.Mesh(electricGeo, electricMaterial)
+        meshes.push(electricMesh)
+      })
+    let finalMesh = combineMeshes(meshes)
     finalMesh.renderOrder = 2
     return finalMesh
   }
@@ -173,6 +176,7 @@ const handleVtaStep3 = (electricRenderData, isoLevel, position, strength) => {
 export const renderElectric = (electricRenderData, strength, position) => {
   const isoLevel = calcThreshold(strength)
   console.log(`幅值${strength}对应的阈值:${isoLevel}`)
+  // return renderCloud(electricRenderData.fusionVta, isoLevel)
   if (strength < 0.85) {
     return handleVtaStep1(electricRenderData.fusionVta, isoLevel, position)
   }
@@ -182,4 +186,20 @@ export const renderElectric = (electricRenderData, strength, position) => {
   if (strength > 1.2) {
     return handleVtaStep3(electricRenderData, isoLevel, position, strength)
   }
+}
+
+const renderCloud = (field, isoLevel) => {
+  const { values, points } = field
+  const positions = []
+  values.forEach((v, i) => {
+    if (v >= isoLevel) {
+      positions.push(...points[i])
+    }
+  })
+  let geo = new THREE.BufferGeometry()
+  const positionAttribute = new THREE.Float32BufferAttribute(positions, 3)
+  geo.setAttribute('position', positionAttribute)
+  const mat = new THREE.PointsMaterial({ size: 0.2, color: 0xffff00 })
+  const mesh = new THREE.Points(geo, mat)
+  return mesh
 }

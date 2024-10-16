@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import '@/libs/buildModel/toIndexed'
+import './toIndexed'
 
 // 函数：计算三角面的法线
 function computeNormal(vA, vB, vC, center) {
@@ -65,5 +65,4 @@ export const flipFace = (geometry) => {
   const correctGeo = new THREE.BufferGeometry()
   const positionAttribute = new THREE.Float32BufferAttribute(positions, 3)
   correctGeo.setAttribute('position', positionAttribute)
-  return correctGeo
 }

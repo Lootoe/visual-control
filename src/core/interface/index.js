@@ -300,5 +300,6 @@ const handleDebug = () => {
     .catch((err) => {
       loadingStore.loadingFail = true
       loadingStore.failReason = err
+      console.log('err', err)
     })
 }
