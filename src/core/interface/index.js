@@ -12,7 +12,7 @@ import { initFiber } from '@/modules/fiber'
 import { initAxesHelper, initCortex, initBrain } from '@/modules/addons'
 import { initFilter } from '@/modules/filter'
 import { initElectric } from '@/modules/electric'
-import { useRoute } from 'vue-router'
+import router from '@/router'
 
 import useSceneStoreHook from '@/store/useSceneStore'
 import usePatientStoreHook from '@/store/usePatientStore'
@@ -76,8 +76,7 @@ export default () => {
 
 const handleAdmin = () => {
   // 从URL获取IPGSN
-  const route = useRoute()
-  const queryParams = route.query
+  const queryParams = router.currentRoute.value.query
   const sceneBg = import.meta.env.VITE_SCENE_BG
   loadingStore.loading = true
   loadingStore.loadingText = '正在初始化场景'
