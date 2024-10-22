@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { getGeometryFromVertices, getPointCloud } from '@/libs/other/threeTools'
+import { getPointCloud } from '@/libs/other/threeTools'
 import { SVO } from '@/libs/other/SVO'
 import { addMesh } from '@/modules/scene'
 
@@ -15,7 +15,7 @@ const getSquarePointsCloud = (num, min, max, center = [0, 0, 0]) => {
 }
 
 export const testSVO = () => {
-  const points = getSquarePointsCloud(500, -50, 50, [0, 0, 0])
+  const points = getSquarePointsCloud(1000, -50, 50, [0, 0, 0])
   const pointCloud = getPointCloud(points, 1)
   addMesh(pointCloud)
 
@@ -25,7 +25,7 @@ export const testSVO = () => {
   }
 
   const svo = new SVO(points, bounds)
-  svo.buildTree(6)
+  svo.buildTree(2)
   console.log('svo', svo)
 
   // 渲染SVO当中所有叶节点的方框
