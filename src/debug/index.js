@@ -1,6 +1,5 @@
 import * as THREE from 'three'
 import { alphaShape } from '@/libs/buildModel'
-import { flipFace } from '@/libs/modifyModel'
 import { addMesh } from '@/modules/scene'
 import { VertexNormalsHelper } from 'three/examples/jsm/Addons.js'
 import { AxesHelper } from 'three'
@@ -72,13 +71,13 @@ const renderMeshFromPoints = (vertices) => {
 }
 
 export function debug() {
-  const points1 = getSquarePointsCloud(4, -50, 50, [10, 10, 10])
-  const points2 = getSquarePointsCloud(100, -50, 50, [-10, -10, -10])
+  const points1 = getSquarePointsCloud(100, -20, 20, [50, 50, 50])
+  const points2 = getSquarePointsCloud(100, -20, 20, [-50, -50, -50])
   // const points1 = createSpherePoints({ x: -100, y: -100, z: -100 }, 40, 30)
   // const points2 = createSpherePoints({ x: 100, y: 100, z: 100 }, 40, 30)
   const points = [...points1, ...points2]
   const cloud = renderCloudFromPoitns(points)
-  // addMesh(cloud)
+  addMesh(cloud)
   console.log('points1', points1)
   alphaShape(points1, 500).then((faces) => {
     const vertices = []
