@@ -3,6 +3,11 @@ import { getChipMeshes } from '@/modules/lead'
 import { marchingCubes } from '@/libs/buildModel'
 import { interscetDetect, combineMeshes, laplacianSmooth } from '@/libs/modifyModel'
 import { flipNormal } from '@/libs/fixNormal'
+import {
+  getGeometryFromVertices,
+  getVerticesFromGeometry,
+  getPointCloud,
+} from '@/libs/other/threeTools'
 import { renderFakeChip, calcFakeData } from './fakeChip'
 import qh from 'quickhull3d'
 
@@ -61,34 +66,6 @@ const intersectsChips = (electricMesh, position, percent, isContain) => {
   return interscetedChips
 }
 
-const getGeoFromVertices = (vertices) => {
-  const positions = []
-  for (let i = 0; i < vertices.length; i++) {
-    const vertex = vertices[i]
-    positions.push(...vertex)
-  }
-  const pointGeometry = new THREE.BufferGeometry()
-  pointGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3))
-  return pointGeometry
-}
-
-const getGeometryVertices = (geometry) => {
-  const vertices = []
-  const positions = geometry.attributes.position.array
-  const uniqueVertices = new Set() // 用于存储唯一的顶点
-  for (let i = 0; i < positions.length; i += 3) {
-    // 序列化顶点为字符串
-    const vertex = `${positions[i]},${positions[i + 1]},${positions[i + 2]}`
-    uniqueVertices.add(vertex) // 添加到 Set 中，自动去重
-  }
-  uniqueVertices.forEach((vertex) => {
-    // 反序列化为数字数组
-    const [x, y, z] = vertex.split(',').map(Number)
-    vertices.push([x, y, z])
-  })
-  return vertices
-}
-
 // 当幅值为0.8时，直接采用补的电极片，无视融合
 const handleVtaStep1 = async (vtaData, isoLevel, position) => {
   const mesh = renderVtaMesh(vtaData, isoLevel)
@@ -129,14 +106,14 @@ const handleVtaStep2 = async (vtaDataList, isoLevel, position) => {
       meshes.push(fakeChip)
     })
     const finalMesh = combineMeshes(meshes)
-    const geoVertices = getGeometryVertices(finalMesh.geometry)
+    const geoVertices = getVerticesFromGeometry(finalMesh.geometry)
     const faces = qh(geoVertices)
     const vertices = []
     faces.forEach((face) => {
       const faceVertices = face.map((v) => geoVertices[v])
       vertices.push(...faceVertices)
     })
-    const qhGeo = getGeoFromVertices(vertices)
+    const qhGeo = getGeometryFromVertices(vertices)
     const finalGeo = laplacianSmooth(qhGeo, 1, 0.14, 0)
     const fianlMesh = new THREE.Mesh(finalGeo, electricMaterial)
     fianlMesh.renderOrder = 2
@@ -178,7 +155,14 @@ export const renderElectric = async (electricRenderData, strength, position) => 
   const isoLevel = calcThreshold(strength)
   console.log(`幅值${strength}对应的阈值:${isoLevel}`)
   if (window?.hack?.showCloud) {
-    return renderCloud(electricRenderData.fusionVta, isoLevel)
+    const { values, points } = electricRenderData.fusionVta
+    const vertices = []
+    values.forEach((v, i) => {
+      if (v >= isoLevel) {
+        vertices.push(points[i])
+      }
+    })
+    return getPointCloud(vertices, 0.1)
   } else {
     if (strength < 0.85) {
       return handleVtaStep1(electricRenderData.fusionVta, isoLevel, position)
@@ -190,20 +174,4 @@ export const renderElectric = async (electricRenderData, strength, position) => 
       return handleVtaStep3(electricRenderData, isoLevel, position, strength)
     }
   }
-}
-
-const renderCloud = (field, isoLevel) => {
-  const { values, points } = field
-  const positions = []
-  values.forEach((v, i) => {
-    if (v >= isoLevel) {
-      positions.push(...points[i])
-    }
-  })
-  let geo = new THREE.BufferGeometry()
-  const positionAttribute = new THREE.Float32BufferAttribute(positions, 3)
-  geo.setAttribute('position', positionAttribute)
-  const mat = new THREE.PointsMaterial({ size: 0.2, color: 0xffff00 })
-  const mesh = new THREE.Points(geo, mat)
-  return mesh
 }

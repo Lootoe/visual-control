@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { alphaShape } from '@/libs/buildModel'
 import { addMesh } from '@/modules/scene'
+import { getGeometryFromVertices, getPointCloud } from '@/libs/other/threeTools'
 
 const getSquarePointsCloud = (num, min, max, center = [0, 0, 0]) => {
   const points = []
@@ -11,36 +12,6 @@ const getSquarePointsCloud = (num, min, max, center = [0, 0, 0]) => {
     points.push([x, y, z])
   }
   return points
-}
-
-const createSpherePoints = (center, radius, seg) => {
-  const geometry = new THREE.SphereGeometry(radius, seg, seg)
-  // 设置geometry的位置
-  geometry.translate(center.x, center.y, center.z)
-  // 获取球体表面的所有顶点
-  const vertices = geometry.attributes.position.array
-  const points = []
-  // 遍历所有顶点
-  for (let i = 0; i < vertices.length; i += 3) {
-    const x = vertices[i]
-    const y = vertices[i + 1]
-    const z = vertices[i + 2]
-    points.push([x, y, z])
-  }
-  return points
-}
-
-const renderCloudFromPoitns = (vertices) => {
-  const positions = []
-  for (let i = 0; i < vertices.length; i++) {
-    const vertex1 = vertices[i]
-    positions.push(...vertex1)
-  }
-  const pointGeometry = new THREE.BufferGeometry()
-  pointGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3))
-  const pointMaterial = new THREE.PointsMaterial({ color: 0x00ffff, size: 0.5 })
-  const pointCloud = new THREE.Points(pointGeometry, pointMaterial)
-  return pointCloud
 }
 
 const electricMaterial = new THREE.MeshPhongMaterial({
@@ -55,16 +26,9 @@ const electricMaterial = new THREE.MeshPhongMaterial({
 })
 
 const renderMeshFromPoints = (vertices) => {
-  const positions = []
-  vertices.forEach((vertex) => {
-    positions.push(...vertex)
-  })
-  const pointGeometry = new THREE.BufferGeometry()
-  pointGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3))
-  pointGeometry.computeVertexNormals()
-  // const newGeo = flipFace(pointGeometry)
-  // newGeo.computeVertexNormals()
-  const mesh = new THREE.Mesh(pointGeometry, electricMaterial)
+  const geo = getGeometryFromVertices(vertices)
+  geo.computeVertexNormals()
+  const mesh = new THREE.Mesh(geo, electricMaterial)
   return mesh
 }
 
@@ -74,7 +38,7 @@ export function testAlphaShape() {
   // const points1 = createSpherePoints({ x: -100, y: -100, z: -100 }, 40, 30)
   // const points2 = createSpherePoints({ x: 100, y: 100, z: 100 }, 40, 30)
   const points = [...points1, ...points2]
-  const cloud = renderCloudFromPoitns(points)
+  const cloud = getPointCloud(points)
   addMesh(cloud)
   console.time('alphaShape')
   alphaShape(points, 50).then((faces) => {
