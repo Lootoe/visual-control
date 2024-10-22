@@ -1,13 +1,9 @@
 import * as THREE from 'three'
 import './toIndexed'
-import { buildNeighborNet } from './buildNeighborNet'
-import { extractTriangles } from './extractTriangles'
 
 export function fixNormals(geometry) {
   const indexedGeo = geometry.toIndexed()
   indexedGeo.computeVertexNormals()
-  buildNeighborNet(indexedGeo)
-  extractTriangles(indexedGeo)
   const index = indexedGeo.index.array // 获取索引数组
   const position = indexedGeo.attributes.position.array // 获取顶点位置数组
   const normal = indexedGeo.attributes.normal.array // 获取法线数组
