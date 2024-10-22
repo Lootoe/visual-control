@@ -1,7 +1,8 @@
 import * as THREE from 'three'
 import { getChipMeshes } from '@/modules/lead'
 import { marchingCubes } from '@/libs/buildModel'
-import { interscetDetect, combineMeshes, laplacianSmooth, flipNormals } from '@/libs/modifyModel'
+import { interscetDetect, combineMeshes, laplacianSmooth } from '@/libs/modifyModel'
+import { flipNormal } from '@/libs/fixNormal'
 import { renderFakeChip, calcFakeData } from './fakeChip'
 import qh from 'quickhull3d'
 
@@ -39,7 +40,7 @@ const renderVtaMesh = (vtaData, isoLevel) => {
   geometry = marchingCubes(vtaData, isoLevel)
   const smoothedGeometry = laplacianSmooth(geometry, 1, 0.5, -1)
   const mesh = new THREE.Mesh(smoothedGeometry, electricMaterial)
-  flipNormals(mesh.geometry)
+  flipNormal(mesh.geometry)
   mesh.renderOrder = 2
   return mesh
 }
@@ -176,19 +177,18 @@ const handleVtaStep3 = async (electricRenderData, isoLevel, position, strength) 
 export const renderElectric = async (electricRenderData, strength, position) => {
   const isoLevel = calcThreshold(strength)
   console.log(`幅值${strength}对应的阈值:${isoLevel}`)
-  // return renderCloud(electricRenderData.fusionVta, isoLevel)
-  if (strength < 0.85) {
-    const result = await handleVtaStep1(electricRenderData.fusionVta, isoLevel, position)
-    return result
-  }
-  if (strength >= 0.85 && strength <= 1.2) {
-    const result = await handleVtaStep2(electricRenderData.splitVta, isoLevel, position)
-    return result
-  }
-  if (strength > 1.2) {
-    const result = await handleVtaStep3(electricRenderData, isoLevel, position, strength)
-    console.log('result', result)
-    return result
+  if (window?.hack?.showCloud) {
+    return renderCloud(electricRenderData.fusionVta, isoLevel)
+  } else {
+    if (strength < 0.85) {
+      return handleVtaStep1(electricRenderData.fusionVta, isoLevel, position)
+    }
+    if (strength >= 0.85 && strength <= 1.2) {
+      return handleVtaStep2(electricRenderData.splitVta, isoLevel, position)
+    }
+    if (strength > 1.2) {
+      return handleVtaStep3(electricRenderData, isoLevel, position, strength)
+    }
   }
 }
 

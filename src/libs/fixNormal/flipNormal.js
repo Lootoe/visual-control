@@ -1,4 +1,4 @@
-export function flipNormals(geometry) {
+export function flipNormal(geometry) {
   // 确保几何体有 index 属性
   if (geometry.index) {
     const index = geometry.index.array

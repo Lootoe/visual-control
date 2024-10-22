@@ -1,8 +1,6 @@
 import * as THREE from 'three'
 import { alphaShape } from '@/libs/buildModel'
 import { addMesh } from '@/modules/scene'
-import { VertexNormalsHelper } from 'three/examples/jsm/Addons.js'
-import { AxesHelper } from 'three'
 
 const getSquarePointsCloud = (num, min, max, center = [0, 0, 0]) => {
   const points = []
@@ -40,7 +38,7 @@ const renderCloudFromPoitns = (vertices) => {
   }
   const pointGeometry = new THREE.BufferGeometry()
   pointGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3))
-  const pointMaterial = new THREE.PointsMaterial({ color: 0x00ffff, size: 1 })
+  const pointMaterial = new THREE.PointsMaterial({ color: 0x00ffff, size: 0.5 })
   const pointCloud = new THREE.Points(pointGeometry, pointMaterial)
   return pointCloud
 }
@@ -48,7 +46,7 @@ const renderCloudFromPoitns = (vertices) => {
 const electricMaterial = new THREE.MeshPhongMaterial({
   color: '#fe2323',
   transparent: true,
-  opacity: 0.6,
+  opacity: 0.8,
   depthTest: true,
   side: THREE.DoubleSide,
   refractionRatio: 1,
@@ -71,24 +69,23 @@ const renderMeshFromPoints = (vertices) => {
 }
 
 export function debug() {
-  const points1 = getSquarePointsCloud(100, -20, 20, [50, 50, 50])
-  const points2 = getSquarePointsCloud(100, -20, 20, [-50, -50, -50])
+  const points1 = getSquarePointsCloud(5000, -20, 20, [50, 50, 50])
+  const points2 = getSquarePointsCloud(5000, -20, 20, [-50, -50, -50])
   // const points1 = createSpherePoints({ x: -100, y: -100, z: -100 }, 40, 30)
   // const points2 = createSpherePoints({ x: 100, y: 100, z: 100 }, 40, 30)
   const points = [...points1, ...points2]
   const cloud = renderCloudFromPoitns(points)
   addMesh(cloud)
-  alphaShape(points1, 500).then((faces) => {
+  console.time('alphaShape')
+  alphaShape(points, 50).then((faces) => {
+    console.timeEnd('alphaShape')
     const vertices = []
     faces.forEach((face) => {
       face.forEach((index) => {
-        vertices.push(points1[index])
+        vertices.push(points[index])
       })
     })
     const mesh = renderMeshFromPoints(vertices)
-    const normalHelper = new VertexNormalsHelper(mesh, 4, 0x00ff00)
     addMesh(mesh)
-    addMesh(normalHelper)
-    addMesh(new AxesHelper(1000))
   })
 }

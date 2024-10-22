@@ -1,14 +1,18 @@
 const getFaceStruct = (face, index) => {
   const sortedIndexes = face.sort((a, b) => a - b)
+
   const [a, b, c] = sortedIndexes
+
   const edge1 = [a, b].join('-')
   const edge2 = [b, c].join('-')
   const edge3 = [a, c].join('-')
+
   return {
     edges: [edge1, edge2, edge3],
     index: index,
     neighbors: [],
     vertices: [a, b, c],
+    center: [],
   }
 }
 
@@ -39,21 +43,40 @@ const computeFaceNormal = (vertices) => {
 export const buildFaceNet = (faces, points) => {
   // 首先提取一个三角形出来作为初始三角形，然后寻找它相邻的三个三角形
   const faceNet = faces.map((face, index) => getFaceStruct(face, index))
-  faceNet.forEach((face) => {
-    face.edges.forEach((edge) => {
-      const adjacentIndex = faceNet.findIndex(
-        (struct) =>
-          struct.edges.includes(edge) &&
-          !face.neighbors.includes(struct.index) &&
-          struct.index !== face.index
-      )
-      face.neighbors.push(adjacentIndex)
-    })
-  })
+
+  // 计算相邻关系
+  // faceNet.forEach((face) => {
+  //   face.edges.forEach((edge) => {
+  //     const adjacentIndex = faceNet.findIndex(
+  //       (struct) =>
+  //         struct.edges.includes(edge) &&
+  //         !face.neighbors.includes(struct.index) &&
+  //         struct.index !== face.index
+  //     )
+  //     face.neighbors.push(adjacentIndex)
+  //   })
+  // })
+
+  // 计算法线
   faceNet.forEach((face) => {
     const vertices = face.vertices.map((index) => points[index])
     const normal = computeFaceNormal(vertices)
     face.normal = normal
+  })
+
+  // 就算三角面中心点
+  faceNet.forEach((face) => {
+    const vertices = face.vertices.map((index) => points[index])
+    const center = vertices.reduce(
+      (acc, cur) => {
+        acc[0] += cur[0]
+        acc[1] += cur[1]
+        acc[2] += cur[2]
+        return acc
+      },
+      [0, 0, 0]
+    )
+    face.center = center.map((v) => v / 3)
   })
   return faceNet
 }
