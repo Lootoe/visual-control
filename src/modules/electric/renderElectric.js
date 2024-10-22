@@ -1,18 +1,9 @@
 import * as THREE from 'three'
 import { getChipMeshes } from '@/modules/lead'
-import { marchingCubes, alphaShape } from '@/libs/buildModel'
-import {
-  interscetDetect,
-  combineMeshes,
-  laplacianSmooth,
-  flipNormals,
-  flipFace,
-} from '@/libs/modifyModel'
+import { marchingCubes } from '@/libs/buildModel'
+import { interscetDetect, combineMeshes, laplacianSmooth, flipNormals } from '@/libs/modifyModel'
 import { renderFakeChip, calcFakeData } from './fakeChip'
 import qh from 'quickhull3d'
-import { fixNormals } from '@/libs/modifyModel/fixNormals'
-import { VertexNormalsHelper } from 'three/examples/jsm/Addons.js'
-import { addMesh } from '@/modules/scene'
 
 const calcThreshold = (strength) => {
   // 本来幅值是从0.8到3V均匀变化的
@@ -177,20 +168,8 @@ const handleVtaStep3 = async (electricRenderData, isoLevel, position, strength) 
         meshes.push(electricMesh)
       })
     let finalMesh = combineMeshes(meshes)
-    const geometryVertices = getGeometryVertices(finalMesh.geometry)
-    console.log('geometryVertices', geometryVertices)
-    const faces = await alphaShape(geometryVertices, 2)
-    const vertices = []
-    faces.forEach((face) => {
-      face.forEach((index) => {
-        vertices.push(geometryVertices[index])
-      })
-    })
-    const alphaGeo = getGeoFromVertices(vertices)
-    const fixedGeo = fixNormals(alphaGeo)
-    const alphaMesh = new THREE.Mesh(fixedGeo, electricMaterial)
-    alphaMesh.renderOrder = 2
-    return alphaMesh
+    finalMesh.renderOrder = 2
+    return finalMesh
   }
 }
 
