@@ -1,9 +1,18 @@
 import * as THREE from 'three'
 import { getChipMeshes } from '@/modules/lead'
-import { marchingCubes } from '@/libs/buildModel'
-import { interscetDetect, combineMeshes, laplacianSmooth, flipNormals } from '@/libs/modifyModel'
+import { marchingCubes, alphaShape } from '@/libs/buildModel'
+import {
+  interscetDetect,
+  combineMeshes,
+  laplacianSmooth,
+  flipNormals,
+  flipFace,
+} from '@/libs/modifyModel'
 import { renderFakeChip, calcFakeData } from './fakeChip'
 import qh from 'quickhull3d'
+import { fixNormals } from '@/libs/modifyModel/fixNormals'
+import { VertexNormalsHelper } from 'three/examples/jsm/Addons.js'
+import { addMesh } from '@/modules/scene'
 
 const calcThreshold = (strength) => {
   // 本来幅值是从0.8到3V均匀变化的
@@ -89,7 +98,7 @@ const getGeometryVertices = (geometry) => {
 }
 
 // 当幅值为0.8时，直接采用补的电极片，无视融合
-const handleVtaStep1 = (vtaData, isoLevel, position) => {
+const handleVtaStep1 = async (vtaData, isoLevel, position) => {
   const mesh = renderVtaMesh(vtaData, isoLevel)
   let results = intersectsChips(mesh, position, 0.12, true)
   // 正极不爬
@@ -106,7 +115,7 @@ const handleVtaStep1 = (vtaData, isoLevel, position) => {
 }
 
 // 当幅值在0.85-1.6V之间时，采用quickhull3d算法
-const handleVtaStep2 = (vtaDataList, isoLevel, position) => {
+const handleVtaStep2 = async (vtaDataList, isoLevel, position) => {
   const group = new THREE.Group()
   vtaDataList.forEach((vtaData) => {
     const mesh = renderVtaMesh(vtaData, isoLevel)
@@ -145,7 +154,7 @@ const handleVtaStep2 = (vtaDataList, isoLevel, position) => {
 }
 
 // 当幅值大于1.6V时，采用融合算法
-const handleVtaStep3 = (electricRenderData, isoLevel, position, strength) => {
+const handleVtaStep3 = async (electricRenderData, isoLevel, position, strength) => {
   const { fusionVta, splitVta, nodeLength } = electricRenderData
   const mesh = renderVtaMesh(fusionVta, isoLevel)
   let results = intersectsChips(mesh, position, 0.14, false)
@@ -156,7 +165,7 @@ const handleVtaStep3 = (electricRenderData, isoLevel, position, strength) => {
     return mesh
   }
   if (results.length === nodeLength && strength < 1.4) {
-    return handleVtaStep2(splitVta, isoLevel, position)
+    return await handleVtaStep2(splitVta, isoLevel, position)
   } else {
     // 必须把原电场放数组第一个
     const meshes = [mesh]
@@ -168,23 +177,39 @@ const handleVtaStep3 = (electricRenderData, isoLevel, position, strength) => {
         meshes.push(electricMesh)
       })
     let finalMesh = combineMeshes(meshes)
-    finalMesh.renderOrder = 2
-    return finalMesh
+    const geometryVertices = getGeometryVertices(finalMesh.geometry)
+    console.log('geometryVertices', geometryVertices)
+    const faces = await alphaShape(geometryVertices, 2)
+    const vertices = []
+    faces.forEach((face) => {
+      face.forEach((index) => {
+        vertices.push(geometryVertices[index])
+      })
+    })
+    const alphaGeo = getGeoFromVertices(vertices)
+    const fixedGeo = fixNormals(alphaGeo)
+    const alphaMesh = new THREE.Mesh(fixedGeo, electricMaterial)
+    alphaMesh.renderOrder = 2
+    return alphaMesh
   }
 }
 
-export const renderElectric = (electricRenderData, strength, position) => {
+export const renderElectric = async (electricRenderData, strength, position) => {
   const isoLevel = calcThreshold(strength)
   console.log(`幅值${strength}对应的阈值:${isoLevel}`)
   // return renderCloud(electricRenderData.fusionVta, isoLevel)
   if (strength < 0.85) {
-    return handleVtaStep1(electricRenderData.fusionVta, isoLevel, position)
+    const result = await handleVtaStep1(electricRenderData.fusionVta, isoLevel, position)
+    return result
   }
   if (strength >= 0.85 && strength <= 1.2) {
-    return handleVtaStep2(electricRenderData.splitVta, isoLevel, position)
+    const result = await handleVtaStep2(electricRenderData.splitVta, isoLevel, position)
+    return result
   }
   if (strength > 1.2) {
-    return handleVtaStep3(electricRenderData, isoLevel, position, strength)
+    const result = await handleVtaStep3(electricRenderData, isoLevel, position, strength)
+    console.log('result', result)
+    return result
   }
 }
 

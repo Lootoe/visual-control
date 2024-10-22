@@ -1,3 +1,4 @@
 import { marchingCubes } from './marchingCubes'
+import { alphaShape } from './alphaShape'
 
-export { marchingCubes }
+export { marchingCubes, alphaShape }

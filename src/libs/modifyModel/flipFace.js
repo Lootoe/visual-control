@@ -65,4 +65,5 @@ export const flipFace = (geometry) => {
   const correctGeo = new THREE.BufferGeometry()
   const positionAttribute = new THREE.Float32BufferAttribute(positions, 3)
   correctGeo.setAttribute('position', positionAttribute)
+  return correctGeo
 }
