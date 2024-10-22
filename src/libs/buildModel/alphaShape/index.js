@@ -1,7 +1,7 @@
 import { delaunay } from './delaunay.js'
 import { calcTetRadius } from './calcTetRadius.js'
 import { getOutterFace } from './getOutterFace.js'
-import { buildFaceNet, unifyFaceNormals } from './buildFaceNet.js'
+import { unifyNormals } from './unifyNormals.js'
 
 export const alphaShape = (points, alpha = 1) => {
   return new Promise((resolve, reject) => {
@@ -25,9 +25,7 @@ export const alphaShape = (points, alpha = 1) => {
           faces.push([b, c, d])
         })
         const polygons = getOutterFace(faces)
-        const net = buildFaceNet(polygons, points)
-        unifyFaceNormals(net, points)
-        const correctPolygons = net.map((face) => face.vertices)
+        const correctPolygons = unifyNormals(polygons, points)
         resolve(correctPolygons)
       })
       .catch(reject)

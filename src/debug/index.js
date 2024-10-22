@@ -78,7 +78,6 @@ export function debug() {
   const points = [...points1, ...points2]
   const cloud = renderCloudFromPoitns(points)
   addMesh(cloud)
-  console.log('points1', points1)
   alphaShape(points1, 500).then((faces) => {
     const vertices = []
     faces.forEach((face) => {
