@@ -1,18 +1,12 @@
+// 优化后的 getFaceStruct
 const getFaceStruct = (face, index) => {
-  const sortedIndexes = face.sort((a, b) => a - b)
-
-  const [a, b, c] = sortedIndexes
-
-  const edge1 = [a, b].join('-')
-  const edge2 = [b, c].join('-')
-  const edge3 = [a, c].join('-')
+  const [a, b, c] = face.sort((a, b) => a - b) // 简化排序，直接解构
 
   return {
-    edges: [edge1, edge2, edge3],
     index: index,
-    neighbors: [],
     vertices: [a, b, c],
     center: [],
+    normal: [], // 这里直接初始化 normal
   }
 }
 
@@ -41,32 +35,17 @@ const computeFaceNormal = (vertices) => {
 }
 
 export const buildFaceNet = (faces, points) => {
-  // 首先提取一个三角形出来作为初始三角形，然后寻找它相邻的三个三角形
-  const faceNet = faces.map((face, index) => getFaceStruct(face, index))
+  const faceNet = faces.map((face, index) => {
+    const struct = getFaceStruct(face, index)
 
-  // 计算相邻关系
-  // faceNet.forEach((face) => {
-  //   face.edges.forEach((edge) => {
-  //     const adjacentIndex = faceNet.findIndex(
-  //       (struct) =>
-  //         struct.edges.includes(edge) &&
-  //         !face.neighbors.includes(struct.index) &&
-  //         struct.index !== face.index
-  //     )
-  //     face.neighbors.push(adjacentIndex)
-  //   })
-  // })
+    // 获取顶点坐标
+    const vertices = struct.vertices.map((index) => points[index])
 
-  // 计算法线
-  faceNet.forEach((face) => {
-    const vertices = face.vertices.map((index) => points[index])
+    // 计算法线
     const normal = computeFaceNormal(vertices)
-    face.normal = normal
-  })
+    struct.normal = normal
 
-  // 就算三角面中心点
-  faceNet.forEach((face) => {
-    const vertices = face.vertices.map((index) => points[index])
+    // 计算中心点
     const center = vertices.reduce(
       (acc, cur) => {
         acc[0] += cur[0]
@@ -76,7 +55,10 @@ export const buildFaceNet = (faces, points) => {
       },
       [0, 0, 0]
     )
-    face.center = center.map((v) => v / 3)
+    struct.center = center.map((v) => v / 3)
+
+    return struct
   })
+
   return faceNet
 }

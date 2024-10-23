@@ -1,23 +1,24 @@
 import { rayIntersectsTriangle } from './rayIntersectsTriangle'
 
 export function isPointInPolygon(point, faceNet, points) {
-  const direction_1 = [0, 0, 1]
-  const direction_2 = [0, 0, -1]
-  let success_1 = false
-  let success_2 = false
+  const directions = [
+    [0, 0, 1], // 正向
+    [0, 0, -1], // 反向
+  ]
+
+  let success = [false, false] // 分别表示正向和反向的结果
   for (const face of faceNet) {
     const triangle = face.vertices.map((v) => points[v])
-    const isCrossedFace = rayIntersectsTriangle(point, direction_1, triangle)
-    if (isCrossedFace) {
-      success_1 = true
-    }
+
+    directions.forEach((dir, i) => {
+      if (rayIntersectsTriangle(point, dir, triangle)) {
+        success[i] = true
+      }
+    })
+
+    // 如果两个方向都已经相交，提前结束遍历
+    if (success[0] && success[1]) break
   }
-  for (const face of faceNet) {
-    const triangle = face.vertices.map((v) => points[v])
-    const isCrossedFace = rayIntersectsTriangle(point, direction_2, triangle)
-    if (isCrossedFace) {
-      success_2 = true
-    }
-  }
-  return success_1 && success_2
+
+  return success[0] && success[1]
 }
