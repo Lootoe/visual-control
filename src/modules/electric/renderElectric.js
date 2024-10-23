@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import { getChipMeshes } from '@/modules/lead'
 import { marchingCubes } from '@/libs/buildModel'
 import { interscetDetect, combineMeshes, laplacianSmooth } from '@/libs/modifyModel'
+import { unifyNormalFromGeometry } from '@/libs/fixNormal'
 import {
   getGeometryFromVertices,
   getVerticesFromGeometry,
@@ -44,6 +45,7 @@ const renderVtaMesh = (vtaData, isoLevel) => {
   geometry = marchingCubes(vtaData, isoLevel)
   const smoothedGeometry = laplacianSmooth(geometry, 1, 0.5, -1)
   const mesh = new THREE.Mesh(smoothedGeometry, electricMaterial)
+  unifyNormalFromGeometry(mesh.geometry)
   mesh.renderOrder = 2
   return mesh
 }

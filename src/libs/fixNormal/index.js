@@ -1,4 +1,4 @@
-import { flipNormal } from './flipNormal'
+import { unifyNormalFromGeometry } from './unifyNormalFromGeometry'
 import { unifyNormal } from './unifyNormal'
 
-export { flipNormal, unifyNormal }
+export { unifyNormalFromGeometry, unifyNormal }
