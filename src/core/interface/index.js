@@ -61,6 +61,9 @@ export default () => {
         mainSceneConfig: { backgroundColor: sceneBg },
         assistSceneSelector: '.assist-scene',
         assistSceneConfig: { backgroundColor: sceneBg },
+      }).then(() => {
+        loadingStore.loading = false
+        loadingStore.loadingText = '加载完成'
       })
     } else {
       handlePad()

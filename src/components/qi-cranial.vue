@@ -13,7 +13,7 @@ const showQi = computed(() => {
 </script>
 
 <template>
-  <div class="qilu-wrap" v-if="showQi">
+  <div class="qilu-wrap" v-if="true">
     <div class="title" @click="dialogVisual = true">
       <img src="../assets/img/warning.png" alt="" />
       <span>气颅提醒</span>
@@ -45,12 +45,12 @@ const showQi = computed(() => {
 <style scoped lang="less">
 .qilu-wrap {
   .title {
-    height: 0.4rem;
-    line-height: 0.4rem;
     font-weight: 400;
     font-size: 0.18rem;
     color: #f4891f;
     cursor: pointer;
+    display: flex;
+    align-items: center;
     img {
       width: 0.36rem;
       height: 0.36rem;
