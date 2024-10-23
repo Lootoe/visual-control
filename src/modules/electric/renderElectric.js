@@ -67,7 +67,7 @@ const intersectsChips = (electricMesh, position, percent, isContain) => {
 }
 
 // 当幅值为0.8时，直接采用补的电极片，无视融合
-const handleVtaStep1 = async (vtaData, isoLevel, position) => {
+const handleVtaStep1 = (vtaData, isoLevel, position) => {
   const mesh = renderVtaMesh(vtaData, isoLevel)
   let results = intersectsChips(mesh, position, 0.12, true)
   // 正极不爬
@@ -84,7 +84,7 @@ const handleVtaStep1 = async (vtaData, isoLevel, position) => {
 }
 
 // 当幅值在0.85-1.6V之间时，采用quickhull3d算法
-const handleVtaStep2 = async (vtaDataList, isoLevel, position) => {
+const handleVtaStep2 = (vtaDataList, isoLevel, position) => {
   const group = new THREE.Group()
   vtaDataList.forEach((vtaData) => {
     const mesh = renderVtaMesh(vtaData, isoLevel)
@@ -123,7 +123,7 @@ const handleVtaStep2 = async (vtaDataList, isoLevel, position) => {
 }
 
 // 当幅值大于1.6V时，采用融合算法
-const handleVtaStep3 = async (electricRenderData, isoLevel, position, strength) => {
+const handleVtaStep3 = (electricRenderData, isoLevel, position, strength) => {
   const { fusionVta, splitVta, nodeLength } = electricRenderData
   const mesh = renderVtaMesh(fusionVta, isoLevel)
   let results = intersectsChips(mesh, position, 0.14, false)
@@ -134,7 +134,7 @@ const handleVtaStep3 = async (electricRenderData, isoLevel, position, strength) 
     return mesh
   }
   if (results.length === nodeLength && strength < 1.4) {
-    return await handleVtaStep2(splitVta, isoLevel, position)
+    return handleVtaStep2(splitVta, isoLevel, position)
   } else {
     // 必须把原电场放数组第一个
     const meshes = [mesh]
@@ -151,7 +151,7 @@ const handleVtaStep3 = async (electricRenderData, isoLevel, position, strength) 
   }
 }
 
-export const renderElectric = async (electricRenderData, strength, position) => {
+export const renderElectric = (electricRenderData, strength, position) => {
   const isoLevel = calcThreshold(strength)
   console.log(`幅值${strength}对应的阈值:${isoLevel}`)
   if (window?.hack?.showCloud) {

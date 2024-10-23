@@ -219,7 +219,7 @@ export const handleStuff = async (stuffList, position) => {
       const electricRenderData = await loadElectric(newVta.downloadUrlArr)
       newVta.electricRenderData = electricRenderData
       if (electricRenderData) {
-        const newMesh = await renderElectric(electricRenderData, newVta.amplitude, position)
+        const newMesh = renderElectric(electricRenderData, newVta.amplitude, position)
         newVta.mesh = newMesh
         addMesh(newMesh)
       }
@@ -230,7 +230,7 @@ export const handleStuff = async (stuffList, position) => {
         removeMesh(oldVta.mesh)
       }
       if (oldVta.electricRenderData) {
-        const newMesh = await renderElectric(oldVta.electricRenderData, newVta.amplitude, position)
+        const newMesh = renderElectric(oldVta.electricRenderData, newVta.amplitude, position)
         newVta.mesh = newMesh
         newVta.electricRenderData = oldVta.electricRenderData
         addMesh(newMesh)
