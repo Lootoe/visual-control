@@ -88,7 +88,7 @@ const handleVtaStep2 = (vtaDataList, isoLevel, position) => {
   const group = new THREE.Group()
   vtaDataList.forEach((vtaData) => {
     const mesh = renderVtaMesh(vtaData, isoLevel)
-    let results = intersectsChips(mesh, position, 0.14, true)
+    let results = intersectsChips(mesh, position, 0.12, true)
     console.log('检测到相交的电极片数量', results.length)
     // 正极不爬
     results = results.filter((v) => v.node === 2)
@@ -126,7 +126,7 @@ const handleVtaStep2 = (vtaDataList, isoLevel, position) => {
 const handleVtaStep3 = (electricRenderData, isoLevel, position, strength) => {
   const { fusionVta, splitVta, nodeLength } = electricRenderData
   const mesh = renderVtaMesh(fusionVta, isoLevel)
-  let results = intersectsChips(mesh, position, 0.14, false)
+  let results = intersectsChips(mesh, position, 0.46, false)
   // 正极不爬
   results = results.filter((v) => v.node !== 1)
   console.log('检测到相交的电极片数量', results.length)
