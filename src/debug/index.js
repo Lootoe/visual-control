@@ -3,7 +3,7 @@ import { testRenderTxt } from './testRenderTxt'
 import { testSVO } from './testSVO'
 
 export const debug = () => {
-  // testAlphaShape()
+  testAlphaShape()
   // testRenderTxt()
-  testSVO()
+  // testSVO()
 }
