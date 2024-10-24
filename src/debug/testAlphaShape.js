@@ -40,11 +40,8 @@ export function testAlphaShape() {
   const points = [...points1, ...points2]
   const cloud = getPointCloud(points)
   addMesh(cloud)
-  console.time('初始化wasm')
   initDelaunayWasm().then(() => {
-    console.timeEnd('初始化wasm')
     const faces = alphaShape(points, 50)
-    console.timeEnd('alphaShape')
     const vertices = []
     faces.forEach((face) => {
       face.forEach((index) => {

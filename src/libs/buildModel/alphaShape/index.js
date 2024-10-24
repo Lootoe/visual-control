@@ -18,7 +18,7 @@ const alphaShape = (points, alpha = 1) => {
   // 计算每个四面体的外接球半径，判断它是否满足alpha形状的条件
   // 每个四面体按照定点顺序都有四个三角面片
   const faces = []
-  tetras.forEach((tetra) => {
+  alphaTetras.forEach((tetra) => {
     const [a, b, c, d] = tetra
     faces.push([a, b, c])
     faces.push([a, c, d])
