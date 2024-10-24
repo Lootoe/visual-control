@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { loadTxt } from './loadTxt.js'
 import { getGeometryFromVertices, getPointCloud } from '@/libs/other/threeTools'
 import { addMesh } from '@/modules/scene'
-import { alphaShape } from '@/libs/buildModel'
+import { initDelaunayWasm, alphaShape } from '@/libs/buildModel'
 
 const electricMaterial = new THREE.MeshPhongMaterial({
   color: '#fe2323',
@@ -37,24 +37,38 @@ export const testRenderTxt = async () => {
     new URL('../assets/Lead_1_2000_output.txt', import.meta.url)
   )
 
-  const isoLevel = calcThreshold(3)
-
-  // 筛选出0.3V的幅值
-  const filted = []
-  values.forEach((value, index) => {
-    if (value >= isoLevel && index % 2 === 0) {
-      filted.push(points[index])
+  const points_filted = []
+  const values_filted = []
+  points.forEach((point, index) => {
+    if (index % 4 === 0) {
+      points_filted.push(point)
+      values_filted.push(values[index])
     }
   })
 
-  const pointCloud = getPointCloud(filted, 0.1)
+  console.log('当前点云数量', points.length)
+
+  const pointCloud = getPointCloud(points, 0.1)
   addMesh(pointCloud)
 
-  alphaShape(filted, 0.4).then((faces) => {
+  const isoLevel = calcThreshold(1)
+
+  // 筛选出0.3V的幅值
+  const validPoints = []
+  values_filted.forEach((value, index) => {
+    if (value >= isoLevel) {
+      validPoints.push(points_filted[index])
+    }
+  })
+
+  console.time('初始化wasm')
+  initDelaunayWasm().then(() => {
+    console.timeEnd('初始化wasm')
+    const faces = alphaShape(validPoints, 1.5)
     const vertices = []
     faces.forEach((face) => {
       face.forEach((index) => {
-        vertices.push(filted[index])
+        vertices.push(validPoints[index])
       })
     })
     const mesh = renderMeshFromPoints(vertices)

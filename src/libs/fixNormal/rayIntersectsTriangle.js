@@ -2,7 +2,7 @@ export function rayIntersectsTriangle(origin, direction, triangle) {
   const [A, B, C] = triangle
   const EPSILON = 1e-9
 
-  // 计算三角形的边向量
+  // 预计算三角形的边向量
   const edge1x = B[0] - A[0]
   const edge1y = B[1] - A[1]
   const edge1z = B[2] - A[2]
@@ -19,15 +19,17 @@ export function rayIntersectsTriangle(origin, direction, triangle) {
   // 计算 edge1 和 h 的点积
   const a = edge1x * hx + edge1y * hy + edge1z * hz
 
-  // 如果 a 近似为 0，则射线与三角形平行
-  if (a > -EPSILON && a < EPSILON) return false
+  // 检查射线与三角形是否平行
+  if (Math.abs(a) < EPSILON) return false
 
   const f = 1.0 / a
+
+  // 计算原点到三角形顶点 A 的向量
   const sx = origin[0] - A[0]
   const sy = origin[1] - A[1]
   const sz = origin[2] - A[2]
 
-  // 计算 u 参数
+  // 计算 u 参数，提前进行边界检查
   const u = f * (sx * hx + sy * hy + sz * hz)
   if (u < 0.0 || u > 1.0) return false
 
@@ -36,13 +38,13 @@ export function rayIntersectsTriangle(origin, direction, triangle) {
   const qy = sz * edge1x - sx * edge1z
   const qz = sx * edge1y - sy * edge1x
 
-  // 计算 v 参数
+  // 计算 v 参数，提前进行边界检查
   const v = f * (direction[0] * qx + direction[1] * qy + direction[2] * qz)
   if (v < 0.0 || u + v > 1.0) return false
 
-  // 计算 t，即交点距离射线起点的距离
+  // 计算 t 参数
   const t = f * (edge2x * qx + edge2y * qy + edge2z * qz)
 
-  // 如果 t 大于 EPSILON，说明交点位于射线的正方向上
+  // 返回结果，减少额外运算
   return t > EPSILON
 }
