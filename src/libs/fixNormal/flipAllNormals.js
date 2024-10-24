@@ -27,7 +27,6 @@ function computeVerticesCenter(vertices) {
 // 如果发现第一个三角面法线方向不正确，则全部三角面都需要调换顺序
 export const flipAllNormals = (geometry) => {
   const { faces, vertices } = getDataFromBufferGeometry(geometry)
-  console.log('vertices', vertices)
 
   const center = computeVerticesCenter(vertices)
 
@@ -42,7 +41,6 @@ export const flipAllNormals = (geometry) => {
       const v3 = vertices[arr[2]]
       correctVertices.push(v3, v2, v1)
     })
-    console.log('correctVertices', correctVertices)
     const positions = []
     correctVertices.forEach((v) => {
       positions.push(...v.toArray())
