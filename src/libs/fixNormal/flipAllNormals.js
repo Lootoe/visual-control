@@ -1,16 +1,26 @@
 import * as THREE from 'three'
+import { rayIntersectsTriangle } from './rayIntersectsTriangle'
 
 // 函数：计算三角面的法线
-function computeNormal(vA, vB, vC, center) {
+function computeNormalOutside(vA, vB, vC) {
   const tri = new THREE.Triangle(vA, vB, vC)
   const normal = new THREE.Vector3()
   tri.getNormal(normal)
   const faceCenter = new THREE.Vector3()
   tri.getMidpoint(faceCenter)
-  const toCenter = new THREE.Vector3()
-  toCenter.subVectors(center, faceCenter)
-  const res = normal.dot(toCenter)
-  return res > 0
+  const point = [
+    faceCenter[0] + normal[0] * 0.5,
+    faceCenter[1] + normal[1] * 0.5,
+    faceCenter[2] + normal[2] * 0.5,
+  ]
+  const v1 = vA.toArray()
+  const v2 = vB.toArray()
+  const v3 = vC.toArray()
+  const direction1 = [0, 0, 1]
+  const direction2 = [0, 0, -1]
+  const success1 = rayIntersectsTriangle(point, direction1, v1, v2, v3)
+  const success2 = rayIntersectsTriangle(point, direction2, v1, v3, v2)
+  return success1 && success2
 }
 
 // 计算点云的几何中心，用于计算法线
@@ -32,8 +42,8 @@ export const flipAllNormals = (geometry) => {
 
   const firstFace = faces[0]
   const [v1, v2, v3] = firstFace.map((i) => vertices[i])
-  const inside = computeNormal(v1, v2, v3, center)
-  if (inside) {
+  const outside = computeNormalOutside(v1, v2, v3, center)
+  if (!outside) {
     const correctVertices = []
     faces.forEach((arr) => {
       const v1 = vertices[arr[0]]

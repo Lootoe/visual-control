@@ -21,6 +21,10 @@ export default defineConfig(() => {
         },
       },
     },
+    // 支持多个worker的关键配置
+    worker: {
+      format: 'es',
+    },
     server: {
       // 是否开启 https
       https: false,

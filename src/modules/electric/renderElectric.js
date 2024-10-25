@@ -43,10 +43,9 @@ const renderVtaMesh = (vtaData, isoLevel) => {
   })
   let geometry = null
   geometry = marchingCubes(vtaData, isoLevel)
-  const smoothedGeometry = laplacianSmooth(geometry, 1, 0.5, -1)
-  const newGeo = flipAllNormals(smoothedGeometry)
-  newGeo.computeVertexNormals()
-  const mesh = new THREE.Mesh(newGeo, electricMaterial)
+  const newGeo = flipAllNormals(geometry)
+  const smoothedGeometry = laplacianSmooth(newGeo, 1, 0.5, -1)
+  const mesh = new THREE.Mesh(smoothedGeometry, electricMaterial)
   mesh.renderOrder = 2
   return mesh
 }
