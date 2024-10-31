@@ -3,8 +3,12 @@ const platform = globalThis.SRENV.PLATFORM
 
 const DebugRoutes = [
   {
-    path: '/debug/index',
-    component: () => import('@/pages/Debug/Index.vue'),
+    path: '/debug/test',
+    component: () => import('@/pages/Debug/Test/Index.vue'),
+  },
+  {
+    path: '/debug/comsol',
+    component: () => import('@/pages/Debug/Comsol/Index.vue'),
   },
 ]
 

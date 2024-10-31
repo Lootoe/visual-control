@@ -1,22 +1,13 @@
 <script setup>
-import { updateProgramByAmplitude } from '@/core/mockProgram'
-import usePatientStoreHook from '@/store/usePatientStore.js'
+const emits = defineEmits(['changeAmp'])
 
-const patientStore = usePatientStoreHook()
 const localAmp = ref(0)
-
-watch(
-  () => patientStore.amplitude,
-  (newval) => {
-    localAmp.value = newval
-  }
-)
 
 const sliderToolTip = (value) => {
   return `幅值：${value}V`
 }
 const onAmpChange = (value) => {
-  updateProgramByAmplitude(value)
+  emits('changeAmp', value)
 }
 </script>
 
@@ -34,7 +25,7 @@ const onAmpChange = (value) => {
       @change="onAmpChange"
     ></el-slider>
     <!-- 展示真正的值，而不是随着拖曳实时变化的值 -->
-    <div class="amp-label">幅值：{{ patientStore.amplitude }}V</div>
+    <div class="amp-label">幅值：{{ localAmp }}V</div>
   </div>
 </template>
 

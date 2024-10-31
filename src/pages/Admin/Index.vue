@@ -1,6 +1,7 @@
 <script setup>
 import usePatientStoreHook from '@/store/usePatientStore'
 import { computed } from 'vue'
+import { updateProgramByAmplitude } from '@/core/mockProgram'
 
 const patientStore = usePatientStoreHook()
 const hasFiber = computed(() => {
@@ -16,6 +17,10 @@ const changeToolItem = (toolIndex) => {
     activedToolIndex.value = toolIndex
   }
 }
+
+const onAmpChanged = (value) => {
+  updateProgramByAmplitude(value)
+}
 </script>
 
 <template>
@@ -25,7 +30,7 @@ const changeToolItem = (toolIndex) => {
     <nucleus-panel v-show="activedToolIndex === 0" :backgroundColor="uiBg"></nucleus-panel>
     <visible-panel v-show="activedToolIndex === 1" :backgroundColor="uiBg"></visible-panel>
     <filter-panel v-show="activedToolIndex === 2" :backgroundColor="uiBg"></filter-panel>
-    <amp-slider></amp-slider>
+    <amp-slider @changeAmp="onAmpChanged"></amp-slider>
     <qi-cranial></qi-cranial>
     <div class="tool-box">
       <div
