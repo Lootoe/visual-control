@@ -1,6 +1,7 @@
 import { initScene } from '@/modules/scene'
 import useLoadingStoreHook from '@/store/useLoadingStore'
 const loadingStore = useLoadingStoreHook()
+import { initDelaunayWasm } from '@/libs/buildModel'
 
 export const debug = () => {
   const sceneBg = import.meta.env.VITE_SCENE_BG
@@ -9,10 +10,14 @@ export const debug = () => {
     mainSceneConfig: { backgroundColor: sceneBg },
     assistSceneSelector: '.assist-scene',
     assistSceneConfig: { backgroundColor: sceneBg },
-  }).then(() => {
-    loadingStore.loading = false
-    loadingStore.loadingText = '加载完成'
   })
+    .then(() => {
+      return initDelaunayWasm()
+    })
+    .then(() => {
+      loadingStore.loading = false
+      loadingStore.loadingText = '加载完成'
+    })
 }
 
 export const compileTxt = (text) => {

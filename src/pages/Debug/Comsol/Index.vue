@@ -1,7 +1,7 @@
 <script setup>
 import { debug, compileTxt } from './index'
 import { addMesh, removeMesh } from '@/modules/scene'
-import { renderTxt } from './renderTxt'
+import { renderTxt, calcPointsLayer } from './renderTxt'
 
 onMounted(() => {
   debug()
@@ -14,12 +14,17 @@ const amp = ref(0)
 let points = []
 let values = []
 let mesh = null
+let staticsList = shallowRef([])
+
+let totalLength = 0
 
 const onAmpChanged = async (value) => {
+  console.time('完整重建耗时')
   amp.value = value
   removeMesh(mesh)
   mesh = await renderTxt(points, values, value, renderMode.value)
   addMesh(mesh)
+  console.timeEnd('完整重建耗时')
 }
 const onModeChange = () => {
   onAmpChanged(amp.value)
@@ -32,7 +37,8 @@ const onFileSuccess = (file) => {
     const res = compileTxt(fileContent)
     points = res.points
     values = res.values
-    console.log('总点数', points.length)
+    totalLength = points.length
+    staticsList.value = calcPointsLayer(values)
     mesh = await renderTxt(points, values, 0, renderMode.value)
     addMesh(mesh)
   }
@@ -43,6 +49,12 @@ const onFileSuccess = (file) => {
 <template>
   <control-scene></control-scene>
   <amp-slider @changeAmp="onAmpChanged"></amp-slider>
+  <div class="statics">
+    <div class="statics-item" v-for="item in staticsList" :key="item.name">
+      [{{ item.range[0] }},{{ item.range[1] }}]：{{ item.length }}
+    </div>
+    <div class="total">总点数：{{ totalLength }}</div>
+  </div>
 
   <div class="panel">
     <el-upload
@@ -79,5 +91,12 @@ const onFileSuccess = (file) => {
   position: absolute;
   bottom: 1.2rem;
   right: 0.36rem;
+}
+.statics {
+  position: absolute;
+  color: #fff;
+  top: 0.2rem;
+  left: 0.2rem;
+  font-size: 0.24rem;
 }
 </style>
