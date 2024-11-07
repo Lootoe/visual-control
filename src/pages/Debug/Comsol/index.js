@@ -1,7 +1,7 @@
 import { initScene } from '@/modules/scene'
 import useLoadingStoreHook from '@/store/useLoadingStore'
 const loadingStore = useLoadingStoreHook()
-import { initDelaunayWasm } from '@/libs/buildModel'
+import { initAlphaShapeWasm } from '@/libs/buildModel'
 
 export const debug = () => {
   const sceneBg = import.meta.env.VITE_SCENE_BG
@@ -12,7 +12,7 @@ export const debug = () => {
     assistSceneConfig: { backgroundColor: sceneBg },
   })
     .then(() => {
-      return initDelaunayWasm()
+      return initAlphaShapeWasm()
     })
     .then(() => {
       loadingStore.loading = false

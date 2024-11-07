@@ -1,4 +1,4 @@
 import { marchingCubes } from './marchingCubes/marchingCubes'
-import { alphaShape, initDelaunayWasm } from './alphaShape'
+import { alphaShape, initAlphaShapeWasm } from './alphaShape'
 
-export { marchingCubes, alphaShape, initDelaunayWasm }
+export { marchingCubes, alphaShape, initAlphaShapeWasm }

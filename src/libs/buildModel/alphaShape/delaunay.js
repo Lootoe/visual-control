@@ -1,12 +1,12 @@
-import createDelaunayWasm from './tetgen.js'
+import createAlphaShapeWasm from './tetgen.js'
 
-let delaunayWasm = null
+let alphaShapeWasm = null
 
-export const initDelaunayWasm = () => {
+export const initAlphaShapeWasm = () => {
   return new Promise((resolve, reject) => {
-    createDelaunayWasm()
+    createAlphaShapeWasm()
       .then((Module) => {
-        delaunayWasm = (points) => {
+        alphaShapeWasm = (points, alpha) => {
           // 获取点数量
           let numPoints = points.length
 
@@ -22,25 +22,25 @@ export const initDelaunayWasm = () => {
           let pointsPtr = Module._malloc(vertices.length * vertices.BYTES_PER_ELEMENT)
           Module.HEAPF64.set(vertices, pointsPtr / vertices.BYTES_PER_ELEMENT)
 
-          // 为四面体数量分配内存
-          let outNumTetrahedraPtr = Module._malloc(4) // 4 字节用于存储整数
+          // 为三角面数量分配内存
+          let outNumFacesPtr = Module._malloc(4) // 4 字节用于存储整数
 
-          // 调用 C++ 封装的函数
-          let tetrahedraPtr = Module._delaunay(pointsPtr, numPoints, outNumTetrahedraPtr)
+          // 调用 C++ 封装的 alphaShape 函数
+          let facesPtr = Module._alphaShape(pointsPtr, numPoints, alpha, outNumFacesPtr)
 
-          // 读取输出的四面体数量
-          let numTetrahedra = Module.HEAP32[outNumTetrahedraPtr >> 2]
+          // 读取输出的三角面数量
+          let numFaces = Module.HEAP32[outNumFacesPtr >> 2]
 
-          // 读取并打印四面体的点索引
-          let tetrahedra = new Int32Array(Module.HEAP32.buffer, tetrahedraPtr, numTetrahedra * 4)
+          // 读取并打印三角面的点索引，每个面有 3 个点
+          let faces = new Int32Array(Module.HEAP32.buffer, facesPtr, numFaces * 3)
 
           // 释放内存
           Module._free(pointsPtr)
-          Module._free(tetrahedraPtr)
-          Module._free(outNumTetrahedraPtr)
+          Module._free(facesPtr)
+          Module._free(outNumFacesPtr)
 
-          // 返回四面体剖分结果
-          return tetrahedra
+          // 返回 alphaShape 结果
+          return faces
         }
         resolve()
       })
@@ -48,12 +48,11 @@ export const initDelaunayWasm = () => {
   })
 }
 
-export const delaunay = (points) => {
-  const indexes = delaunayWasm(points)
-  // 每四个顶点作为一个斯迈纳提
-  const tetrahedra = []
-  for (let i = 0; i < indexes.length; i += 4) {
-    tetrahedra.push(indexes.slice(i, i + 4))
+export const delaunay = (points, alpha) => {
+  const results = alphaShapeWasm(points, alpha)
+  const faces = []
+  for (let i = 0; i < results.length; i += 3) {
+    faces.push([results[i], results[i + 1], results[i + 2]])
   }
-  return tetrahedra
+  return faces
 }
