@@ -3,6 +3,7 @@ import * as THREE from 'three'
 export function unifyNormals(bufferGeometry) {
   bufferGeometry.computeBoundsTree()
   bufferGeometry.computeBoundingBox()
+  bufferGeometry.computeVertexNormals()
   const position = bufferGeometry.attributes.position
   const normal = bufferGeometry.attributes.normal
 
@@ -79,5 +80,5 @@ export function unifyNormals(bufferGeometry) {
   normal.needsUpdate = true
 
   // 重新计算法线
-  bufferGeometry.computeVertexNormals()
+  bufferGeometry.deleteAttribute('normal')
 }

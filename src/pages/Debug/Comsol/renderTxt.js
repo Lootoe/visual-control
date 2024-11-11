@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { getGeometryFromVertices, getPointCloud } from '@/libs/other/threeTools'
 import { alphaShape } from '@/libs/buildModel'
+import { laplacianSmooth } from '@/libs/modifyModel/laplacianSmooth'
 import { unifyNormals } from './unifyNormal'
 
 const electricMaterial = new THREE.MeshPhongMaterial({
@@ -16,8 +17,9 @@ const electricMaterial = new THREE.MeshPhongMaterial({
 
 const renderMeshFromPoints = (vertices) => {
   const geo = getGeometryFromVertices(vertices)
-  geo.computeVertexNormals()
-  const mesh = new THREE.Mesh(geo, electricMaterial)
+  unifyNormals(geo)
+  const smoothGeo = laplacianSmooth(geo, 1, 0.5, -0.5)
+  const mesh = new THREE.Mesh(smoothGeo, electricMaterial)
   return mesh
 }
 
@@ -50,7 +52,7 @@ export const renderTxt = (points, values, amp, mode) => {
       resolve(pointCloud)
     }
     if (mode === 1) {
-      const faces = alphaShape(validPoints, 0.8)
+      const faces = alphaShape(validPoints, 1)
       const vertices = []
       faces.forEach((face) => {
         face.forEach((index) => {
@@ -58,7 +60,6 @@ export const renderTxt = (points, values, amp, mode) => {
         })
       })
       const mesh = renderMeshFromPoints(vertices)
-      unifyNormals(mesh.geometry)
       resolve(mesh)
     }
   })
