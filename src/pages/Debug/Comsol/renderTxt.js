@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { getGeometryFromVertices, getPointCloud } from '@/libs/other/threeTools'
 import { alphaShape } from '@/libs/buildModel'
+import { unifyNormals } from './unifyNormal'
 
 const electricMaterial = new THREE.MeshPhongMaterial({
   color: '#fe2323',
@@ -48,9 +49,8 @@ export const renderTxt = (points, values, amp, mode) => {
       const pointCloud = getPointCloud(validPoints, 0.1)
       resolve(pointCloud)
     }
-
     if (mode === 1) {
-      const faces = alphaShape(validPoints, 1)
+      const faces = alphaShape(validPoints, 0.8)
       const vertices = []
       faces.forEach((face) => {
         face.forEach((index) => {
@@ -58,6 +58,7 @@ export const renderTxt = (points, values, amp, mode) => {
         })
       })
       const mesh = renderMeshFromPoints(vertices)
+      unifyNormals(mesh.geometry)
       resolve(mesh)
     }
   })

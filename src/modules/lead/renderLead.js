@@ -64,6 +64,7 @@ const renderCircleChips = (lead) => {
     // 计算前面的间距总和
     // 电极片起始点的位置 = firstChipDistance + 电极片长度 * (index) + 电极片间距 * (index)
     if (i === 0) {
+      // !!!这个值是补偿值，表示txt文件中第一个点往上多大距离才是电极片底端
       startPos += 1
     } else {
       const chipGap = gap[i - 1]
