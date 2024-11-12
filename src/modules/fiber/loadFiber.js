@@ -17,6 +17,14 @@ const loadFile = (url) => {
   })
 }
 
+const isFlag = (str) => {
+  const flagReg = /#v\d+/
+  const isNewVersion = flagReg.test(str)
+  // const res = str.match(flagReg)
+  // const version = res[0].split('#v')[1]
+  return isNewVersion
+}
+
 export const loadFiber = (url) => {
   return new Promise((resolve, reject) => {
     const fiberVectors = []
@@ -30,6 +38,10 @@ export const loadFiber = (url) => {
         const dataRow = data.split(regExp)
         // 最后一个是空的，所以去掉
         dataRow.pop()
+        const isNewVersion = isFlag(dataRow[0])
+        if (isNewVersion) {
+          dataRow.shift()
+        }
         dataRow.forEach((data) => {
           // 每3个数字组成一个点的坐标
           const points = data.trim().split(/\s/)
@@ -47,7 +59,9 @@ export const loadFiber = (url) => {
           const newLineVectors = []
           for (let i = 0; i < len; i += 3) {
             const vec = curve.getPointAt(i / len)
-            vec.applyMatrix4(matrix)
+            if (!isNewVersion) {
+              vec.applyMatrix4(matrix)
+            }
             const x = parseFloat(vec.x.toFixed(3))
             const y = parseFloat(vec.y.toFixed(3))
             const z = parseFloat(vec.z.toFixed(3))
