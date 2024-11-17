@@ -13,7 +13,7 @@ const showQi = computed(() => {
 </script>
 
 <template>
-  <div class="qilu-wrap" v-if="true">
+  <div class="qilu-wrap" v-if="showQi">
     <div class="title" @click="dialogVisual = true">
       <img src="../assets/img/warning.png" alt="" />
       <span>气颅提醒</span>
