@@ -54,13 +54,16 @@ export const interscetDetect = (meshA, meshB, percent = 0.2, once = false) => {
 
     // 检测与 MeshB 的相交情况
     const intersects = raycaster.intersectObject(meshB, false)
-    if (intersects.length > 0) {
-      // 使用点在几何体内部的检测
-      if (isPointInsideMesh(vertex, meshB)) {
-        if (once) return true
-        containCount++
-        if (containCount > COUNT_THRESHOLD) {
-          return true
+    if (once && intersects.length > 0) {
+      return true
+    } else {
+      if (intersects.length > 0) {
+        // 使用点在几何体内部的检测
+        if (isPointInsideMesh(vertex, meshB)) {
+          containCount++
+          if (containCount > COUNT_THRESHOLD) {
+            return true
+          }
         }
       }
     }

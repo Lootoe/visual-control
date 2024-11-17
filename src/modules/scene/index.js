@@ -9,7 +9,6 @@ import {
   addMeshInAssist,
 } from './init'
 import { SCENE_FACES, changeSceneSide } from './changeSceneSide'
-import { initOutlineEffect, updateOutlineEffect } from './postProcessing/outlineEffect'
 
 // 在场景初始化完成时，需要adjustCameraPosition到一个倾斜角度
 const initScene = (params) => {
@@ -18,7 +17,6 @@ const initScene = (params) => {
     __initScene(params)
       .then(() => {
         adjustCameraPosition()
-        initOutlineEffect()
         resolve()
       })
       .catch(reject)
@@ -35,5 +33,4 @@ export {
   addMeshInAssist,
   SCENE_FACES,
   changeSceneSide,
-  updateOutlineEffect,
 }

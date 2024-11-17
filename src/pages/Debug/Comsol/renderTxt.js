@@ -1,8 +1,7 @@
 import * as THREE from 'three'
 import { getGeometryFromVertices, getPointCloud } from '@/libs/other/threeTools'
 import { alphaShape } from '@/libs/buildModel'
-import { laplacianSmooth } from '@/libs/modifyModel/laplacianSmooth'
-import { unifyNormals } from './unifyNormal'
+import { laplacianSmooth, unifyNormal } from '@/libs/modifyModel'
 
 const electricMaterial = new THREE.MeshPhongMaterial({
   color: '#fe2323',
@@ -17,7 +16,7 @@ const electricMaterial = new THREE.MeshPhongMaterial({
 
 const renderMeshFromPoints = (vertices) => {
   const geo = getGeometryFromVertices(vertices)
-  unifyNormals(geo)
+  unifyNormal(geo)
   const smoothGeo = laplacianSmooth(geo, 1, 0.5, -0.5)
   const mesh = new THREE.Mesh(smoothGeo, electricMaterial)
   return mesh

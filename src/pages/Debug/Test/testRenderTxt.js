@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { loadTxt } from './loadTxt.js'
 import { getGeometryFromVertices, getPointCloud } from '@/libs/other/threeTools'
 import { addMesh } from '@/modules/scene'
-import { initDelaunayWasm, alphaShape } from '@/libs/buildModel'
+import { initAlphaShapeWasm, alphaShape } from '@/libs/buildModel'
 
 const electricMaterial = new THREE.MeshPhongMaterial({
   color: '#fe2323',
@@ -60,7 +60,7 @@ export const testRenderTxt = async () => {
   })
   // console.log('validPoints', validPoints.length)
   // console.time('初始化wasm')
-  // initDelaunayWasm().then(() => {
+  // initAlphaShapeWasm().then(() => {
   //   console.timeEnd('初始化wasm')
   //   const faces = alphaShape(validPoints, 1.5)
   //   const vertices = []

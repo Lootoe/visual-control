@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { getChipMeshes } from '@/modules/lead'
 import { marchingCubes } from '@/libs/buildModel'
-import { interscetDetect, combineMeshes, laplacianSmooth } from '@/libs/modifyModel'
+import { interscetDetect, combineMeshes, laplacianSmooth, unifyNormal } from '@/libs/modifyModel'
 import {
   getGeometryFromVertices,
   getVerticesFromGeometry,
@@ -40,15 +40,15 @@ const renderVtaMesh = (vtaData, isoLevel) => {
       vertices.push(p.toArray())
     }
   })
-  let geometry = null
-  geometry = marchingCubes(vtaData, isoLevel)
-  const smoothedGeometry = laplacianSmooth(geometry, 1, 0.5, -1)
+  const geometry = marchingCubes(vtaData, isoLevel)
+  unifyNormal(geometry)
+  const smoothedGeometry = laplacianSmooth(geometry, 1, 0.5, -0.5)
   const mesh = new THREE.Mesh(smoothedGeometry, electricMaterial)
   mesh.renderOrder = 2
   return mesh
 }
 
-const intersectsChips = (electricMesh, position, percent, isContain) => {
+const intersectsChips = (electricMesh, position, percent, once) => {
   const allChips = getChipMeshes()
   const leadChips = allChips[position]
   const interscetedChips = []
@@ -56,7 +56,7 @@ const intersectsChips = (electricMesh, position, percent, isContain) => {
     // 阈值设为36是因为电极片最上层的点数为36
     // 我们认为第一层完全被覆盖了才认为是相交
     const vitualMesh = new THREE.Mesh(chip.mesh.userData.electricGeo, new THREE.MeshBasicMaterial())
-    const flag = interscetDetect(vitualMesh, electricMesh, percent, isContain)
+    const flag = interscetDetect(vitualMesh, electricMesh, percent, once)
     if (flag) {
       interscetedChips.push(chip)
     }
@@ -67,9 +67,9 @@ const intersectsChips = (electricMesh, position, percent, isContain) => {
 // 当幅值为0.8时，直接采用补的电极片，无视融合
 const handleVtaStep1 = (vtaData, isoLevel, position) => {
   const mesh = renderVtaMesh(vtaData, isoLevel)
-  let results = intersectsChips(mesh, position, 0.12, true)
+  let results = intersectsChips(mesh, position, 0.1, true)
   // 正极不爬
-  results = results.filter((v) => v.node !== 1)
+  results = results.filter((v) => v.node === 2)
   console.log('检测到相交的电极片数量', results.length)
   if (results.length === 0) return mesh
   const group = new THREE.Group()

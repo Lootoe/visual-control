@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 
-export function unifyNormals(bufferGeometry) {
+export function unifyNormal(bufferGeometry) {
   bufferGeometry.computeBoundsTree()
   bufferGeometry.computeBoundingBox()
   bufferGeometry.computeVertexNormals()
