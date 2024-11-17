@@ -51,7 +51,7 @@ const bindUpdateProgram = () => {
 
 const fetchPatient = () => {
   const result = callAndroid('fetchPatient')
-  const patient = convertPatient(JSON.parse(result))
+  const patient = JSON.parse(result)
   const patientInfo = convertPatient(patient)
   const patientAssets = convertAssets(patient)
   patientStore.$patch((state) => {

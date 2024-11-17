@@ -11,7 +11,7 @@ import { initFiber } from '@/modules/fiber'
 import { initAxesHelper, initCortex, initBrain } from '@/modules/addons'
 import { initFilter } from '@/modules/filter'
 import { initElectric } from '@/modules/electric'
-import router from '@/router'
+import { useRouter } from 'vue-router'
 
 import useSceneStoreHook from '@/store/useSceneStore'
 import usePatientStoreHook from '@/store/usePatientStore'
@@ -75,6 +75,7 @@ export default () => {
 
 const handleAdmin = () => {
   // 从URL获取IPGSN
+  const router = useRouter()
   const queryParams = router.currentRoute.value.query
   const sceneBg = import.meta.env.VITE_SCENE_BG
   loadingStore.loading = true
@@ -122,7 +123,8 @@ const handleAdmin = () => {
     })
     .catch((err) => {
       loadingStore.loadingFail = true
-      loadingStore.failReason = err
+      loadingStore.failReason = '加载失败'
+      console.error(err)
     })
 }
 
@@ -171,7 +173,8 @@ const handlePC = () => {
     })
     .catch((err) => {
       loadingStore.loadingFail = true
-      loadingStore.failReason = err
+      loadingStore.failReason = '加载失败'
+      console.error(err)
     })
 }
 
@@ -218,8 +221,10 @@ const handlePad = () => {
       initCortex()
       initElectric()
     })
-    .catch(() => {
+    .catch((err) => {
       switchTo2D()
+      loadingStore.failReason = '加载失败'
+      console.error(err)
     })
 }
 
@@ -274,6 +279,7 @@ const handleDemo = () => {
     })
     .catch((err) => {
       loadingStore.loadingFail = true
-      loadingStore.failReason = err
+      loadingStore.failReason = '加载失败'
+      console.error(err)
     })
 }

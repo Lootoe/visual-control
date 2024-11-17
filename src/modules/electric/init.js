@@ -1,6 +1,6 @@
 import usePatientStoreHook from '@/store/usePatientStore'
 import useVtaStoreHook from '@/store/useVtaStore'
-import { convertToVtaTable } from './subscribeProgramUpdate'
+import { convertToVtaTable } from './updateElectrics'
 import { map } from 'radash'
 import { addMesh } from '@/modules/scene'
 import { loadElectric } from './loadElectric'

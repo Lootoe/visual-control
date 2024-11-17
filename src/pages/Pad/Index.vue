@@ -19,11 +19,11 @@ const changeToolItem = (toolIndex) => {
 }
 
 const fullScreen = ref(false)
-const localToggleFullScreen = (isFullScreen) => {
-  if (isPadExist()) {
-    toggleFullScreen(isFullScreen)
-  }
+const localToggleFullScreen = () => {
   fullScreen.value = !fullScreen.value
+  if (isPadExist()) {
+    toggleFullScreen(fullScreen.value)
+  }
 }
 </script>
 

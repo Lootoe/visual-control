@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { initDelaunayWasm, alphaShape } from '@/libs/buildModel'
+import { initAlphaShapeWasm, alphaShape } from '@/libs/buildModel'
 import { addMesh } from '@/modules/scene'
 import { getGeometryFromVertices, getPointCloud } from '@/libs/other/threeTools'
 
@@ -40,7 +40,7 @@ export function testAlphaShape() {
   const points = [...points1, ...points2]
   const cloud = getPointCloud(points)
   addMesh(cloud)
-  initDelaunayWasm().then(() => {
+  initAlphaShapeWasm().then(() => {
     const faces = alphaShape(points, 50)
     const vertices = []
     faces.forEach((face) => {

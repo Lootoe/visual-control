@@ -13,6 +13,7 @@ const commandEnum = {
   HIDE: 'HideMesh',
   CUT: 'CutMesh',
   NONE: 'DoNothing',
+  INIT: 'Init',
 }
 
 // 计算触点组合是否变化
@@ -78,65 +79,55 @@ const __createStuff = (newVta, oldVta, str) => {
   }
 }
 
+// !=======================================以上是工具函数================================
+// !=======================================下面是处理流程================================
+
 // 判断哪些条件要做哪些事
 // 并且得到控制台的输出语句
-const createStuff = ({
-  isCombinationChanged,
-  isAmplitudeChanged,
-  isAmplitudeZero,
-  isMeshLoaded,
-  newVta,
-  oldVta,
-}) => {
-  if (isCombinationChanged) {
-    if (isAmplitudeChanged) {
-      if (isAmplitudeZero) {
-        // 医生重选触点组合
-        // 触点改变、幅值为0，幅值改变
-        // 将原来的模型给销毁
-        return __createStuff(newVta, oldVta, commandEnum.DELETE)
-      } else {
-        // 之前程控过，再次进入程控页面
-        // 触点改变、幅值不为0，幅值改变
-        // 加载和渲染电场
-        return __createStuff(newVta, oldVta, commandEnum.UPDATE)
-      }
+const createStuff = (
+  { isCombinationChanged, isAmplitudeChanged, isAmplitudeZero, isMeshLoaded, newVta, oldVta },
+  isControl
+) => {
+  if (isControl) {
+    if (isAmplitudeZero) {
+      // 改触点组合后，点击程控按钮
+      return __createStuff(newVta, oldVta, commandEnum.UPDATE)
     } else {
-      // 医生只是在切换触点，什么也不做
-      return __createStuff(newVta, oldVta, commandEnum.NONE)
+      if (isCombinationChanged) {
+        // 交叉刺激
+        return __createStuff(newVta, oldVta, commandEnum.INIT)
+      } else {
+        // 触点还原时，需要重新渲染电场
+        return __createStuff(newVta, oldVta, commandEnum.CUT)
+      }
     }
   } else {
-    if (isAmplitudeZero) {
-      // 医生在程控时，将幅值调为0
-      // 触点未变、幅值为0，幅值改变
-      // 隐藏电场模型
-      return __createStuff(newVta, oldVta, commandEnum.HIDE)
-    } else {
-      // 医生选完触点后，点击程控按钮，然后调节幅值
-      // 触点未变、幅值不为0，幅值改变
-      // 判断模型是否加载
-      if (isAmplitudeChanged) {
-        if (!isMeshLoaded) {
-          // 如果没加载，那就加载一下
-          return __createStuff(newVta, oldVta, commandEnum.UPDATE)
-        } else {
-          // 如果加载过，那就直接切割
-          return __createStuff(newVta, oldVta, commandEnum.CUT)
-        }
+    if (isCombinationChanged) {
+      if (isAmplitudeZero) {
+        // 修改触点组合时，销毁前电场
+        return __createStuff(newVta, oldVta, commandEnum.DELETE)
       } else {
-        // 医生反复点击程控按钮，下发指令给IPG
-        // 触点未变、幅值不为0，幅值不改变
-        // 什么也不做
-        return __createStuff(newVta, oldVta, commandEnum.NONE)
+        // 防止其他情况
+        return __createStuff(newVta, oldVta, commandEnum.INIT)
+      }
+    } else {
+      if (isAmplitudeZero) {
+        // 触点组合不变，幅值为0，暂时隐藏电场
+        return __createStuff(newVta, oldVta, commandEnum.HIDE)
+      } else {
+        if (isAmplitudeChanged) {
+          // 正常CUTOFF
+          return __createStuff(newVta, oldVta, commandEnum.CUT)
+        } else {
+          return __createStuff(newVta, oldVta, commandEnum.NONE)
+        }
       }
     }
   }
 }
 
 // 计算需要更新的东西
-export const diffVtaList = (newVtaList, oldVtaList) => {
-  console.log('oldVtaList', oldVtaList)
-
+export const diffVtaListPad = (newVtaList, oldVtaList, isControl) => {
   // 记录了模型应该做哪些事
   let stuffList = []
   // 触点组合是否改变
@@ -147,8 +138,6 @@ export const diffVtaList = (newVtaList, oldVtaList) => {
   let isAmplitudeZero = false
   // 是否已经加载过模型
   let isMeshLoaded = false
-  // 先遍历获取重要的判断条件
-  // 同步刺激和异步刺激的转变会导致长度变化
   if (!oldVtaList) {
     // 再把新的VTA全部更新
     newVtaList.forEach((newVta) => {
@@ -156,14 +145,17 @@ export const diffVtaList = (newVtaList, oldVtaList) => {
       isAmplitudeChanged = true
       isAmplitudeZero = false
       isMeshLoaded = true
-      const stuff = createStuff({
-        isCombinationChanged,
-        isAmplitudeChanged,
-        isAmplitudeZero,
-        isMeshLoaded,
-        newVta,
-        oldVta: null,
-      })
+      const stuff = createStuff(
+        {
+          isCombinationChanged,
+          isAmplitudeChanged,
+          isAmplitudeZero,
+          isMeshLoaded,
+          newVta,
+          oldVta: null,
+        },
+        isControl
+      )
       stuffList.push(stuff)
     })
   } else if (oldVtaList.length !== newVtaList.length) {
@@ -173,14 +165,17 @@ export const diffVtaList = (newVtaList, oldVtaList) => {
       isAmplitudeChanged = true
       isAmplitudeZero = true
       isMeshLoaded = true
-      const stuff = createStuff({
-        isCombinationChanged,
-        isAmplitudeChanged,
-        isAmplitudeZero,
-        isMeshLoaded,
-        newVta: null,
-        oldVta: oldVta,
-      })
+      const stuff = createStuff(
+        {
+          isCombinationChanged,
+          isAmplitudeChanged,
+          isAmplitudeZero,
+          isMeshLoaded,
+          newVta: null,
+          oldVta: oldVta,
+        },
+        isControl
+      )
       stuffList.push(stuff)
     })
     // 再把新的VTA全部更新
@@ -189,14 +184,17 @@ export const diffVtaList = (newVtaList, oldVtaList) => {
       isAmplitudeChanged = true
       isAmplitudeZero = false
       isMeshLoaded = true
-      const stuff = createStuff({
-        isCombinationChanged,
-        isAmplitudeChanged,
-        isAmplitudeZero,
-        isMeshLoaded,
-        newVta,
-        oldVta: null,
-      })
+      const stuff = createStuff(
+        {
+          isCombinationChanged,
+          isAmplitudeChanged,
+          isAmplitudeZero,
+          isMeshLoaded,
+          newVta,
+          oldVta: null,
+        },
+        isControl
+      )
       stuffList.push(stuff)
     })
   } else {
@@ -206,21 +204,24 @@ export const diffVtaList = (newVtaList, oldVtaList) => {
       isAmplitudeChanged = calcAmplitudeIsChanged(oldVta, newVta)
       isAmplitudeZero = calcAmplitudeIsZero(newVta)
       isMeshLoaded = calcMeshIsLoaded(oldVta)
-      const stuff = createStuff({
-        isCombinationChanged,
-        isAmplitudeChanged,
-        isAmplitudeZero,
-        isMeshLoaded,
-        newVta,
-        oldVta,
-      })
+      const stuff = createStuff(
+        {
+          isCombinationChanged,
+          isAmplitudeChanged,
+          isAmplitudeZero,
+          isMeshLoaded,
+          newVta,
+          oldVta,
+        },
+        isControl
+      )
       stuffList.push(stuff)
     })
   }
   return stuffList
 }
 
-export const handleStuff = async (stuffList, position) => {
+export const handleStuffPad = async (stuffList, position) => {
   await map(stuffList, async (stuff) => {
     const { command, newVta, oldVta } = stuff
     if (command === commandEnum.NONE) {
@@ -229,7 +230,7 @@ export const handleStuff = async (stuffList, position) => {
       oldVta.mesh = null
       oldVta.electricRenderData = null
     }
-    if (command === commandEnum.UPDATE) {
+    if (command === commandEnum.INIT) {
       // 先删除旧模型
       if (calcMeshIsLoaded(oldVta)) {
         removeMesh(oldVta.mesh)
@@ -243,6 +244,16 @@ export const handleStuff = async (stuffList, position) => {
         newVta.mesh = newMesh
         addMesh(newMesh)
       }
+    }
+    if (command === commandEnum.UPDATE) {
+      // 先删除旧模型
+      if (calcMeshIsLoaded(oldVta)) {
+        removeMesh(oldVta.mesh)
+        oldVta.mesh = null
+        oldVta.electricRenderData = null
+      }
+      const electricRenderData = await loadElectric(newVta.downloadUrlArr)
+      newVta.electricRenderData = electricRenderData
     }
     if (command === commandEnum.CUT) {
       // 先删除旧模型

@@ -4,11 +4,12 @@ import useLeadStoreHook from '@/store/useLeadStore'
 const leadStore = useLeadStoreHook()
 
 export const updateChip = (newProgram) => {
-  // 解析program，并根据program更新电极片颜色和userData
-  // !电场模块也会订阅，但是不在这里处理
-  // 第一层forEach是多根电极
-  // 第二层forEach一根电极有多个Program
-  // 第三层forEach才是遍历nodes更新电极片
+  // 在所有操作开始前，重置所有 chip 的 isUpdated 状态
+  Object.values(leadStore.leadList).forEach((lead) => {
+    lead.chips.forEach((chip) => {
+      chip.isUpdated = false
+    })
+  })
   Object.values(newProgram).forEach((arr) => {
     arr.forEach((program) => {
       const { position, nodes, display } = program
@@ -18,6 +19,10 @@ export const updateChip = (newProgram) => {
         nodes.forEach((obj) => {
           const { node, color, index, amplitude } = obj
           const target = chips.find((v) => v.index === index)
+          // 检查 target 是否已经被更新过
+          if (target.isUpdated) {
+            return // 跳过已经被更新的 chip
+          }
           target.node = node
           const defaultColor = '#27386f'
           target.color = color === '' ? defaultColor : color
@@ -27,6 +32,10 @@ export const updateChip = (newProgram) => {
           const userData = Object.assign(target.mesh.userData, fixed)
           mesh.userData = userData
           mesh.material.color = new THREE.Color(target.color)
+          // 标记为已更新
+          if (target.node !== 0) {
+            target.isUpdated = true
+          }
         })
       }
     })

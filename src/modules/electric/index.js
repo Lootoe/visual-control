@@ -1,9 +1,11 @@
 import { subscribeProgramUpdate } from './subscribeProgramUpdate'
-import { __initElectric } from './init'
+import { updateElectrics } from './updateElectrics'
+import usePatientStoreHook from '@/store/usePatientStore.js'
+const patientStore = usePatientStoreHook()
 
 const initElectric = () => {
   return new Promise((resolve, reject) => {
-    __initElectric()
+    updateElectrics(patientStore.patientProgram)
     subscribeProgramUpdate()
     resolve()
   })
