@@ -1,74 +1,49 @@
 import * as THREE from 'three'
 
-const calcColors = (curve, len, lightness = 0.6) => {
+const calcColors = (curve, len, tangent, x, y, z) => {
   const colors = []
+  const factor = 0.6 // 将乘法因子提取出循环
 
-  // 提前创建向量并复用
+  for (let i = 0; i < len; i++) {
+    tangent.copy(curve.getTangentAt(i / (len - 1))).normalize()
+    // 使用乘法因子并减少临时变量
+    colors.push(
+      Math.abs(tangent.dot(x)) * factor,
+      Math.abs(tangent.dot(z)) * factor,
+      Math.abs(tangent.dot(y)) * factor
+    )
+  }
+  return colors
+}
+
+// 优化后的 renderFiberInOneMesh 函数
+export const renderFiberInOneMesh = (sourceFibers) => {
+  const allPositions = []
+  const allColors = []
+  const tangent = new THREE.Vector3() // 重用tangent对象
   const x = new THREE.Vector3(1, 0, 0)
   const y = new THREE.Vector3(0, 1, 0)
   const z = new THREE.Vector3(0, 0, 1)
 
-  // 计算向量长度，只需计算一次
-  const xLength = x.length()
-  const yLength = y.length()
-  const zLength = z.length()
-
-  for (let i = 0; i < len; i++) {
-    const t = curve.getTangentAt(i / (len - 1)).normalize()
-
-    // 预计算 t 的长度以复用
-    const tLength = t.length()
-
-    // 计算各个轴的角度值
-    let xAngle = (Math.abs(t.dot(x)) / (tLength * xLength)) * lightness
-    let yAngle = (Math.abs(t.dot(y)) / (tLength * yLength)) * lightness
-    let zAngle = (Math.abs(t.dot(z)) / (tLength * zLength)) * lightness
-
-    // 将计算结果添加到 colors 数组中
-    colors.push(xAngle, zAngle, yAngle)
-  }
-
-  return colors
-}
-
-const lineMat = new THREE.LineBasicMaterial({ vertexColors: true })
-
-export const renderFiber = (vectors) => {
-  const curve = new THREE.CatmullRomCurve3(vectors)
-  const len = vectors.length
-  const colors = calcColors(curve, len)
-  const positions = []
-  for (let i = 0; i < len; i++) {
-    let v = curve.getPointAt(i / (len - 1))
-    positions.push(v.x, v.y, v.z)
-  }
-  const geometry = new THREE.BufferGeometry()
-  geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3))
-  geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3))
-  const line = new THREE.Line(geometry, lineMat)
-  return line
-}
-
-export const renderFiberInOneMesh = (sourceFibers) => {
-  // 使用坐标构建纤维素
-  const allPositions = []
-  const allColors = []
-  sourceFibers.forEach((vectors) => {
+  for (const arr of sourceFibers) {
+    const vectors = arr.map((p) => new THREE.Vector3(p[0], p[1], p[2]))
     const curve = new THREE.CatmullRomCurve3(vectors)
     const len = vectors.length
-    const colors = calcColors(curve, len)
+    const colors = calcColors(curve, len, tangent, x, y, z)
+
     for (let i = 0; i < len; i++) {
-      let v = curve.getPointAt(i / (len - 1))
+      const v = curve.getPointAt(i / (len - 1))
       allPositions.push(v.x, v.y, v.z)
     }
+
     allColors.push(...colors)
-    // 添加NaN值点，让神经纤维截断
-    allPositions.push(NaN, NaN, NaN)
+    allPositions.push(NaN, NaN, NaN) // 截断纤维
     allColors.push(0, 0, 0)
-  })
+  }
+
   const geometry = new THREE.BufferGeometry()
   geometry.setAttribute('position', new THREE.Float32BufferAttribute(allPositions, 3))
   geometry.setAttribute('color', new THREE.Float32BufferAttribute(allColors, 3))
-  const line = new THREE.Line(geometry, new THREE.LineBasicMaterial({ vertexColors: true }))
-  return line
+
+  return new THREE.Line(geometry, new THREE.LineBasicMaterial({ vertexColors: true }))
 }

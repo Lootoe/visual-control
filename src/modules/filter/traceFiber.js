@@ -1,63 +1,109 @@
-import * as THREE from 'three'
 import { removeMesh, addMesh } from '@/modules/scene'
 import useFilterStoreHook from '@/store/useFilterStore'
 import useFiberStoreHook from '@/store/useFiberStore'
 import { renderFiberInOneMesh } from '@/modules/fiber'
+import fiberTraverseWorker from './fiberTraverseWorker.js?worker'
 
 const fiberStore = useFiberStoreHook()
 const filterStore = useFilterStoreHook()
 
-const tracing = (filters, fiberList) => {
-  const raycaster = new THREE.Raycaster()
-  raycaster.firstHitOnly = true
-  const direction_1 = new THREE.Vector3(0, 0, 1)
-  const direction_2 = new THREE.Vector3(0, 0, -1)
-  const intersectSuccess = (raycaster, mesh, point) => {
-    raycaster.set(point, direction_1)
-    const intersects_1 = raycaster.intersectObject(mesh)
-    const success_1 = intersects_1.length
-    raycaster.set(point, direction_2)
-    const intersects_2 = raycaster.intersectObject(mesh)
-    const success_2 = intersects_2.length
-    return success_1 && success_2
+// 拆解PLY模型
+const splitPLY = (ply) => {
+  const data = {
+    vertices: Array.from(ply.attributes.position.array),
+    indices: ply.index ? Array.from(ply.index.array) : null,
   }
-  raycaster.firstHitOnly = true
-  filters.forEach((filter) => {
-    const { mesh, crossedFibers } = filter
-    /**电场可能为空，那些模型就不需要追踪 */
-    if (mesh) {
-      fiberList.forEach((fiber, index) => {
-        // 计算每个核团都有哪些神经纤维经过
-        for (let i = 0; i < fiber.length; i++) {
-          const point = fiber[i]
-          if (intersectSuccess(raycaster, mesh, point)) {
-            crossedFibers.push(index)
-            break
-          }
-        }
-        // // 计算每个核团都包含了哪些纤维的起始点
-        // const pointStart = fiber.matrix[0]
-        // if (intersectSuccess(raycaster, mesh, pointStart)) {
-        //   startFromFibers.push(index)
-        // }
-        // // 计算每个核团都包含了哪些纤维的结束点
-        // const pointEnd = fiber.matrix[fiber.matrix.length - 1]
-        // if (intersectSuccess(raycaster, mesh, pointEnd)) {
-        //   endWithFibers.push(index)
-        // }
-      })
+  return data
+}
+
+const splitArrayIntoChunks = (arr, numChunks) => {
+  const chunkSize = Math.ceil(arr.length / numChunks)
+  const chunks = []
+
+  for (let i = 0; i < numChunks; i++) {
+    const start = i * chunkSize
+    const end = start + chunkSize
+    chunks.push(arr.slice(start, end))
+  }
+
+  return chunks
+}
+
+const arrayBufferToObject = (buffer) => {
+  // 使用 TextDecoder 将 ArrayBuffer 转换为字符串
+  const decoder = new TextDecoder()
+  const jsonString = decoder.decode(new Uint8Array(buffer))
+
+  // 将 JSON 字符串解析为对象
+  return JSON.parse(jsonString)
+}
+
+const traverse = (worker, filters, fibers) => {
+  return new Promise((resolve, reject) => {
+    try {
+      worker.postMessage({ filters, fibers })
+      worker.onmessage = (e) => {
+        worker.terminate()
+        const result = arrayBufferToObject(e.data)
+        resolve(result)
+      }
+    } catch (error) {
+      reject(error)
     }
   })
 }
 
+const tracing = (filters, fiberList) => {
+  return new Promise((resolve) => {
+    const workerLen = 4
+    const workerPool = Array.from(
+      { length: workerLen },
+      () => new fiberTraverseWorker({ type: 'module' })
+    )
+    filters.forEach((v) => {
+      const ply = v.mesh.geometry
+      const plyData = splitPLY(ply)
+      v.mesh = plyData
+    })
+    const chunks = splitArrayIntoChunks(fiberList, workerLen)
+    const traverseTask = []
+    const traverseResult = []
+    chunks.forEach((fibers, i) => {
+      const worker = workerPool[i]
+      const task = traverse(worker, filters, fibers)
+      traverseTask.push(task)
+    })
+    Promise.all(traverseTask).then((arry) => {
+      arry.forEach((res) => {
+        traverseResult.push(res)
+      })
+      // 将所有追踪结果合并起来
+      traverseResult.forEach((workerFilters) => {
+        workerFilters.forEach((workerFilter, index) => {
+          const actualModel = filters[index]
+          actualModel.crossedFibers.push(...workerFilter.crossedFibers)
+        })
+      })
+      resolve()
+    })
+  })
+}
+
 export const tracingFiber = () => {
-  const fiberList = fiberStore.fiberList
-  const chipFilter = filterStore.chipFilter
-  const nucleusFilter = filterStore.nucleusFilter
-  console.time('神经纤维追踪计时')
-  tracing(chipFilter, fiberList)
-  tracing(nucleusFilter, fiberList)
-  console.timeEnd('神经纤维追踪计时')
+  return new Promise((resolve) => {
+    const fiberList = fiberStore.fiberList
+    const chipFilter = filterStore.chipFilter
+    const nucleusFilter = filterStore.nucleusFilter
+    console.time('神经纤维追踪计时')
+    const task1 = tracing(chipFilter, fiberList)
+    const task2 = tracing(nucleusFilter, fiberList)
+    Promise.all([task1, task2]).then(() => {
+      console.timeEnd('神经纤维追踪计时')
+      // 只保留坐标去除Index，Index只是为了多线程追踪时，记录神经纤维编号
+      fiberStore.fiberList = fiberList.map((fiber) => fiber.vectors)
+      resolve()
+    })
+  })
 }
 
 export const clearFibers = () => {

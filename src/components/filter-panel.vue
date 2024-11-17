@@ -114,10 +114,10 @@ const tracing = (type) => {
   }
   // settimeout是防止运算导致cpu卡住，结果setLoadingProps无法执行完毕
   // 间接导致设置的文字无效
-  setTimeout(() => {
+  setTimeout(async () => {
     // 判断是不是第一次分析，如果是第一次分析就需要先追踪神经纤维
     if (firstTime) {
-      tracingFiber()
+      await tracingFiber()
       firstTime = false
     }
     clearFibers()
