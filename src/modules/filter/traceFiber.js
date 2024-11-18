@@ -94,11 +94,11 @@ export const tracingFiber = () => {
     const fiberList = fiberStore.fiberList
     const chipFilter = filterStore.chipFilter
     const nucleusFilter = filterStore.nucleusFilter
-    console.time('神经纤维追踪计时')
     const task1 = tracing(chipFilter, fiberList)
     const task2 = tracing(nucleusFilter, fiberList)
+    console.time('神经纤维追踪耗时')
     Promise.all([task1, task2]).then(() => {
-      console.timeEnd('神经纤维追踪计时')
+      console.timeEnd('神经纤维追踪耗时')
       // 只保留坐标去除Index，Index只是为了多线程追踪时，记录神经纤维编号
       fiberStore.fiberList = fiberList.map((fiber) => fiber.vectors)
       resolve()
@@ -113,11 +113,15 @@ export const clearFibers = () => {
 }
 
 export const renderTracedFiber = (fiberIndexes) => {
+  const fiberSet = new Set(fiberIndexes)
+  // 将fiberSet转为数组
+  const uniqueFiberIndexes = Array.from(fiberSet)
+  console.log('【已追踪到的神经纤维】', uniqueFiberIndexes.length)
   clearFibers()
   const fiberList = fiberStore.fiberList
   const needToShowFibers = []
   // 先根据索引拿到纤维素的坐标
-  fiberIndexes.forEach((index) => {
+  uniqueFiberIndexes.forEach((index) => {
     needToShowFibers.push(fiberList[index])
   })
   // 将所有线条合并为一根

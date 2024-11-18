@@ -137,12 +137,6 @@ const tracing = (type) => {
     showReset.value = true
     const fiberList = fiberStore.fiberList
     const indexes = compileTracingContext(source, filters, fiberList)
-    // 给数组去重，防止重复添加
-    const fiberSet = new Set(indexes)
-    const showLen = fiberSet.size
-    const totalLen = fiberList.length
-    console.log('显示的神经纤维数量', showLen)
-    console.log('神经纤维总数', totalLen)
     renderTracedFiber(indexes)
     loadingStore.loadingText = '追踪成功'
     loadingStore.loading = false

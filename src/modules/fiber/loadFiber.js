@@ -52,6 +52,7 @@ export const loadFiber = (fiberUrlList) => {
           }
           return obj
         })
+        console.log('【神经纤维总数】', fiberPool.length)
         resolve(fiberPool)
       })
       .catch(reject)
