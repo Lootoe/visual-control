@@ -29,7 +29,7 @@ const leadStore = useLeadStoreHook()
 const fiberStore = useFiberStoreHook()
 const addonStore = useAddonStoreHook()
 const filterStore = useFilterStoreHook()
-const { loadBegin, loadUpdate, loadEnd, loadFail } = useLoadingCoverHook()
+const { loadBegin, loadUpdate, loadEnd, loadFail, delay } = useLoadingCoverHook()
 
 const logData = () => {
   console.log('【MainSceneManager】', sceneStore.mainSceneManager)
@@ -107,8 +107,9 @@ const handleAdmin = () => {
     .then(() => {
       return initFilter()
     })
-    .then(() => {
+    .then(async () => {
       loadUpdate({ content: '加载完成' })
+      await delay(200)
       loadEnd()
       logData()
     })
@@ -160,8 +161,9 @@ const handlePC = () => {
     .then(() => {
       return initFilter()
     })
-    .then(() => {
+    .then(async () => {
       loadUpdate({ content: '加载完成' })
+      await delay(200)
       loadEnd()
       logData()
     })
@@ -211,8 +213,9 @@ const handlePad = () => {
     .then(() => {
       return initFilter()
     })
-    .then(() => {
+    .then(async () => {
       loadUpdate({ content: '加载完成' })
+      await delay(200)
       loadEnd()
       logData()
     })
@@ -266,8 +269,9 @@ const handleDemo = () => {
     .then(() => {
       return initFilter()
     })
-    .then(() => {
+    .then(async () => {
       loadUpdate({ content: '加载完成' })
+      await delay(200)
       loadEnd()
       logData()
     })

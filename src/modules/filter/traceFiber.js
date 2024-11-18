@@ -172,6 +172,7 @@ export const renderRestFiber = () => {
 
 export const renderWholeBrainFiber = () => {
   const wholeBrainFiberAssets = patientStore.patientAssets.wholeBrainFiber
+  console.log('wholeBrainFiberAssets', wholeBrainFiberAssets)
   return new Promise((resolve, reject) => {
     const downloadUrlList = wholeBrainFiberAssets.map((item) => item.downloadUrl)
     loadFiber(downloadUrlList)

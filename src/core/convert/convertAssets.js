@@ -44,8 +44,18 @@ export const convertAssets = (params) => {
         const wholeBrainFibers = item.downloadUrlList.filter((v) => {
           return v.search('head_mask') !== -1
         })
-        assets.fiber = fibers
-        assets.wholeBrainFiber = wholeBrainFibers
+        assets.fiber = fibers.map((v) => {
+          return {
+            downloadUrl: v,
+            fileName: v,
+          }
+        })
+        assets.wholeBrainFiber = wholeBrainFibers.map((v) => {
+          return {
+            downloadUrl: v,
+            fileName: v,
+          }
+        })
       }
       if (item.type === 'matrix') {
         const str1 = 'MNI152_template'

@@ -49,7 +49,12 @@ const onAmpChanged = (value) => {
       </div>
     </div>
     <div class="bottom-box" v-if="hasFiber">
-      <div class="fiber-btn" @click="changeToolItem(2)" :backgroundColor="uiBg">
+      <div
+        class="fiber-btn"
+        @click="changeToolItem(2)"
+        :backgroundColor="uiBg"
+        :style="{ backgroundColor: uiBg }"
+      >
         <img src="@/assets/img/arrow.png" :class="{ down: activedToolIndex !== 2 }" />
         <div class="btn__text">神经纤维</div>
       </div>
