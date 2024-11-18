@@ -1,49 +1,72 @@
 import * as THREE from 'three'
 
-const calcColors = (curve, len, tangent, x, y, z) => {
-  const colors = []
-  const factor = 0.8 // 将乘法因子提取出循环
-
-  for (let i = 0; i < len; i++) {
-    tangent.copy(curve.getTangentAt(i / (len - 1))).normalize()
-    // 使用乘法因子并减少临时变量
-    colors.push(
-      Math.abs(tangent.dot(x)) * factor,
-      Math.abs(tangent.dot(z)) * factor,
-      Math.abs(tangent.dot(y)) * factor
-    )
-  }
-  return colors
-}
-
-// 优化后的 renderFiberInOneMesh 函数
 export const renderFiberInOneMesh = (sourceFibers) => {
   const allPositions = []
-  const allColors = []
-  const tangent = new THREE.Vector3() // 重用tangent对象
-  const x = new THREE.Vector3(1, 0, 0)
-  const y = new THREE.Vector3(0, 1, 0)
-  const z = new THREE.Vector3(0, 0, 1)
+  const tangents = []
 
   for (const arr of sourceFibers) {
     const vectors = arr.map((p) => new THREE.Vector3(p[0], p[1], p[2]))
     const curve = new THREE.CatmullRomCurve3(vectors)
-    const len = vectors.length
-    const colors = calcColors(curve, len, tangent, x, y, z)
+    const len = Math.max(4, Math.floor(vectors.length / 2))
 
     for (let i = 0; i < len; i++) {
-      const v = curve.getPointAt(i / (len - 1))
+      const t = i / (len - 1)
+      const v = curve.getPointAt(t)
+      const tangent = curve.getTangentAt(t).normalize()
+
       allPositions.push(v.x, v.y, v.z)
+      tangents.push(tangent.x, tangent.y, tangent.z)
     }
 
-    allColors.push(...colors)
     allPositions.push(NaN, NaN, NaN) // 截断纤维
-    allColors.push(0, 0, 0)
+    tangents.push(NaN, NaN, NaN)
   }
 
   const geometry = new THREE.BufferGeometry()
   geometry.setAttribute('position', new THREE.Float32BufferAttribute(allPositions, 3))
-  geometry.setAttribute('color', new THREE.Float32BufferAttribute(allColors, 3))
+  geometry.setAttribute('tangent', new THREE.Float32BufferAttribute(tangents, 3))
 
-  return new THREE.Line(geometry, new THREE.LineBasicMaterial({ vertexColors: true }))
+  const material = new THREE.ShaderMaterial({
+    vertexShader: `
+      ${THREE.ShaderChunk.logdepthbuf_pars_vertex}
+      bool isPerspectiveMatrix(mat4){
+        return true;
+      }
+      attribute vec3 tangent; // 预先计算并传入切线
+      varying vec3 vTangent;  // 传递切线向量到片段着色器
+      varying vec3 vPosition; // 传递顶点位置
+
+      void main() {
+        vTangent = tangent; // 直接使用传入的切线
+        vPosition = position; // 传递顶点位置（备用）
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+
+        ${THREE.ShaderChunk.logdepthbuf_vertex}
+      }
+    `,
+    fragmentShader: `
+      ${THREE.ShaderChunk.logdepthbuf_pars_fragment}
+      precision lowp float;
+      varying vec3 vTangent; // 接收顶点着色器传递的切线向量
+
+      void main() {
+        vec3 normalizedTangent = normalize(vTangent); // 归一化切线向量
+
+        // 按切线方向计算颜色
+        vec3 x = vec3(1.0, 0.0, 0.0);
+        vec3 y = vec3(0.0, 1.0, 0.0);
+        vec3 z = vec3(0.0, 0.0, 1.0);
+
+        float r = abs(dot(normalizedTangent, x));
+        float g = abs(dot(normalizedTangent, z));
+        float b = abs(dot(normalizedTangent, y));
+
+        gl_FragColor = vec4(r, g, b, 1.0); // 根据切线方向着色
+        ${THREE.ShaderChunk.logdepthbuf_fragment}
+      }
+    `,
+    vertexColors: true,
+  })
+
+  return new THREE.Line(geometry, material)
 }
