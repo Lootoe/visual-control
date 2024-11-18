@@ -113,6 +113,7 @@ export const clearFibers = () => {
 }
 
 export const renderTracedFiber = (fiberIndexes) => {
+  console.time('渲染神经纤维耗时')
   const fiberSet = new Set(fiberIndexes)
   // 将fiberSet转为数组
   const uniqueFiberIndexes = Array.from(fiberSet)
@@ -128,6 +129,7 @@ export const renderTracedFiber = (fiberIndexes) => {
   const fiberMeshes = renderFiberInOneMesh(needToShowFibers)
   addMesh(fiberMeshes)
   fiberStore.displayingFiberList = fiberMeshes
+  console.timeEnd('渲染神经纤维耗时')
 }
 
 export const renderAllFiber = () => {
