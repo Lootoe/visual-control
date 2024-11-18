@@ -29,6 +29,7 @@ const arrayBufferToObject = (buffer) => {
 
 export const loadFiber = (fiberUrlList) => {
   return new Promise((resolve, reject) => {
+    console.time('【加载神经纤维】')
     const loadFiberTask = []
     for (let i = 0; i < fiberUrlList.length; i++) {
       const worker = new fiberLoadWorker({ type: 'module' })
@@ -53,6 +54,7 @@ export const loadFiber = (fiberUrlList) => {
           return obj
         })
         console.log('【神经纤维总数】', fiberPool.length)
+        console.timeEnd('【加载神经纤维】')
         resolve(fiberPool)
       })
       .catch(reject)

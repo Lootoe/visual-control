@@ -15,6 +15,7 @@ export const convertAssets = (params) => {
     matrix: {},
     filter: [],
     VTA: [],
+    wholeBrainFiber: [],
   }
   if (globalThis.SRENV.IS_PLATFORM_PAD()) {
     sourceData.forEach((item) => {
@@ -37,12 +38,14 @@ export const convertAssets = (params) => {
         }
       }
       if (item.type === 'fiber') {
-        assets.fiber = item.downloadUrlList.map((v) => {
-          return {
-            downloadUrl: v,
-            fileName: v,
-          }
+        const fibers = item.downloadUrlList.filter((v) => {
+          return v.search('whole_brain') !== -1
         })
+        const wholeBrainFibers = item.downloadUrlList.filter((v) => {
+          return v.search('head_mask') !== -1
+        })
+        assets.fiber = fibers
+        assets.wholeBrainFiber = wholeBrainFibers
       }
       if (item.type === 'matrix') {
         const str1 = 'MNI152_template'
@@ -92,7 +95,14 @@ export const convertAssets = (params) => {
         assets.lead = lead
       }
       if (item.type === 'fiber') {
-        assets.fiber = item.downloadUrlList
+        const fibers = item.downloadUrlList.filter((v) => {
+          return v.fileName.search('whole_brain') !== -1
+        })
+        const wholeBrainFibers = item.downloadUrlList.filter((v) => {
+          return v.fileName.search('head_mask') !== -1
+        })
+        assets.fiber = fibers
+        assets.wholeBrainFiber = wholeBrainFibers
       }
       if (item.type === 'matrix') {
         const str1 = 'MNI152_template'

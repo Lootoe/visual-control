@@ -23,11 +23,7 @@ const loadFile = (url) => {
 }
 
 async function loadFiber({ url, globalAffine }) {
-  console.log(`正在加载神经纤维源文件${url}`)
-  console.time('【总耗时】')
-  console.time('【加载神经纤维源文件耗时】')
   loadFile(url).then((rowData) => {
-    console.timeEnd('【加载神经纤维源文件耗时】')
     // 每一行表示一条线
     const regExp = /\n/g
     const fiberStrArr = rowData.split(regExp)
@@ -37,7 +33,6 @@ async function loadFiber({ url, globalAffine }) {
     if (isNewVersion) {
       fiberStrArr.shift()
     }
-    console.time('【解析坐标耗时】')
     const fibers = []
     const m4 = new THREE.Matrix4(-1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1)
     fiberStrArr.forEach((fiberStr) => {
@@ -66,12 +61,8 @@ async function loadFiber({ url, globalAffine }) {
         fibers.push(vectors)
       }
     })
-    console.timeEnd('【解析坐标耗时】')
-    console.time('【传输数据耗时】')
     const arrayBuffer = objectToArrayBuffer(fibers)
     self.postMessage(arrayBuffer, [arrayBuffer.buffer])
-    console.timeEnd('【传输数据耗时】')
-    console.timeEnd('【总耗时】')
     self.close()
   })
 }
