@@ -8,7 +8,6 @@ document.body.appendChild(root)
 export default function useLoadingCover() {
   const state = reactive({
     content: '加载中',
-    delay: 500,
     opacity: 1,
     loading: false,
     failed: false,
@@ -39,10 +38,8 @@ export default function useLoadingCover() {
   }
 
   const loadEnd = () => {
-    setTimeout(() => {
-      render(null, root)
-      state.loading = false
-    }, state.delay)
+    render(null, root)
+    state.loading = false
   }
 
   const loadFail = (reason) => {
@@ -59,5 +56,13 @@ export default function useLoadingCover() {
     state.failedReason = ''
   }
 
-  return { loadBegin, loadUpdate, loadEnd, loadFail }
+  const delay = (ms) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, ms)
+    })
+  }
+
+  return { loadBegin, loadUpdate, loadEnd, loadFail, delay }
 }

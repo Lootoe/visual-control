@@ -77,7 +77,6 @@ const handleAdmin = () => {
   const sceneBg = import.meta.env.VITE_SCENE_BG
   loadBegin({
     content: '正在初始化场景',
-    delay: 500,
     opacity: 0.8,
   })
   initScene({
@@ -131,7 +130,6 @@ const handlePC = () => {
   const sceneBg = import.meta.env.VITE_SCENE_BG
   loadBegin({
     content: '正在初始化场景',
-    delay: 500,
     opacity: 0.8,
   })
   initScene({
@@ -183,7 +181,6 @@ const handlePad = () => {
   const sceneBg = import.meta.env.VITE_SCENE_BG
   loadBegin({
     content: '正在初始化场景',
-    delay: 500,
     opacity: 0.8,
   })
   initScene({
@@ -239,7 +236,6 @@ const handleDemo = () => {
   const sceneBg = import.meta.env.VITE_SCENE_BG
   loadBegin({
     content: '正在初始化场景',
-    delay: 500,
     opacity: 0.8,
   })
   initScene({

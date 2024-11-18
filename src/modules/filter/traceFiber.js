@@ -1,11 +1,13 @@
 import { removeMesh, addMesh } from '@/modules/scene'
 import useFilterStoreHook from '@/store/useFilterStore'
 import useFiberStoreHook from '@/store/useFiberStore'
-import { renderFiberInOneMesh } from '@/modules/fiber'
+import { renderFiberInOneMesh, loadFiber } from '@/modules/fiber'
 import fiberTraverseWorker from './fiberTraverseWorker.js?worker'
+import usePatientStoreHook from '@/store/usePatientStore'
 
 const fiberStore = useFiberStoreHook()
 const filterStore = useFilterStoreHook()
+const patientStore = usePatientStoreHook()
 
 // 拆解PLY模型
 const splitPLY = (ply) => {
@@ -166,4 +168,20 @@ export const renderRestFiber = () => {
   const fiberMeshes = renderFiberInOneMesh(needToShowFibers)
   addMesh(fiberMeshes)
   fiberStore.displayingFiberList = fiberMeshes
+}
+
+export const renderWholeBrainFiber = () => {
+  const wholeBrainFiberAssets = patientStore.patientAssets.wholeBrainFiber
+  return new Promise((resolve, reject) => {
+    const downloadUrlList = wholeBrainFiberAssets.map((item) => item.downloadUrl)
+    loadFiber(downloadUrlList)
+      .then((fiberPool) => {
+        const fiberPoolVectors = fiberPool.map((item) => item.vectors)
+        const fiberMesh = renderFiberInOneMesh(fiberPoolVectors)
+        fiberStore.displayingFiberList = fiberMesh
+        addMesh(fiberMesh)
+        resolve()
+      })
+      .catch(reject)
+  })
 }

@@ -5,6 +5,7 @@ import {
   renderTracedFiber,
   renderAllFiber,
   renderRestFiber,
+  renderWholeBrainFiber,
 } from './traceFiber'
 import { compileTracingContext } from './compileFiberContext'
 
@@ -16,4 +17,5 @@ export {
   compileTracingContext,
   renderAllFiber,
   renderRestFiber,
+  renderWholeBrainFiber,
 }

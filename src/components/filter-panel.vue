@@ -21,9 +21,10 @@ import {
   tracingFiber,
   renderAllFiber,
   renderRestFiber,
+  renderWholeBrainFiber,
 } from '@/modules/filter'
 
-const { loadBegin, loadUpdate, loadEnd } = useLoadingCoverHook()
+const { loadBegin, loadUpdate, loadEnd, delay } = useLoadingCoverHook()
 
 // 显示所有神经纤维，而不是能追踪到的神经纤维
 window.hack.sf = () => {
@@ -103,6 +104,7 @@ const selectItem = (item) => {
   const selectedNum = selectedArr.length
   hasSeleced.value = selectedNum > 0
   isSingle.value = selectedNum <= 1
+  isWholeBrain.value = false
 }
 
 const reselect = () => {
@@ -111,31 +113,39 @@ const reselect = () => {
   })
   isSingle.value = true
   hasSeleced.value = false
+  isWholeBrain.value = false
 }
 
-const tracing = (type) => {
-  if (firstTime) {
+const tracing = async (type) => {
+  clearFibers()
+  if (!hasSeleced.value && !isWholeBrain.value) return
+  if (isWholeBrain.value) {
     loadBegin({
-      content: '第一次追踪神经纤维时间较久，请耐心等待',
-      delay: 500,
+      content: '追踪全脑神经纤维时间较久，请耐心等待',
       opacity: 0.8,
+    })
+    await delay(200)
+    renderWholeBrainFiber().then(() => {
+      loadEnd()
+      showReset.value = true
+      return
     })
   } else {
-    loadBegin({
-      content: '正在追踪神经纤维',
-      delay: 500,
-      opacity: 0.8,
-    })
-  }
-  // settimeout是防止运算导致cpu卡住，结果setLoadingProps无法执行完毕
-  // 间接导致设置的文字无效
-  setTimeout(async () => {
-    // 判断是不是第一次分析，如果是第一次分析就需要先追踪神经纤维
     if (firstTime) {
+      loadBegin({
+        content: '第一次追踪神经纤维时间较久，请耐心等待',
+        opacity: 0.8,
+      })
+      await delay(200)
       await tracingFiber()
       firstTime = false
+    } else {
+      loadBegin({
+        content: '正在追踪神经纤维',
+        opacity: 0.8,
+      })
+      await delay(200)
     }
-    clearFibers()
     // 从列表里筛选出已选中的item
     const arr = filters.filter((v) => v.selected).map((v) => v.factor)
     let source = ''
@@ -155,13 +165,14 @@ const tracing = (type) => {
     renderTracedFiber(indexes)
     loadUpdate({ content: '追踪成功' })
     loadEnd()
-  }, 200)
+  }
 }
 
 const reset = () => {
   showReset.value = false
   reselect()
   clearFibers()
+  isWholeBrain.value = false
 }
 
 const selectAll = () => {
@@ -170,6 +181,21 @@ const selectAll = () => {
   })
   hasSeleced.value = true
   isSingle.value = false
+  isWholeBrain.value = false
+}
+
+const isWholeBrain = ref(false)
+
+const selectWholeBrain = () => {
+  localNucleusFilter.value.forEach((v) => {
+    v.selected = false
+  })
+  localChipFilter.value.forEach((v) => {
+    v.selected = false
+  })
+  isWholeBrain.value = !isWholeBrain.value
+  hasSeleced.value = false
+  isSingle.value = true
 }
 </script>
 
@@ -210,6 +236,7 @@ const selectAll = () => {
       </div>
       <div class="bottom" :class="{ active: hasSeleced }">
         <div class="bottom__left">
+          <div class="btn" @click="selectWholeBrain" :class="{ active: isWholeBrain }">全脑</div>
           <div class="btn" @click="selectAll">全选</div>
           <div class="btn" @click="reselect">重选</div>
         </div>
@@ -299,7 +326,7 @@ const selectAll = () => {
       padding: 0.12rem;
       border-top: 0.01rem solid rgba(103, 110, 125, 1);
       .bottom__left {
-        width: 40%;
+        width: 60%;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -313,6 +340,10 @@ const selectAll = () => {
           align-items: center;
           border-radius: 0.04rem;
           margin-right: 0.08rem;
+          &.active {
+            color: #fff;
+            border: 0.01rem solid #fff;
+          }
         }
       }
       .bottom__right {
@@ -360,7 +391,7 @@ const selectAll = () => {
       user-select: none;
       position: absolute;
       bottom: -0.76rem;
-      right: 36%;
+      left: 34%;
       img {
         width: 0.26rem;
         margin-right: 0.03rem;
