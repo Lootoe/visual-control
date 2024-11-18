@@ -7,7 +7,7 @@ export const renderFiberInOneMesh = (sourceFibers) => {
   for (const arr of sourceFibers) {
     const vectors = arr.map((p) => new THREE.Vector3(p[0], p[1], p[2]))
     const curve = new THREE.CatmullRomCurve3(vectors)
-    const len = Math.max(4, Math.floor(vectors.length / 2))
+    const len = vectors.length
 
     for (let i = 0; i < len; i++) {
       const t = i / (len - 1)
