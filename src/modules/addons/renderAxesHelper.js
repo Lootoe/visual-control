@@ -47,9 +47,10 @@ const createSpriteLabel = (text, color, x, y, z) => {
 
 export const renderAxesHelper = (AxesHelperLength = 100) => {
   let axes = new THREE.AxesHelper(AxesHelperLength)
+  axes.setColors(new THREE.Color('#ff6666'), new THREE.Color('#6666ff'), new THREE.Color('#66ff66'))
   const axesX = createSpriteLabel('X', '#ff6666', AxesHelperLength + 2, 0, 0)
-  const axesY = createSpriteLabel('Y', '#66ff66', 0, AxesHelperLength + 2, 0)
-  const axesZ = createSpriteLabel('Z', '#6666ff', 0, 0, AxesHelperLength + 2)
+  const axesY = createSpriteLabel('Y', '#6666ff', 0, AxesHelperLength + 2, 0)
+  const axesZ = createSpriteLabel('Z', '#66ff66', 0, 0, AxesHelperLength + 2)
   const group = new THREE.Group()
   group.add(...[axes, axesX, axesY, axesZ])
   addonStore.addons.axesHelper = {
