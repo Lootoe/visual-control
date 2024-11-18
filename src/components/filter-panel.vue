@@ -10,9 +10,10 @@ defineProps({
   },
 })
 
-import useLoadingStoreHook from '@/store/useLoadingStore'
 import useFilterStoreHook from '@/store/useFilterStore'
 import useFiberStoreHook from '@/store/useFiberStore'
+import useLoadingCoverHook from '@/components/LoadingCover/useLoadingCover'
+
 import {
   clearFibers,
   renderTracedFiber,
@@ -22,31 +23,38 @@ import {
   renderRestFiber,
 } from '@/modules/filter'
 
+const { loadBegin, loadUpdate, loadEnd } = useLoadingCoverHook()
+
 // 显示所有神经纤维，而不是能追踪到的神经纤维
 window.hack.sf = () => {
-  loadingStore.loading = true
-  loadingStore.loadingText = '正在追踪神经纤维'
+  loadBegin({
+    content: '正在追踪神经纤维',
+    delay: 500,
+    opacity: 0.8,
+  })
   setTimeout(() => {
     renderAllFiber()
-    loadingStore.loading = false
+    loadEnd()
     showReset.value = true
   }, 200)
 }
 
 // 显示不能追踪到的神经纤维
 window.hack.rsf = () => {
-  loadingStore.loading = true
-  loadingStore.loadingText = '正在追踪神经纤维'
+  loadBegin({
+    content: '正在追踪神经纤维',
+    delay: 500,
+    opacity: 0.8,
+  })
   setTimeout(() => {
     renderRestFiber()
-    loadingStore.loading = false
+    loadEnd()
     showReset.value = true
   }, 200)
 }
 
 const filterStore = useFilterStoreHook()
 const fiberStore = useFiberStoreHook()
-const loadingStore = useLoadingStoreHook()
 
 const localNucleusFilter = ref([])
 const localChipFilter = ref([])
@@ -106,11 +114,18 @@ const reselect = () => {
 }
 
 const tracing = (type) => {
-  loadingStore.loading = true
   if (firstTime) {
-    loadingStore.loadingText = '第一次追踪神经纤维时间较久，请耐心等待'
+    loadBegin({
+      content: '第一次追踪神经纤维时间较久，请耐心等待',
+      delay: 500,
+      opacity: 0.8,
+    })
   } else {
-    loadingStore.loadingText = '正在追踪神经纤维'
+    loadBegin({
+      content: '正在追踪神经纤维',
+      delay: 500,
+      opacity: 0.8,
+    })
   }
   // settimeout是防止运算导致cpu卡住，结果setLoadingProps无法执行完毕
   // 间接导致设置的文字无效
@@ -138,8 +153,8 @@ const tracing = (type) => {
     const fiberList = fiberStore.fiberList
     const indexes = compileTracingContext(source, filters, fiberList)
     renderTracedFiber(indexes)
-    loadingStore.loadingText = '追踪成功'
-    loadingStore.loading = false
+    loadUpdate({ content: '追踪成功' })
+    loadEnd()
   }, 200)
 }
 

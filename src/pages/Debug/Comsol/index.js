@@ -1,6 +1,4 @@
 import { initScene } from '@/modules/scene'
-import useLoadingStoreHook from '@/store/useLoadingStore'
-const loadingStore = useLoadingStoreHook()
 import { initAlphaShapeWasm } from '@/libs/buildModel'
 
 export const debug = () => {
@@ -10,14 +8,9 @@ export const debug = () => {
     mainSceneConfig: { backgroundColor: sceneBg },
     assistSceneSelector: '.assist-scene',
     assistSceneConfig: { backgroundColor: sceneBg },
+  }).then(() => {
+    return initAlphaShapeWasm()
   })
-    .then(() => {
-      return initAlphaShapeWasm()
-    })
-    .then(() => {
-      loadingStore.loading = false
-      loadingStore.loadingText = '加载完成'
-    })
 }
 
 export const compileTxt = (text) => {

@@ -2,25 +2,46 @@
 defineOptions({
   name: 'loading-cover',
 })
-import useLoadingStoreHook from '@/store/useLoadingStore'
-const loadingStore = useLoadingStoreHook()
+
+defineProps({
+  content: {
+    type: String,
+    default: 'loading',
+  },
+  opacity: {
+    type: Number,
+    default: 1,
+  },
+  loading: {
+    type: Boolean,
+    default: true,
+  },
+  failed: {
+    type: Boolean,
+    default: false,
+  },
+  failedReason: {
+    type: String,
+    default: '加载失败',
+  },
+})
 </script>
 
 <template>
-  <div class="page-mask" v-if="loadingStore.loading">
+  <div class="page-mask" v-if="loading" :style="{ opacity: opacity }">
     <div class="locate">
-      <template v-if="!loadingStore.loadingFail">
+      <template v-if="!failed">
         <div class="spinner-wrapper">
           <div class="spinner"></div>
           <div class="spinner-text">loading</div>
         </div>
-        <div class="loading-text">{{ loadingStore.loadingText }}</div>
+        <div class="loading-text">{{ content }}</div>
       </template>
       <template v-else>
         <div class="fail-img">
           <img src="@/assets/img/error.png" />
         </div>
-        <div class="fail-reason">{{ loadingStore.failReason }}</div>
+        <div class="fail-reason">{{ failedReason }}</div>
       </template>
     </div>
   </div>
@@ -32,8 +53,10 @@ const loadingStore = useLoadingStoreHook()
   width: 100vw;
   height: 100vh;
   position: fixed;
+  left: 0;
+  top: 0;
   z-index: 9999;
-  opacity: 0.8;
+  transition: all 0.3s;
   .locate {
     position: absolute;
     top: 50%;

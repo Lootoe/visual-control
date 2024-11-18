@@ -2,8 +2,6 @@ import { testAlphaShape } from './testAlphaShape'
 import { testRenderTxt } from './testRenderTxt'
 import { testSVO } from './testSVO'
 import { initScene } from '@/modules/scene'
-import useLoadingStoreHook from '@/store/useLoadingStore'
-const loadingStore = useLoadingStoreHook()
 
 const handleDebug = () => {
   // testAlphaShape()
@@ -18,12 +16,7 @@ export const debug = () => {
     mainSceneConfig: { backgroundColor: sceneBg },
     assistSceneSelector: '.assist-scene',
     assistSceneConfig: { backgroundColor: sceneBg },
+  }).then(() => {
+    return handleDebug()
   })
-    .then(() => {
-      loadingStore.loading = false
-      loadingStore.loadingText = '加载完成'
-    })
-    .then(() => {
-      return handleDebug()
-    })
 }

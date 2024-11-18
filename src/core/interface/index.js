@@ -19,8 +19,8 @@ import useNucleusStoreHook from '@/store/useNucleusStore'
 import useLeadStoreHook from '@/store/useLeadStore'
 import useFiberStoreHook from '@/store/useFiberStore'
 import useAddonStoreHook from '@/store/useAddonStore'
-import useLoadingStoreHook from '@/store/useLoadingStore'
 import useFilterStoreHook from '@/store/useFilterStore'
+import useLoadingCoverHook from '@/components/LoadingCover/useLoadingCover'
 
 const sceneStore = useSceneStoreHook()
 const patientStore = usePatientStoreHook()
@@ -28,8 +28,8 @@ const nucleusStore = useNucleusStoreHook()
 const leadStore = useLeadStoreHook()
 const fiberStore = useFiberStoreHook()
 const addonStore = useAddonStoreHook()
-const loadingStore = useLoadingStoreHook()
 const filterStore = useFilterStoreHook()
+const { loadBegin, loadUpdate, loadEnd, loadFail } = useLoadingCoverHook()
 
 const logData = () => {
   console.log('【MainSceneManager】', sceneStore.mainSceneManager)
@@ -60,9 +60,6 @@ export default () => {
         mainSceneConfig: { backgroundColor: sceneBg },
         assistSceneSelector: '.assist-scene',
         assistSceneConfig: { backgroundColor: sceneBg },
-      }).then(() => {
-        loadingStore.loading = false
-        loadingStore.loadingText = '加载完成'
       })
     } else {
       handlePad()
@@ -78,8 +75,11 @@ const handleAdmin = () => {
   const router = useRouter()
   const queryParams = router.currentRoute.value.query
   const sceneBg = import.meta.env.VITE_SCENE_BG
-  loadingStore.loading = true
-  loadingStore.loadingText = '正在初始化场景'
+  loadBegin({
+    content: '正在初始化场景',
+    delay: 500,
+    opacity: 0.8,
+  })
   initScene({
     mainSceneSelector: '.main-scene',
     mainSceneConfig: { backgroundColor: sceneBg },
@@ -87,30 +87,30 @@ const handleAdmin = () => {
     assistSceneConfig: { backgroundColor: sceneBg },
   })
     .then(() => {
-      loadingStore.loadingText = '正在下载患者影像'
+      loadUpdate({ content: '正在加载患者影像' })
       return initAdminPatient(queryParams)
     })
     .then(() => {
       return initMatrix()
     })
     .then(() => {
-      loadingStore.loadingText = '正在处理核团'
+      loadUpdate({ content: '正在加载核团' })
       return initNucleus()
     })
     .then(() => {
-      loadingStore.loadingText = '正在处理电极'
+      loadUpdate({ content: '正在加载电极' })
       return initLead()
     })
     .then(() => {
-      loadingStore.loadingText = '正在处理神经纤维'
+      loadUpdate({ content: '正在加载神经纤维' })
       return initFiber()
     })
     .then(() => {
       return initFilter()
     })
     .then(() => {
-      loadingStore.loadingText = '加载成功'
-      loadingStore.loading = false
+      loadUpdate({ content: '加载完成' })
+      loadEnd()
       logData()
     })
     .then(() => {
@@ -122,16 +122,18 @@ const handleAdmin = () => {
       initElectric()
     })
     .catch((err) => {
-      loadingStore.loadingFail = true
-      loadingStore.failReason = '加载失败'
+      loadFail(err)
       console.error(err)
     })
 }
 
 const handlePC = () => {
   const sceneBg = import.meta.env.VITE_SCENE_BG
-  loadingStore.loading = true
-  loadingStore.loadingText = '正在初始化场景'
+  loadBegin({
+    content: '正在初始化场景',
+    delay: 500,
+    opacity: 0.8,
+  })
   initScene({
     mainSceneSelector: '.main-scene',
     mainSceneConfig: { backgroundColor: sceneBg },
@@ -139,30 +141,30 @@ const handlePC = () => {
     assistSceneConfig: { backgroundColor: sceneBg },
   })
     .then(() => {
-      loadingStore.loadingText = '正在下载患者影像'
+      loadUpdate({ content: '正在加载患者影像' })
       return initPCPatient()
     })
     .then(() => {
       return initMatrix()
     })
     .then(() => {
-      loadingStore.loadingText = '正在处理核团'
+      loadUpdate({ content: '正在加载核团' })
       return initNucleus()
     })
     .then(() => {
-      loadingStore.loadingText = '正在处理电极'
+      loadUpdate({ content: '正在加载电极' })
       return initLead()
     })
     .then(() => {
-      loadingStore.loadingText = '正在处理神经纤维'
+      loadUpdate({ content: '正在加载神经纤维' })
       return initFiber()
     })
     .then(() => {
       return initFilter()
     })
     .then(() => {
-      loadingStore.loadingText = '加载成功'
-      loadingStore.loading = false
+      loadUpdate({ content: '加载完成' })
+      loadEnd()
       logData()
     })
     .then(() => {
@@ -172,16 +174,18 @@ const handlePC = () => {
       initElectric()
     })
     .catch((err) => {
-      loadingStore.loadingFail = true
-      loadingStore.failReason = '加载失败'
+      loadFail(err)
       console.error(err)
     })
 }
 
 const handlePad = () => {
   const sceneBg = import.meta.env.VITE_SCENE_BG
-  loadingStore.loading = true
-  loadingStore.loadingText = '正在初始化场景'
+  loadBegin({
+    content: '正在初始化场景',
+    delay: 500,
+    opacity: 0.8,
+  })
   initScene({
     mainSceneSelector: '.main-scene',
     mainSceneConfig: { backgroundColor: sceneBg },
@@ -189,30 +193,30 @@ const handlePad = () => {
     assistSceneConfig: { backgroundColor: sceneBg },
   })
     .then(() => {
-      loadingStore.loadingText = '正在下载患者影像'
+      loadUpdate({ content: '正在加载患者影像' })
       return initPadPatient()
     })
     .then(() => {
       return initMatrix()
     })
     .then(() => {
-      loadingStore.loadingText = '正在处理核团'
+      loadUpdate({ content: '正在加载核团' })
       return initNucleus()
     })
     .then(() => {
-      loadingStore.loadingText = '正在处理电极'
+      loadUpdate({ content: '正在加载电极' })
       return initLead()
     })
     .then(() => {
-      loadingStore.loadingText = '正在处理神经纤维'
+      loadUpdate({ content: '正在加载神经纤维' })
       return initFiber()
     })
     .then(() => {
       return initFilter()
     })
     .then(() => {
-      loadingStore.loadingText = '加载成功'
-      loadingStore.loading = false
+      loadUpdate({ content: '加载完成' })
+      loadEnd()
       logData()
     })
     .then(() => {
@@ -223,18 +227,21 @@ const handlePad = () => {
     })
     .catch((err) => {
       switchTo2D()
-      loadingStore.failReason = '加载失败'
+      loadFail(err)
       console.error(err)
     })
 }
 
 const handleDemo = () => {
   // 从URL获取IPGSN
-  const route = useRoute()
-  const queryParams = route.query
+  const router = useRouter()
+  const queryParams = router.currentRoute.value.query
   const sceneBg = import.meta.env.VITE_SCENE_BG
-  loadingStore.loading = true
-  loadingStore.loadingText = '正在初始化场景'
+  loadBegin({
+    content: '正在初始化场景',
+    delay: 500,
+    opacity: 0.8,
+  })
   initScene({
     mainSceneSelector: '.main-scene',
     mainSceneConfig: { backgroundColor: sceneBg },
@@ -242,31 +249,30 @@ const handleDemo = () => {
     assistSceneConfig: { backgroundColor: sceneBg },
   })
     .then(() => {
-      loadingStore.loadingText = '正在下载患者影像'
-      loadingStore.loading = false
+      loadUpdate({ content: '正在加载患者影像' })
       return initDemoPatient({ demoId: queryParams.demoId })
     })
     .then(() => {
       return initMatrix()
     })
     .then(() => {
-      loadingStore.loadingText = '正在处理核团'
+      loadUpdate({ content: '正在加载核团' })
       return initNucleus()
     })
     .then(() => {
-      loadingStore.loadingText = '正在处理电极'
+      loadUpdate({ content: '正在加载电极' })
       return initLead()
     })
     .then(() => {
-      loadingStore.loadingText = '正在处理神经纤维'
+      loadUpdate({ content: '正在加载神经纤维' })
       return initFiber()
     })
     .then(() => {
       return initFilter()
     })
     .then(() => {
-      loadingStore.loadingText = '加载成功'
-      loadingStore.loading = false
+      loadUpdate({ content: '加载完成' })
+      loadEnd()
       logData()
     })
     .then(() => {
@@ -278,8 +284,7 @@ const handleDemo = () => {
       initElectric()
     })
     .catch((err) => {
-      loadingStore.loadingFail = true
-      loadingStore.failReason = '加载失败'
+      loadFail(err)
       console.error(err)
     })
 }
